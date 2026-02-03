@@ -1,80 +1,81 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>jirotubert-star</title>
-    <meta name="description" content="Personal site for jirotubert-star." />
-    <style>
-      :root {
-        --bg: #0b0b0b;
-        --text: #f6f6f6;
-        --muted: #a0a0a0;
-        --accent: #00b3a4;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: "Helvetica Neue", Arial, sans-serif;
-        color: var(--text);
-        background: radial-gradient(1200px 600px at 20% 10%, #1b1b1b, var(--bg));
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-      }
-      main {
-        width: min(900px, 92vw);
-        padding: 64px 24px;
-      }
-      h1 {
-        margin: 0 0 16px 0;
-        font-size: clamp(2.2rem, 4vw, 3.5rem);
-        letter-spacing: 0.02em;
-      }
-      p {
-        margin: 0 0 24px 0;
-        color: var(--muted);
-        font-size: 1.05rem;
-        line-height: 1.6;
-      }
-      .actions {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-      .btn {
-        display: inline-block;
-        padding: 10px 18px;
-        border-radius: 999px;
-        text-decoration: none;
-        color: var(--text);
-        border: 1px solid #2a2a2a;
-      }
-      .btn.primary {
-        background: var(--accent);
-        color: #061c1a;
-        border-color: transparent;
-        font-weight: 600;
-      }
-      footer {
-        margin-top: 40px;
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
-    </style>
+    <title>OneStep – Jeden Tag ein kleiner Schritt</title>
+    <meta name="description" content="OneStep ist eine minimalistische Web‑App für nachhaltigen Fortschritt durch kleine tägliche Aufgaben." />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <main>
-      <h1>Hi, I’m jirotubert-star</h1>
-      <p>
-        Welcome to my GitHub Pages site. This is a clean starter page that you can
-        customize with your projects, links, and contact info.
-      </p>
-      <div class="actions">
-        <a class="btn primary" href="https://github.com/jirotubert-star" target="_blank" rel="noreferrer">GitHub</a>
-        <a class="btn" href="mailto:hello@example.com">Contact</a>
+    <header class="top">
+      <div class="brand">
+        <div class="logo">OneStep</div>
+        <div class="tagline">Ein kleiner Schritt pro Tag ist besser als ein perfekter Plan.</div>
       </div>
-      <footer>Last updated: February 3, 2026</footer>
+    </header>
+
+    <main class="layout">
+      <!-- Welcome: shown only when no goals exist -->
+      <section id="welcome" class="panel welcome" aria-live="polite">
+        <h1>Willkommen bei OneStep</h1>
+        <p>
+          OneStep hilft dir, jeden Tag einen kleinen, realistischen Schritt zu gehen.
+          Kein Druck, keine Schuldgefühle – nur stetiger, ruhiger Fortschritt.
+        </p>
+        <p>
+          Starte mit einem einzigen Ziel. Daraus wird automatisch deine erste Tagesaufgabe erstellt.
+        </p>
+      </section>
+
+      <!-- Today / Checklist -->
+      <section class="panel" aria-labelledby="today-title">
+        <div class="panel-head">
+          <h2 id="today-title">Today</h2>
+          <span class="soft-note" id="today-count">0 Aufgaben</span>
+        </div>
+        <ul id="today-list" class="checklist" aria-live="polite"></ul>
+      </section>
+
+      <!-- Life Goals -->
+      <section class="panel" aria-labelledby="goals-title">
+        <div class="panel-head">
+          <h2 id="goals-title">Life Goals</h2>
+          <span class="soft-note">Dein Aufgaben‑Pool</span>
+        </div>
+        <form id="goal-form" class="goal-form" autocomplete="off">
+          <label class="sr-only" for="goal-input">Neues Ziel</label>
+          <input id="goal-input" type="text" placeholder="z. B. 15 Minuten lesen" required />
+          <button type="submit" class="btn">Hinzufügen</button>
+        </form>
+        <ul id="goals-list" class="goals"></ul>
+      </section>
+
+      <!-- Progress / Motivation -->
+      <section class="panel" aria-labelledby="progress-title">
+        <div class="panel-head">
+          <h2 id="progress-title">Progress</h2>
+          <span class="soft-note">Ruhig. Klar. Nachhaltig.</span>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-value" id="streak">0</div>
+            <div class="stat-label">Aktive Tage in Folge</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="total-done">0</div>
+            <div class="stat-label">Erledigte Aufgaben gesamt</div>
+          </div>
+        </div>
+        <p id="motivation" class="motivation"></p>
+      </section>
     </main>
+
+    <footer class="footer">
+      <span>OneStep · Minimalistische Fortschritts‑App</span>
+      <span class="soft-note">Lokal gespeichert in deinem Browser</span>
+    </footer>
+
+    <script src="js/app.js"></script>
   </body>
 </html>

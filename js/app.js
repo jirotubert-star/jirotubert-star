@@ -244,6 +244,7 @@ const renderToday = (state) => {
 
 const renderGoals = (state) => {
   goalsList.innerHTML = "";
+  const activeGoalIds = new Set(state.todayTasks.map((task) => task.goalId));
 
   if (state.goals.length === 0) {
     const empty = document.createElement("li");
@@ -254,6 +255,7 @@ const renderGoals = (state) => {
 
   state.goals.forEach((goal) => {
     const li = document.createElement("li");
+    if (activeGoalIds.has(goal.id)) li.classList.add("active-goal");
     const title = document.createElement("span");
     title.textContent = goal.title;
     const badge = document.createElement("span");

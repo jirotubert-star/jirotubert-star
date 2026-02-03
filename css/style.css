@@ -243,6 +243,16 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   color: #7a3f35;
 }
 
+.goals li.active-goal {
+  background: #ecf6f1;
+  border-color: #d1e6dc;
+}
+
+.goals li.active-goal .difficulty {
+  background: #d9efe6;
+  color: #2f6f62;
+}
+
 .test-controls {
   background: #f7f3ec;
   border: 1px solid #e5ded4;

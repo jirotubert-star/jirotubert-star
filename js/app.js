@@ -382,12 +382,17 @@ const toggleTask = (taskId, textEl, labelEl) => {
   if (textEl) {
     textEl.classList.toggle("done", task.done);
   }
-  if (labelEl && task.done) {
-    labelEl.classList.remove("burst");
-    // Force reflow to restart the animation on repeated checks.
-    void labelEl.offsetHeight;
-    labelEl.classList.add("burst");
-    setTimeout(() => labelEl.classList.remove("burst"), 700);
+  if (labelEl) {
+    // Ensure only one checkbox animates at a time.
+    todayList.querySelectorAll(".neon-checkbox.burst").forEach((node) => {
+      node.classList.remove("burst");
+    });
+    if (task.done) {
+      // Force reflow to restart the animation on repeated checks.
+      void labelEl.offsetHeight;
+      labelEl.classList.add("burst");
+      setTimeout(() => labelEl.classList.remove("burst"), 700);
+    }
   }
   renderProgress(state);
 };

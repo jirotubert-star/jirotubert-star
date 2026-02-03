@@ -106,6 +106,7 @@ const simulatedDateEl = document.getElementById("simulated-date");
 const resetBtn = document.getElementById("reset-app");
 const navItems = document.querySelectorAll(".bottom-nav .nav-item");
 const sections = document.querySelectorAll("[data-section]");
+let currentTab = "today";
 
 // ---------------------------
 // Motivationstexte
@@ -342,6 +343,7 @@ const renderAll = (state) => {
   renderGoals(state);
   renderProgress(state);
   renderSimulatedDate(state);
+  setActiveTab(currentTab);
 };
 
 // ---------------------------
@@ -440,11 +442,14 @@ const setSimulationOffset = (value) => {
 let listenersBound = false;
 
 const setActiveTab = (target) => {
+  currentTab = target || "today";
   navItems.forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.target === target);
+    btn.classList.toggle("active", btn.dataset.target === currentTab);
   });
   sections.forEach((section) => {
-    section.classList.toggle("section-hidden", section.dataset.section !== target);
+    const isActive = section.dataset.section === currentTab;
+    section.classList.toggle("section-hidden", !isActive);
+    section.hidden = !isActive;
   });
   window.scrollTo({ top: 0, behavior: "smooth" });
 };

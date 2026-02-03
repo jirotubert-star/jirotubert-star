@@ -69,6 +69,10 @@ body {
   display: none;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .panel-head {
   display: flex;
   align-items: baseline;

@@ -389,8 +389,13 @@ const init = () => {
         "Möchtest du wirklich alles zurücksetzen? (Ziele, Fortschritt, Aufgaben)"
       );
       if (!confirmed) return;
+      // Vollständiger Reset: State löschen, Defaults speichern, UI neu rendern.
       localStorage.removeItem(STORAGE_KEY);
-      init();
+      const fresh = defaultState();
+      saveState(fresh);
+      goalInput.value = "";
+      dayOffsetInput.value = 0;
+      renderAll(fresh);
     });
 
     listenersBound = true;

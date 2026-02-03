@@ -222,7 +222,6 @@ const renderToday = (state) => {
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.checked = task.done;
-      checkbox.addEventListener("change", () => toggleTask(task.id));
 
       const frame = document.createElement("div");
       frame.className = "neon-checkbox__frame";
@@ -292,6 +291,8 @@ const renderToday = (state) => {
       label.appendChild(text);
       li.appendChild(label);
       li.appendChild(badge);
+      li.dataset.taskId = task.id;
+      checkbox.addEventListener("change", () => toggleTask(task.id, text));
       todayList.appendChild(li);
     });
   }
@@ -360,7 +361,7 @@ const addGoal = (title, difficulty) => {
   renderAll(state);
 };
 
-const toggleTask = (taskId) => {
+const toggleTask = (taskId, textEl) => {
   const state = loadState();
   const task = state.todayTasks.find((t) => t.id === taskId);
   if (!task) return;
@@ -378,7 +379,10 @@ const toggleTask = (taskId) => {
   }
 
   saveState(state);
-  renderAll(state);
+  if (textEl) {
+    textEl.classList.toggle("done", task.done);
+  }
+  renderProgress(state);
 };
 
 const addTaskFromGoal = (goalId) => {

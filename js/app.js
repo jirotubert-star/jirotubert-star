@@ -104,6 +104,8 @@ const dayOffsetInput = document.getElementById("day-offset");
 const applyOffsetBtn = document.getElementById("apply-offset");
 const simulatedDateEl = document.getElementById("simulated-date");
 const resetBtn = document.getElementById("reset-app");
+const navItems = document.querySelectorAll(".bottom-nav .nav-item");
+const sections = document.querySelectorAll("[data-section]");
 
 // ---------------------------
 // Motivationstexte
@@ -437,12 +439,23 @@ const setSimulationOffset = (value) => {
 // ---------------------------
 let listenersBound = false;
 
+const setActiveTab = (target) => {
+  navItems.forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.target === target);
+  });
+  sections.forEach((section) => {
+    section.classList.toggle("section-hidden", section.dataset.section !== target);
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
 const init = () => {
   const state = loadState();
   ensureTodayTasks(state);
   updateStreak(state);
   saveState(state);
   renderAll(state);
+  setActiveTab("today");
 
   if (!listenersBound) {
     goalForm.addEventListener("submit", (event) => {
@@ -471,6 +484,10 @@ const init = () => {
       goalInput.value = "";
       dayOffsetInput.value = 0;
       renderAll(fresh);
+    });
+
+    navItems.forEach((btn) => {
+      btn.addEventListener("click", () => setActiveTab(btn.dataset.target));
     });
 
     listenersBound = true;

@@ -17,7 +17,7 @@
 
     <main class="layout app-shell">
       <!-- Welcome: shown only when no goals exist -->
-      <section id="welcome" class="panel welcome" aria-live="polite">
+      <section id="welcome" class="panel welcome" aria-live="polite" data-section="today">
         <h1>Willkommen bei OneStep</h1>
         <p>
           OneStep hilft dir, jeden Tag einen kleinen, realistischen Schritt zu gehen.
@@ -29,7 +29,7 @@
       </section>
 
       <!-- Today / Checklist -->
-      <section class="panel" aria-labelledby="today-title">
+      <section class="panel" aria-labelledby="today-title" data-section="today">
         <div class="panel-head">
           <h2 id="today-title">Today</h2>
           <span class="soft-note" id="today-count">0 Aufgaben</span>
@@ -39,7 +39,7 @@
       </section>
 
       <!-- Life Goals -->
-      <section class="panel" aria-labelledby="goals-title">
+      <section class="panel" aria-labelledby="goals-title" data-section="goals">
         <div class="panel-head">
           <h2 id="goals-title">Life Goals</h2>
           <span class="soft-note">Dein Aufgaben‑Pool</span>
@@ -59,7 +59,7 @@
       </section>
 
       <!-- Progress / Motivation -->
-      <section class="panel" aria-labelledby="progress-title">
+      <section class="panel" aria-labelledby="progress-title" data-section="progress">
         <div class="panel-head">
           <h2 id="progress-title">Progress</h2>
           <span class="soft-note">Ruhig. Klar. Nachhaltig.</span>
@@ -91,19 +91,19 @@
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
       <button id="reset-app" class="btn ghost" type="button">Reset</button>
-      <span class="soft-note" id="version">Version 1.1.7</span>
+      <span class="soft-note" id="version">Version 1.1.8</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">
-      <button class="nav-item active" type="button">
+      <button class="nav-item active" type="button" data-target="today">
         <span class="nav-icon">✓</span>
         <span class="nav-label">Today</span>
       </button>
-      <button class="nav-item" type="button">
+      <button class="nav-item" type="button" data-target="goals">
         <span class="nav-icon">◎</span>
         <span class="nav-label">Goals</span>
       </button>
-      <button class="nav-item" type="button">
+      <button class="nav-item" type="button" data-target="progress">
         <span class="nav-icon">▦</span>
         <span class="nav-label">Progress</span>
       </button>

@@ -65,6 +65,10 @@ body {
   animation: fadeUp 450ms ease both;
 }
 
+.section-hidden {
+  display: none;
+}
+
 .panel-head {
   display: flex;
   align-items: baseline;

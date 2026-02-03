@@ -292,7 +292,7 @@ const renderToday = (state) => {
       li.appendChild(label);
       li.appendChild(badge);
       li.dataset.taskId = task.id;
-      checkbox.addEventListener("change", () => toggleTask(task.id, text));
+      checkbox.addEventListener("change", () => toggleTask(task.id, text, label));
       todayList.appendChild(li);
     });
   }
@@ -361,7 +361,7 @@ const addGoal = (title, difficulty) => {
   renderAll(state);
 };
 
-const toggleTask = (taskId, textEl) => {
+const toggleTask = (taskId, textEl, labelEl) => {
   const state = loadState();
   const task = state.todayTasks.find((t) => t.id === taskId);
   if (!task) return;
@@ -381,6 +381,13 @@ const toggleTask = (taskId, textEl) => {
   saveState(state);
   if (textEl) {
     textEl.classList.toggle("done", task.done);
+  }
+  if (labelEl && task.done) {
+    labelEl.classList.remove("burst");
+    // Force reflow to restart the animation on repeated checks.
+    void labelEl.offsetHeight;
+    labelEl.classList.add("burst");
+    setTimeout(() => labelEl.classList.remove("burst"), 700);
   }
   renderProgress(state);
 };

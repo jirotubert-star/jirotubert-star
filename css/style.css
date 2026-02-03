@@ -326,34 +326,10 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   opacity: 0;
   transition: opacity 0.4s ease;
 }
-
-.neon-checkbox__borders span:nth-child(1) {
-  top: 0;
-  left: -100%;
-  animation: borderFlow1 2s linear infinite;
-}
-
-.neon-checkbox__borders span:nth-child(2) {
-  top: -100%;
-  right: 0;
-  width: 1px;
-  height: 40px;
-  animation: borderFlow2 2s linear infinite;
-}
-
-.neon-checkbox__borders span:nth-child(3) {
-  bottom: 0;
-  right: -100%;
-  animation: borderFlow3 2s linear infinite;
-}
-
-.neon-checkbox__borders span:nth-child(4) {
-  bottom: -100%;
-  left: 0;
-  width: 1px;
-  height: 40px;
-  animation: borderFlow4 2s linear infinite;
-}
+.neon-checkbox__borders span:nth-child(1) { top: 0; left: -100%; }
+.neon-checkbox__borders span:nth-child(2) { top: -100%; right: 0; width: 1px; height: 40px; }
+.neon-checkbox__borders span:nth-child(3) { bottom: 0; right: -100%; }
+.neon-checkbox__borders span:nth-child(4) { bottom: -100%; left: 0; width: 1px; height: 40px; }
 
 .neon-checkbox__particles span {
   position: absolute;
@@ -412,37 +388,34 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   opacity: 0.2;
 }
 
-.neon-checkbox
-  input:checked
-  ~ .neon-checkbox__frame
-  .neon-checkbox__borders
-  span {
+.neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__borders span {
   opacity: 1;
 }
 
-/* Particle Animations */
-.neon-checkbox
-  input:checked
-  ~ .neon-checkbox__frame
-  .neon-checkbox__particles
-  span {
+/* Particle Animations (nur beim Klick) */
+.neon-checkbox.burst input:checked ~ .neon-checkbox__frame .neon-checkbox__particles span {
   animation: particleExplosion 0.6s ease-out forwards;
 }
 
-.neon-checkbox
-  input:checked
-  ~ .neon-checkbox__frame
-  .neon-checkbox__rings
-  .ring {
+.neon-checkbox.burst input:checked ~ .neon-checkbox__frame .neon-checkbox__rings .ring {
   animation: ringPulse 0.6s ease-out forwards;
 }
 
-.neon-checkbox
-  input:checked
-  ~ .neon-checkbox__frame
-  .neon-checkbox__sparks
-  span {
+.neon-checkbox.burst input:checked ~ .neon-checkbox__frame .neon-checkbox__sparks span {
   animation: sparkFlash 0.6s ease-out forwards;
+}
+
+.neon-checkbox.burst input:checked ~ .neon-checkbox__frame .neon-checkbox__borders span:nth-child(1) {
+  animation: borderFlow1 0.6s linear;
+}
+.neon-checkbox.burst input:checked ~ .neon-checkbox__frame .neon-checkbox__borders span:nth-child(2) {
+  animation: borderFlow2 0.6s linear;
+}
+.neon-checkbox.burst input:checked ~ .neon-checkbox__frame .neon-checkbox__borders span:nth-child(3) {
+  animation: borderFlow3 0.6s linear;
+}
+.neon-checkbox.burst input:checked ~ .neon-checkbox__frame .neon-checkbox__borders span:nth-child(4) {
+  animation: borderFlow4 0.6s linear;
 }
 
 /* Animations */

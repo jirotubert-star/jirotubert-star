@@ -111,6 +111,7 @@ const tabOrder = ["today", "goals", "progress"];
 let touchStartX = null;
 let touchStartY = null;
 let touchStartTime = null;
+let trackingPointerId = null;
 
 // ---------------------------
 // Motivationstexte
@@ -507,36 +508,41 @@ const init = () => {
       btn.addEventListener("click", () => setActiveTab(btn.dataset.target));
     });
 
-    const appShell = document.querySelector(".app-shell");
-    if (appShell) {
-      appShell.addEventListener("touchstart", (event) => {
-        const touch = event.changedTouches[0];
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
-        touchStartTime = Date.now();
-      }, { passive: true });
+    const isInteractive = (target) =>
+      target.closest("input, textarea, select, button, a");
 
-      appShell.addEventListener("touchend", (event) => {
-        if (touchStartX === null || touchStartY === null) return;
-        const touch = event.changedTouches[0];
-        const dx = touch.clientX - touchStartX;
-        const dy = touch.clientY - touchStartY;
-        const dt = Date.now() - touchStartTime;
+    window.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "touch") return;
+      if (isInteractive(event.target)) return;
+      trackingPointerId = event.pointerId;
+      touchStartX = event.clientX;
+      touchStartY = event.clientY;
+      touchStartTime = Date.now();
+    }, { passive: true });
 
-        // Horizontal swipe: at least 60px, vertical drift under 40px, within 600ms.
-        if (Math.abs(dx) > 60 && Math.abs(dy) < 40 && dt < 600) {
-          if (dx < 0) {
-            goToAdjacentTab("next");
-          } else {
-            goToAdjacentTab("prev");
-          }
+    window.addEventListener("pointerup", (event) => {
+      if (event.pointerType !== "touch") return;
+      if (trackingPointerId !== event.pointerId) return;
+      if (touchStartX === null || touchStartY === null) return;
+
+      const dx = event.clientX - touchStartX;
+      const dy = event.clientY - touchStartY;
+      const dt = Date.now() - touchStartTime;
+
+      // Horizontal swipe: at least 60px, vertical drift under 40px, within 600ms.
+      if (Math.abs(dx) > 60 && Math.abs(dy) < 40 && dt < 600) {
+        if (dx < 0) {
+          goToAdjacentTab("next");
+        } else {
+          goToAdjacentTab("prev");
         }
+      }
 
-        touchStartX = null;
-        touchStartY = null;
-        touchStartTime = null;
-      }, { passive: true });
-    }
+      trackingPointerId = null;
+      touchStartX = null;
+      touchStartY = null;
+      touchStartTime = null;
+    }, { passive: true });
 
     listenersBound = true;
   }

@@ -107,6 +107,10 @@ const resetBtn = document.getElementById("reset-app");
 const navItems = document.querySelectorAll(".bottom-nav .nav-item");
 const sections = document.querySelectorAll("[data-section]");
 let currentTab = "today";
+const tabOrder = ["today", "goals", "progress"];
+let touchStartX = null;
+let touchStartY = null;
+let touchStartTime = null;
 
 // ---------------------------
 // Motivationstexte
@@ -454,6 +458,14 @@ const setActiveTab = (target) => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
+const goToAdjacentTab = (direction) => {
+  const index = tabOrder.indexOf(currentTab);
+  if (index === -1) return;
+  const nextIndex = direction === "next" ? index + 1 : index - 1;
+  if (nextIndex < 0 || nextIndex >= tabOrder.length) return;
+  setActiveTab(tabOrder[nextIndex]);
+};
+
 const init = () => {
   const state = loadState();
   ensureTodayTasks(state);
@@ -494,6 +506,37 @@ const init = () => {
     navItems.forEach((btn) => {
       btn.addEventListener("click", () => setActiveTab(btn.dataset.target));
     });
+
+    const appShell = document.querySelector(".app-shell");
+    if (appShell) {
+      appShell.addEventListener("touchstart", (event) => {
+        const touch = event.changedTouches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        touchStartTime = Date.now();
+      }, { passive: true });
+
+      appShell.addEventListener("touchend", (event) => {
+        if (touchStartX === null || touchStartY === null) return;
+        const touch = event.changedTouches[0];
+        const dx = touch.clientX - touchStartX;
+        const dy = touch.clientY - touchStartY;
+        const dt = Date.now() - touchStartTime;
+
+        // Horizontal swipe: at least 60px, vertical drift under 40px, within 600ms.
+        if (Math.abs(dx) > 60 && Math.abs(dy) < 40 && dt < 600) {
+          if (dx < 0) {
+            goToAdjacentTab("next");
+          } else {
+            goToAdjacentTab("prev");
+          }
+        }
+
+        touchStartX = null;
+        touchStartY = null;
+        touchStartTime = null;
+      }, { passive: true });
+    }
 
     listenersBound = true;
   }

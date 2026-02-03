@@ -511,26 +511,23 @@ const init = () => {
     const isInteractive = (target) =>
       target.closest("input, textarea, select, button, a");
 
-    window.addEventListener("pointerdown", (event) => {
-      if (event.pointerType !== "touch") return;
-      if (isInteractive(event.target)) return;
-      trackingPointerId = event.pointerId;
-      touchStartX = event.clientX;
-      touchStartY = event.clientY;
+    const startTracking = (x, y, pointerId = null) => {
+      trackingPointerId = pointerId;
+      touchStartX = x;
+      touchStartY = y;
       touchStartTime = Date.now();
-    }, { passive: true });
+    };
 
-    window.addEventListener("pointerup", (event) => {
-      if (event.pointerType !== "touch") return;
-      if (trackingPointerId !== event.pointerId) return;
+    const endTracking = (x, y, pointerId = null) => {
+      if (pointerId !== null && trackingPointerId !== pointerId) return;
       if (touchStartX === null || touchStartY === null) return;
 
-      const dx = event.clientX - touchStartX;
-      const dy = event.clientY - touchStartY;
+      const dx = x - touchStartX;
+      const dy = y - touchStartY;
       const dt = Date.now() - touchStartTime;
 
-      // Horizontal swipe: at least 60px, vertical drift under 40px, within 600ms.
-      if (Math.abs(dx) > 60 && Math.abs(dy) < 40 && dt < 600) {
+      // Horizontal swipe: at least 60px, vertical drift under 40px, within 700ms.
+      if (Math.abs(dx) > 60 && Math.abs(dy) < 40 && dt < 700) {
         if (dx < 0) {
           goToAdjacentTab("next");
         } else {
@@ -542,6 +539,29 @@ const init = () => {
       touchStartX = null;
       touchStartY = null;
       touchStartTime = null;
+    };
+
+    window.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "touch") return;
+      if (isInteractive(event.target)) return;
+      startTracking(event.clientX, event.clientY, event.pointerId);
+    }, { passive: true });
+
+    window.addEventListener("pointerup", (event) => {
+      if (event.pointerType !== "touch") return;
+      endTracking(event.clientX, event.clientY, event.pointerId);
+    }, { passive: true });
+
+    // Fallback for browsers where pointer events are unreliable.
+    window.addEventListener("touchstart", (event) => {
+      if (isInteractive(event.target)) return;
+      const touch = event.changedTouches[0];
+      startTracking(touch.clientX, touch.clientY, null);
+    }, { passive: true });
+
+    window.addEventListener("touchend", (event) => {
+      const touch = event.changedTouches[0];
+      endTracking(touch.clientX, touch.clientY, null);
     }, { passive: true });
 
     listenersBound = true;

@@ -22,10 +22,12 @@ body {
     var(--bg);
   min-height: 100vh;
   -webkit-text-size-adjust: 100%;
+  overscroll-behavior-x: contain;
 }
 
 .app-shell {
   padding-bottom: 90px;
+  touch-action: pan-y;
 }
 
 .top {

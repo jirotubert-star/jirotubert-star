@@ -24,7 +24,13 @@ const STORAGE_KEY = "onestep_state_v1";
 // ---------------------------
 // Grundlegende Zeit-Utilities
 // ---------------------------
-const todayISO = () => new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+const todayISO = (offsetDays = 0) => {
+  // Testmodus: Wir können das Datum um X Tage verschieben,
+  // um die 3-Tage-Logik schnell zu testen.
+  const date = new Date();
+  date.setDate(date.getDate() + offsetDays);
+  return date.toISOString().slice(0, 10); // YYYY-MM-DD
+};
 
 const daysBetween = (startISO, endISO) => {
   // Berechnet volle Tage zwischen zwei ISO-Daten.
@@ -47,6 +53,7 @@ const defaultState = () => ({
   lastActiveDate: null,
   streak: 0,
   totalDone: 0,
+  simulationOffsetDays: 0,
 });
 
 const loadState = () => {
@@ -55,10 +62,20 @@ const loadState = () => {
 
   try {
     const parsed = JSON.parse(raw);
-    return {
+    const normalized = {
       ...defaultState(),
       ...parsed,
     };
+    normalized.goals = normalized.goals.map((goal) => ({
+      ...goal,
+      difficulty: goal.difficulty || "medium",
+    }));
+    normalized.todayTasks = normalized.todayTasks.map((task) => ({
+      ...task,
+      difficulty: task.difficulty || "medium",
+      doneAt: task.doneAt || null,
+    }));
+    return normalized;
   } catch (err) {
     console.warn("State konnte nicht geladen werden, zurücksetzen.", err);
     return defaultState();
@@ -75,12 +92,18 @@ const saveState = (state) => {
 const welcomeSection = document.getElementById("welcome");
 const todayList = document.getElementById("today-list");
 const todayCount = document.getElementById("today-count");
+const unlockControls = document.getElementById("unlock-controls");
 const goalsList = document.getElementById("goals-list");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
+const goalDifficulty = document.getElementById("goal-difficulty");
 const streakEl = document.getElementById("streak");
 const totalDoneEl = document.getElementById("total-done");
 const motivationEl = document.getElementById("motivation");
+const dayOffsetInput = document.getElementById("day-offset");
+const applyOffsetBtn = document.getElementById("apply-offset");
+const simulatedDateEl = document.getElementById("simulated-date");
+const resetBtn = document.getElementById("reset-app");
 
 // ---------------------------
 // Motivationstexte
@@ -101,7 +124,10 @@ const shouldUnlockNewTask = (state) => {
   if (!state.lastTaskUnlockDate) return true;
 
   // Alle 3 Tage wird eine neue Aufgabe freigeschaltet.
-  const diff = daysBetween(state.lastTaskUnlockDate, todayISO());
+  const diff = daysBetween(
+    state.lastTaskUnlockDate,
+    todayISO(state.simulationOffsetDays)
+  );
   return diff >= 3;
 };
 
@@ -119,7 +145,7 @@ const pickTaskFromGoals = (state) => {
 const ensureTodayTasks = (state) => {
   // Wenn das Datum wechselt, bleiben die Tasks sichtbar,
   // aber wir markieren sie als neue Tagesliste.
-  const today = todayISO();
+  const today = todayISO(state.simulationOffsetDays);
 
   // Wenn wir noch keine Tasks für heute haben, setzen wir das Datum neu.
   if (!state.todayTasks.length || state.todayTasks[0].date !== today) {
@@ -127,6 +153,7 @@ const ensureTodayTasks = (state) => {
       ...task,
       date: today,
       done: false,
+      doneAt: null,
     }));
   }
 
@@ -137,25 +164,12 @@ const ensureTodayTasks = (state) => {
       id: crypto.randomUUID(),
       goalId: firstGoal.id,
       label: firstGoal.title,
+      difficulty: firstGoal.difficulty,
       done: false,
+      doneAt: null,
       date: today,
     });
     state.lastTaskUnlockDate = today;
-  }
-
-  // Alle 3 Tage eine weitere Aufgabe freischalten.
-  if (state.goals.length > 0 && shouldUnlockNewTask(state)) {
-    const newGoal = pickTaskFromGoals(state);
-    if (newGoal) {
-      state.todayTasks.push({
-        id: crypto.randomUUID(),
-        goalId: newGoal.id,
-        label: newGoal.title,
-        done: false,
-        date: today,
-      });
-      state.lastTaskUnlockDate = today;
-    }
   }
 };
 
@@ -163,7 +177,7 @@ const ensureTodayTasks = (state) => {
 // Streak-Logik
 // ---------------------------
 const updateStreak = (state) => {
-  const today = todayISO();
+  const today = todayISO(state.simulationOffsetDays);
 
   if (!state.lastActiveDate) {
     state.lastActiveDate = today;
@@ -213,9 +227,14 @@ const renderToday = (state) => {
       span.textContent = task.label;
       if (task.done) span.classList.add("done");
 
+      const badge = document.createElement("span");
+      badge.className = `difficulty ${task.difficulty}`;
+      badge.textContent = difficultyLabel(task.difficulty);
+
       label.appendChild(checkbox);
       label.appendChild(span);
       li.appendChild(label);
+      li.appendChild(badge);
       todayList.appendChild(li);
     });
   }
@@ -235,7 +254,13 @@ const renderGoals = (state) => {
 
   state.goals.forEach((goal) => {
     const li = document.createElement("li");
-    li.textContent = goal.title;
+    const title = document.createElement("span");
+    title.textContent = goal.title;
+    const badge = document.createElement("span");
+    badge.className = `difficulty ${goal.difficulty}`;
+    badge.textContent = difficultyLabel(goal.difficulty);
+    li.appendChild(title);
+    li.appendChild(badge);
     goalsList.appendChild(li);
   });
 };
@@ -250,21 +275,24 @@ const renderProgress = (state) => {
 
 const renderAll = (state) => {
   renderWelcome(state);
+  renderUnlock(state);
   renderToday(state);
   renderGoals(state);
   renderProgress(state);
+  renderSimulatedDate(state);
 };
 
 // ---------------------------
 // Actions
 // ---------------------------
-const addGoal = (title) => {
+const addGoal = (title, difficulty) => {
   const state = loadState();
 
   state.goals.push({
     id: crypto.randomUUID(),
     title,
-    createdAt: todayISO(),
+    difficulty,
+    createdAt: todayISO(state.simulationOffsetDays),
   });
 
   ensureTodayTasks(state);
@@ -281,17 +309,59 @@ const toggleTask = (taskId) => {
   task.done = !task.done;
 
   if (task.done) {
-    state.totalDone += 1;
-    updateStreak(state);
+    const today = todayISO(state.simulationOffsetDays);
+    // Wurde die Aufgabe heute schon gezählt, nicht erneut erhöhen.
+    if (task.doneAt !== today) {
+      state.totalDone += 1;
+      task.doneAt = today;
+      updateStreak(state);
+    }
   }
 
   saveState(state);
   renderAll(state);
 };
 
+const addTaskFromGoal = (goalId) => {
+  const state = loadState();
+  const goal = state.goals.find((g) => g.id === goalId);
+  if (!goal) return;
+
+  const today = todayISO(state.simulationOffsetDays);
+  state.todayTasks.push({
+    id: crypto.randomUUID(),
+    goalId: goal.id,
+    label: goal.title,
+    difficulty: goal.difficulty,
+    done: false,
+    doneAt: null,
+    date: today,
+  });
+
+  state.lastTaskUnlockDate = today;
+  saveState(state);
+  renderAll(state);
+};
+
+const addRandomTask = () => {
+  const state = loadState();
+  const goal = pickTaskFromGoals(state);
+  if (!goal) return;
+  addTaskFromGoal(goal.id);
+};
+
+const setSimulationOffset = (value) => {
+  const state = loadState();
+  state.simulationOffsetDays = value;
+  saveState(state);
+  init();
+};
+
 // ---------------------------
 // Initialisierung
 // ---------------------------
+let listenersBound = false;
+
 const init = () => {
   const state = loadState();
   ensureTodayTasks(state);
@@ -299,14 +369,96 @@ const init = () => {
   saveState(state);
   renderAll(state);
 
-  goalForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const value = goalInput.value.trim();
-    if (!value) return;
+  if (!listenersBound) {
+    goalForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const value = goalInput.value.trim();
+      if (!value) return;
 
-    addGoal(value);
-    goalInput.value = "";
-  });
+      addGoal(value, goalDifficulty.value);
+      goalInput.value = "";
+    });
+
+    applyOffsetBtn.addEventListener("click", () => {
+      const value = Number(dayOffsetInput.value || 0);
+      setSimulationOffset(value);
+    });
+
+    resetBtn.addEventListener("click", () => {
+      const confirmed = window.confirm(
+        "Möchtest du wirklich alles zurücksetzen? (Ziele, Fortschritt, Aufgaben)"
+      );
+      if (!confirmed) return;
+      localStorage.removeItem(STORAGE_KEY);
+      init();
+    });
+
+    listenersBound = true;
+  }
 };
+
+// ---------------------------
+// Rendering: Unlock Controls
+// ---------------------------
+function renderUnlock(state) {
+  unlockControls.innerHTML = "";
+
+  const eligible = shouldUnlockNewTask(state);
+  const candidates = state.goals.filter(
+    (g) => !state.todayTasks.some((t) => t.goalId === g.id)
+  );
+
+  if (!eligible || candidates.length === 0) {
+    unlockControls.classList.remove("active");
+    return;
+  }
+
+  unlockControls.classList.add("active");
+
+  const intro = document.createElement("div");
+  intro.textContent =
+    "3 Tage sind vorbei – du kannst eine weitere Aufgabe hinzufügen oder zufällig auswählen.";
+
+  const row = document.createElement("div");
+  row.className = "unlock-row";
+
+  const select = document.createElement("select");
+  candidates.forEach((goal) => {
+    const option = document.createElement("option");
+    option.value = goal.id;
+    option.textContent = `${goal.title} (${difficultyLabel(goal.difficulty)})`;
+    select.appendChild(option);
+  });
+
+  const addBtn = document.createElement("button");
+  addBtn.type = "button";
+  addBtn.className = "btn";
+  addBtn.textContent = "Hinzufügen";
+  addBtn.addEventListener("click", () => addTaskFromGoal(select.value));
+
+  const randomBtn = document.createElement("button");
+  randomBtn.type = "button";
+  randomBtn.className = "btn ghost";
+  randomBtn.textContent = "Zufällig auswählen";
+  randomBtn.addEventListener("click", addRandomTask);
+
+  row.appendChild(select);
+  row.appendChild(addBtn);
+  row.appendChild(randomBtn);
+
+  unlockControls.appendChild(intro);
+  unlockControls.appendChild(row);
+}
+
+function renderSimulatedDate(state) {
+  dayOffsetInput.value = state.simulationOffsetDays;
+  simulatedDateEl.textContent = `Heute: ${todayISO(state.simulationOffsetDays)}`;
+}
+
+function difficultyLabel(value) {
+  if (value === "easy") return "Einfach";
+  if (value === "hard") return "Schwer";
+  return "Mittel";
+}
 
 init();

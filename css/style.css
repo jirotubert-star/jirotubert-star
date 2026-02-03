@@ -131,13 +131,18 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   margin-bottom: 12px;
 }
 
-.goal-form input {
+.goal-form input,
+.goal-form select {
   flex: 1;
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid #d9d2c6;
   font-size: 1rem;
   background: #fff;
+}
+
+.goal-form select {
+  max-width: 140px;
 }
 
 .btn {
@@ -149,6 +154,12 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   font-weight: 600;
   cursor: pointer;
   transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid #cbd7d1;
 }
 
 .btn:hover {
@@ -183,6 +194,80 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   color: var(--muted);
 }
 
+.unlock {
+  background: #f3f7f3;
+  border: 1px dashed #cbd7d1;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  display: none;
+}
+
+.unlock.active {
+  display: grid;
+  gap: 8px;
+}
+
+.unlock-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.unlock select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d9d2c6;
+  background: #fff;
+}
+
+.difficulty {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: #e7f1ee;
+  color: #2f6f62;
+}
+
+.difficulty.medium {
+  background: #efe9df;
+  color: #6b5a3a;
+}
+
+.difficulty.hard {
+  background: #f0e3e0;
+  color: #7a3f35;
+}
+
+.test-controls {
+  background: #f7f3ec;
+  border: 1px solid #e5ded4;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.test-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.test-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.test-row input {
+  width: 90px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d9d2c6;
+}
+
 .footer {
   display: flex;
   justify-content: space-between;
@@ -191,6 +276,8 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   margin: 0 auto;
   color: var(--muted);
   font-size: 0.9rem;
+  align-items: center;
+  gap: 12px;
 }
 
 .sr-only {
@@ -224,6 +311,9 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
 @media (max-width: 480px) {
   .goal-form {
     flex-direction: column;
+  }
+  .goal-form select {
+    max-width: none;
   }
   .footer {
     flex-direction: column;

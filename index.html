@@ -34,6 +34,7 @@
           <h2 id="today-title">Today</h2>
           <span class="soft-note" id="today-count">0 Aufgaben</span>
         </div>
+        <div id="unlock-controls" class="unlock" aria-live="polite"></div>
         <ul id="today-list" class="checklist" aria-live="polite"></ul>
       </section>
 
@@ -46,6 +47,12 @@
         <form id="goal-form" class="goal-form" autocomplete="off">
           <label class="sr-only" for="goal-input">Neues Ziel</label>
           <input id="goal-input" type="text" placeholder="z. B. 15 Minuten lesen" required />
+          <label class="sr-only" for="goal-difficulty">Schwierigkeit</label>
+          <select id="goal-difficulty" aria-label="Schwierigkeit">
+            <option value="easy">Einfach</option>
+            <option value="medium" selected>Mittel</option>
+            <option value="hard">Schwer</option>
+          </select>
           <button type="submit" class="btn">Hinzufügen</button>
         </form>
         <ul id="goals-list" class="goals"></ul>
@@ -56,6 +63,15 @@
         <div class="panel-head">
           <h2 id="progress-title">Progress</h2>
           <span class="soft-note">Ruhig. Klar. Nachhaltig.</span>
+        </div>
+        <div class="test-controls">
+          <div class="test-title">Testphase: Tagesanzahl simulieren</div>
+          <div class="test-row">
+            <label for="day-offset">Tag‑Offset</label>
+            <input id="day-offset" type="number" min="-30" max="30" step="1" value="0" />
+            <button id="apply-offset" class="btn ghost" type="button">Anwenden</button>
+          </div>
+          <div class="soft-note" id="simulated-date">Heute: --</div>
         </div>
         <div class="stats">
           <div class="stat">
@@ -74,6 +90,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
+      <button id="reset-app" class="btn ghost" type="button">Reset</button>
     </footer>
 
     <script src="js/app.js"></script>

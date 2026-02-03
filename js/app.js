@@ -217,22 +217,79 @@ const renderToday = (state) => {
     state.todayTasks.forEach((task) => {
       const li = document.createElement("li");
       const label = document.createElement("label");
-      const checkbox = document.createElement("input");
+      label.className = "neon-checkbox";
 
+      const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.checked = task.done;
       checkbox.addEventListener("change", () => toggleTask(task.id));
 
-      const span = document.createElement("span");
-      span.textContent = task.label;
-      if (task.done) span.classList.add("done");
+      const frame = document.createElement("div");
+      frame.className = "neon-checkbox__frame";
+
+      const box = document.createElement("div");
+      box.className = "neon-checkbox__box";
+
+      const checkContainer = document.createElement("div");
+      checkContainer.className = "neon-checkbox__check-container";
+
+      const check = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      check.setAttribute("class", "neon-checkbox__check");
+      check.setAttribute("viewBox", "0 0 24 24");
+      const checkPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      checkPath.setAttribute("d", "M5 12l5 5L19 7");
+      check.appendChild(checkPath);
+
+      const glow = document.createElement("div");
+      glow.className = "neon-checkbox__glow";
+
+      const borders = document.createElement("div");
+      borders.className = "neon-checkbox__borders";
+      for (let i = 0; i < 4; i += 1) {
+        borders.appendChild(document.createElement("span"));
+      }
+
+      const particles = document.createElement("div");
+      particles.className = "neon-checkbox__particles";
+      for (let i = 0; i < 12; i += 1) {
+        particles.appendChild(document.createElement("span"));
+      }
+
+      const rings = document.createElement("div");
+      rings.className = "neon-checkbox__rings";
+      for (let i = 0; i < 3; i += 1) {
+        const ring = document.createElement("div");
+        ring.className = "ring";
+        rings.appendChild(ring);
+      }
+
+      const sparks = document.createElement("div");
+      sparks.className = "neon-checkbox__sparks";
+      for (let i = 0; i < 4; i += 1) {
+        sparks.appendChild(document.createElement("span"));
+      }
+
+      checkContainer.appendChild(check);
+      frame.appendChild(box);
+      frame.appendChild(checkContainer);
+      frame.appendChild(glow);
+      frame.appendChild(borders);
+      frame.appendChild(particles);
+      frame.appendChild(rings);
+      frame.appendChild(sparks);
+
+      const text = document.createElement("span");
+      text.className = "task-text";
+      text.textContent = task.label;
+      if (task.done) text.classList.add("done");
 
       const badge = document.createElement("span");
       badge.className = `difficulty ${task.difficulty}`;
       badge.textContent = difficultyLabel(task.difficulty);
 
       label.appendChild(checkbox);
-      label.appendChild(span);
+      label.appendChild(frame);
+      label.appendChild(text);
       li.appendChild(label);
       li.appendChild(badge);
       todayList.appendChild(li);

@@ -401,6 +401,11 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   min-width: 0;
 }
 
+.task-text.rest-day {
+  font-style: italic;
+  color: var(--muted);
+}
+
 /* From Uiverse.io by 00Kubi */
 .neon-checkbox {
   --primary: #00ffaa;

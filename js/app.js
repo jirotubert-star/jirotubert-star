@@ -83,6 +83,7 @@ const loadState = () => {
       ...task,
       difficulty: task.difficulty || "medium",
       doneAt: task.doneAt || null,
+      isRestDay: task.isRestDay || false,
     }));
     normalized.completedDays = normalized.completedDays || {};
     normalized.weeklyPlans = normalized.weeklyPlans || {};
@@ -193,11 +194,12 @@ const ensureTodayTasks = (state) => {
         if (!goal) return null;
         const plan = getPlanForGoal(state, goal.id);
         const entry = plan[weekdayKey];
-        if (planHasAnyActive(plan) && entry && !entry.active) return null;
-        const label = entry && entry.active && entry.text ? entry.text : goal.title;
+        const hasActivePlan = planHasAnyActive(plan);
+        const label = getLabelForToday(goal, entry, hasActivePlan);
         return {
           ...task,
           label,
+          isRestDay: hasActivePlan && entry && !entry.active,
           date: today,
           done: false,
           doneAt: null,
@@ -211,12 +213,14 @@ const ensureTodayTasks = (state) => {
     const firstGoal = state.goals[0];
     const plan = getPlanForGoal(state, firstGoal.id);
     const entry = plan[weekdayKey];
-    if (planHasAnyActive(plan) && entry && !entry.active) return;
+    const hasActivePlan = planHasAnyActive(plan);
+    const label = getLabelForToday(firstGoal, entry, hasActivePlan);
     state.todayTasks.push({
       id: crypto.randomUUID(),
       goalId: firstGoal.id,
-      label: entry && entry.active && entry.text ? entry.text : firstGoal.title,
+      label,
       difficulty: firstGoal.difficulty,
+      isRestDay: hasActivePlan && entry && !entry.active,
       done: false,
       doneAt: null,
       date: today,
@@ -274,6 +278,7 @@ const renderToday = (state) => {
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.checked = task.done;
+      checkbox.disabled = task.isRestDay;
 
       const frame = document.createElement("div");
       frame.className = "neon-checkbox__frame";
@@ -333,6 +338,7 @@ const renderToday = (state) => {
       text.className = "task-text";
       text.textContent = task.label;
       if (task.done) text.classList.add("done");
+      if (task.isRestDay) text.classList.add("rest-day");
 
       const badge = document.createElement("span");
       badge.className = `difficulty ${task.difficulty}`;
@@ -344,7 +350,9 @@ const renderToday = (state) => {
       li.appendChild(label);
       li.appendChild(badge);
       li.dataset.taskId = task.id;
-      checkbox.addEventListener("change", () => toggleTask(task.id, text, label));
+      if (!task.isRestDay) {
+        checkbox.addEventListener("change", () => toggleTask(task.id, text, label));
+      }
       todayList.appendChild(li);
     });
   }
@@ -434,7 +442,8 @@ const toggleTask = (taskId, textEl, labelEl) => {
   }
 
   const today = todayISO(state.simulationOffsetDays);
-  const allDone = state.todayTasks.length > 0 && state.todayTasks.every((t) => t.done);
+  const actionable = state.todayTasks.filter((t) => !t.isRestDay);
+  const allDone = actionable.length > 0 && actionable.every((t) => t.done);
   if (allDone) {
     state.completedDays[today] = true;
   } else {
@@ -470,12 +479,13 @@ const addTaskFromGoal = (goalId) => {
   const weekdayKey = weekdayKeyFromISO(today);
   const plan = getPlanForGoal(state, goal.id);
   const entry = plan[weekdayKey];
-  if (planHasAnyActive(plan) && entry && !entry.active) return;
+  const hasActivePlan = planHasAnyActive(plan);
   state.todayTasks.push({
     id: crypto.randomUUID(),
     goalId: goal.id,
-    label: entry && entry.active && entry.text ? entry.text : goal.title,
+    label: getLabelForToday(goal, entry, hasActivePlan),
     difficulty: goal.difficulty,
+    isRestDay: hasActivePlan && entry && !entry.active,
     done: false,
     doneAt: null,
     date: today,
@@ -522,6 +532,16 @@ const getPlanForGoal = (state, goalId) => {
 
 const planHasAnyActive = (plan) =>
   WEEKDAYS.some((day) => plan[day.key]?.active);
+
+const getLabelForToday = (goal, planEntry, hasActivePlan) => {
+  if (hasActivePlan && planEntry && !planEntry.active) {
+    return `Rest Day (${goal.title})`;
+  }
+  if (planEntry && planEntry.active && planEntry.text) {
+    return planEntry.text;
+  }
+  return goal.title;
+};
 
 const renderWeeklyPlan = (state) => {
   if (!planGoalSelect || !planGrid || !planHint) return;

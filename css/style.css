@@ -141,11 +141,13 @@ body.theme-dark .theme-toggle__track {
   transition: transform 0.2s ease;
 }
 
-.theme-toggle__label input {
-  display: none;
+.theme-toggle__input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
 
-.theme-toggle__label:has(:checked) {
+.theme-toggle__label.is-checked {
   transform: scaleX(-1);
 }
 

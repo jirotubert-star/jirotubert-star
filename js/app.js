@@ -105,6 +105,7 @@ const applyOffsetBtn = document.getElementById("apply-offset");
 const simulatedDateEl = document.getElementById("simulated-date");
 const resetBtn = document.getElementById("reset-app");
 const themeSwitch = document.getElementById("theme-switch");
+const themeLabel = document.getElementById("theme-label");
 const navItems = document.querySelectorAll(".bottom-nav .nav-item");
 const sections = document.querySelectorAll("[data-section]");
 let currentTab = "today";
@@ -451,6 +452,7 @@ const applyTheme = (mode) => {
   document.body.classList.toggle("theme-dark", mode === "dark");
   localStorage.setItem("onestep_theme", mode);
   if (themeSwitch) themeSwitch.checked = mode === "dark";
+  if (themeLabel) themeLabel.classList.toggle("is-checked", mode === "dark");
 };
 
 const setActiveTab = (target) => {

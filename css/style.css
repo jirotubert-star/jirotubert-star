@@ -67,6 +67,26 @@ body {
   animation: fadeUp 450ms ease both;
 }
 
+.panel h3 {
+  margin: 10px 0 6px;
+  font-size: 1.05rem;
+}
+
+.info-block {
+  padding: 12px 0;
+  border-bottom: 1px solid #efe8dd;
+}
+
+.info-block:last-child {
+  border-bottom: none;
+}
+
+.info-list {
+  margin: 8px 0 0 18px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .section-hidden {
   display: none;
 }
@@ -648,7 +668,7 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   right: 0;
   bottom: 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 6px;
   padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
   background: rgba(250, 247, 241, 0.92);

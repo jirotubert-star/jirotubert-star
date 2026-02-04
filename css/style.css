@@ -139,8 +139,10 @@ body.theme-dark .theme-toggle__track {
   cursor: pointer;
   overflow: hidden;
   transition: transform 0.2s ease;
+  position: relative;
 }
 
+.theme-toggle__label input,
 .theme-toggle__input {
   position: absolute;
   opacity: 0;

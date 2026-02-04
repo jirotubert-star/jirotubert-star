@@ -106,6 +106,7 @@ const simulatedDateEl = document.getElementById("simulated-date");
 const resetBtn = document.getElementById("reset-app");
 const themeSwitch = document.getElementById("theme-switch");
 const themeLabel = document.getElementById("theme-label");
+const themeToggle = document.querySelector(".theme-toggle");
 const navItems = document.querySelectorAll(".bottom-nav .nav-item");
 const sections = document.querySelectorAll("[data-section]");
 let currentTab = "today";
@@ -521,6 +522,19 @@ const init = () => {
     if (themeSwitch) {
       themeSwitch.addEventListener("change", () => {
         applyTheme(themeSwitch.checked ? "dark" : "light");
+      });
+    }
+    if (themeToggle && themeSwitch) {
+      themeToggle.addEventListener("click", (event) => {
+        if (event.target === themeSwitch) return;
+        const previous = themeSwitch.checked;
+        // Allow the default toggle if it happens, otherwise flip manually.
+        setTimeout(() => {
+          if (themeSwitch.checked === previous) {
+            themeSwitch.checked = !previous;
+          }
+          applyTheme(themeSwitch.checked ? "dark" : "light");
+        }, 0);
       });
     }
 

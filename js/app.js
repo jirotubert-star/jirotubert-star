@@ -277,7 +277,7 @@ const renderToday = (state) => {
 
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
-      checkbox.checked = task.done;
+      checkbox.checked = task.isRestDay ? true : task.done;
       checkbox.disabled = task.isRestDay;
 
       const frame = document.createElement("div");
@@ -337,7 +337,7 @@ const renderToday = (state) => {
       const text = document.createElement("span");
       text.className = "task-text";
       text.textContent = task.label;
-      if (task.done) text.classList.add("done");
+      if (task.done && !task.isRestDay) text.classList.add("done");
       if (task.isRestDay) text.classList.add("rest-day");
 
       const badge = document.createElement("span");

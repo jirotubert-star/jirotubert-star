@@ -104,8 +104,9 @@ const dayOffsetInput = document.getElementById("day-offset");
 const applyOffsetBtn = document.getElementById("apply-offset");
 const simulatedDateEl = document.getElementById("simulated-date");
 const resetBtn = document.getElementById("reset-app");
-const primaryColorInput = document.getElementById("primary-color");
-const secondaryColorInput = document.getElementById("secondary-color");
+const themeSwitch = document.getElementById("theme-switch");
+const themeLabel = document.getElementById("theme-label");
+const themeToggle = document.querySelector(".theme-toggle");
 const navItems = document.querySelectorAll(".bottom-nav .nav-item");
 const sections = document.querySelectorAll("[data-section]");
 let currentTab = "today";
@@ -448,13 +449,11 @@ const setSimulationOffset = (value) => {
 // ---------------------------
 let listenersBound = false;
 
-const applyColors = (primary, secondary) => {
-  if (primary) document.body.style.setProperty("--bg", primary);
-  if (secondary) document.body.style.setProperty("--text", secondary);
-  localStorage.setItem(
-    "onestep_colors",
-    JSON.stringify({ primary, secondary })
-  );
+const applyTheme = (mode) => {
+  document.body.classList.toggle("theme-dark", mode === "dark");
+  localStorage.setItem("onestep_theme", mode);
+  if (themeSwitch) themeSwitch.checked = mode === "dark";
+  if (themeLabel) themeLabel.classList.toggle("is-checked", mode === "dark");
 };
 
 const setActiveTab = (target) => {
@@ -485,17 +484,7 @@ const init = () => {
   saveState(state);
   renderAll(state);
   setActiveTab("today");
-  const storedColors = localStorage.getItem("onestep_colors");
-  if (storedColors) {
-    try {
-      const { primary, secondary } = JSON.parse(storedColors);
-      applyColors(primary, secondary);
-      if (primaryColorInput) primaryColorInput.value = primary || "#f3efe7";
-      if (secondaryColorInput) secondaryColorInput.value = secondary || "#1f2a2e";
-    } catch (err) {
-      console.warn("Farben konnten nicht geladen werden.", err);
-    }
-  }
+  applyTheme(localStorage.getItem("onestep_theme") || "light");
 
   if (!listenersBound) {
     goalForm.addEventListener("submit", (event) => {
@@ -530,14 +519,22 @@ const init = () => {
       btn.addEventListener("click", () => setActiveTab(btn.dataset.target));
     });
 
-    if (primaryColorInput) {
-      primaryColorInput.addEventListener("input", () => {
-        applyColors(primaryColorInput.value, secondaryColorInput?.value);
+    if (themeSwitch) {
+      themeSwitch.addEventListener("change", () => {
+        applyTheme(themeSwitch.checked ? "dark" : "light");
       });
     }
-    if (secondaryColorInput) {
-      secondaryColorInput.addEventListener("input", () => {
-        applyColors(primaryColorInput?.value, secondaryColorInput.value);
+    if (themeToggle && themeSwitch) {
+      themeToggle.addEventListener("click", (event) => {
+        if (event.target === themeSwitch) return;
+        const previous = themeSwitch.checked;
+        // Allow the default toggle if it happens, otherwise flip manually.
+        setTimeout(() => {
+          if (themeSwitch.checked === previous) {
+            themeSwitch.checked = !previous;
+          }
+          applyTheme(themeSwitch.checked ? "dark" : "light");
+        }, 0);
       });
     }
 

@@ -270,15 +270,17 @@ const renderToday = (state) => {
     empty.textContent = "Noch keine Tagesaufgaben – füge ein Ziel hinzu.";
     todayList.appendChild(empty);
   } else {
+    const today = todayISO(state.simulationOffsetDays);
     state.todayTasks.forEach((task) => {
+      const restDay = isRestDayForTask(state, task, today) || task.isRestDay;
       const li = document.createElement("li");
       const label = document.createElement("label");
       label.className = "neon-checkbox";
 
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
-      checkbox.checked = task.isRestDay ? true : task.done;
-      checkbox.disabled = task.isRestDay;
+      checkbox.checked = restDay ? true : task.done;
+      checkbox.disabled = restDay;
 
       const frame = document.createElement("div");
       frame.className = "neon-checkbox__frame";
@@ -337,8 +339,8 @@ const renderToday = (state) => {
       const text = document.createElement("span");
       text.className = "task-text";
       text.textContent = task.label;
-      if (task.done && !task.isRestDay) text.classList.add("done");
-      if (task.isRestDay) text.classList.add("rest-day");
+      if (task.done && !restDay) text.classList.add("done");
+      if (restDay) text.classList.add("rest-day");
 
       const badge = document.createElement("span");
       badge.className = `difficulty ${task.difficulty}`;
@@ -350,7 +352,7 @@ const renderToday = (state) => {
       li.appendChild(label);
       li.appendChild(badge);
       li.dataset.taskId = task.id;
-      if (!task.isRestDay) {
+      if (!restDay) {
         checkbox.addEventListener("change", () => toggleTask(task.id, text, label));
       }
       todayList.appendChild(li);
@@ -442,7 +444,9 @@ const toggleTask = (taskId, textEl, labelEl) => {
   }
 
   const today = todayISO(state.simulationOffsetDays);
-  const actionable = state.todayTasks.filter((t) => !t.isRestDay);
+  const actionable = state.todayTasks.filter(
+    (t) => !isRestDayForTask(state, t, today) && !t.isRestDay
+  );
   const allDone = actionable.length > 0 && actionable.every((t) => t.done);
   if (allDone) {
     state.completedDays[today] = true;
@@ -541,6 +545,16 @@ const getLabelForToday = (goal, planEntry, hasActivePlan) => {
     return planEntry.text;
   }
   return goal.title;
+};
+
+const isRestDayForTask = (state, task, isoDate) => {
+  const goal = state.goals.find((g) => g.id === task.goalId);
+  if (!goal) return false;
+  const plan = getPlanForGoal(state, goal.id);
+  if (!planHasAnyActive(plan)) return false;
+  const weekdayKey = weekdayKeyFromISO(isoDate);
+  const entry = plan[weekdayKey];
+  return !!(entry && !entry.active);
 };
 
 const renderWeeklyPlan = (state) => {

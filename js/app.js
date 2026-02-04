@@ -104,6 +104,7 @@ const dayOffsetInput = document.getElementById("day-offset");
 const applyOffsetBtn = document.getElementById("apply-offset");
 const simulatedDateEl = document.getElementById("simulated-date");
 const resetBtn = document.getElementById("reset-app");
+const themeSwitch = document.getElementById("theme-switch");
 const navItems = document.querySelectorAll(".bottom-nav .nav-item");
 const sections = document.querySelectorAll("[data-section]");
 let currentTab = "today";
@@ -446,6 +447,12 @@ const setSimulationOffset = (value) => {
 // ---------------------------
 let listenersBound = false;
 
+const applyTheme = (mode) => {
+  document.body.classList.toggle("theme-dark", mode === "dark");
+  localStorage.setItem("onestep_theme", mode);
+  if (themeSwitch) themeSwitch.checked = mode === "dark";
+};
+
 const setActiveTab = (target) => {
   currentTab = target || "today";
   navItems.forEach((btn) => {
@@ -474,6 +481,7 @@ const init = () => {
   saveState(state);
   renderAll(state);
   setActiveTab("today");
+  applyTheme(localStorage.getItem("onestep_theme") || "light");
 
   if (!listenersBound) {
     goalForm.addEventListener("submit", (event) => {
@@ -507,6 +515,12 @@ const init = () => {
     navItems.forEach((btn) => {
       btn.addEventListener("click", () => setActiveTab(btn.dataset.target));
     });
+
+    if (themeSwitch) {
+      themeSwitch.addEventListener("change", () => {
+        applyTheme(themeSwitch.checked ? "dark" : "light");
+      });
+    }
 
     const isInteractive = (target) =>
       target.closest("input, textarea, select, button, a");

@@ -39,6 +39,32 @@ body.theme-dark {
     var(--bg);
 }
 
+body.theme-dark .checklist li,
+body.theme-dark .goals li {
+  background: #f3f4f6;
+  border-color: #e2e4e8;
+  color: #1f2a2e;
+}
+
+body.theme-dark .checklist .done {
+  color: #66727a;
+}
+
+body.theme-dark .difficulty {
+  background: #e5f1ed;
+  color: #2f6f62;
+}
+
+body.theme-dark .difficulty.medium {
+  background: #efe9df;
+  color: #6b5a3a;
+}
+
+body.theme-dark .difficulty.hard {
+  background: #f0e3e0;
+  color: #7a3f35;
+}
+
 .app-shell {
   padding-bottom: 90px;
   touch-action: pan-y;

@@ -55,6 +55,7 @@ const defaultState = () => ({
   totalDone: 0,
   simulationOffsetDays: 0,
   completedDays: {},
+  weeklyPlans: {},
 });
 
 const loadState = () => {
@@ -77,6 +78,7 @@ const loadState = () => {
       doneAt: task.doneAt || null,
     }));
     normalized.completedDays = normalized.completedDays || {};
+    normalized.weeklyPlans = normalized.weeklyPlans || {};
     return normalized;
   } catch (err) {
     console.warn("State konnte nicht geladen werden, zurücksetzen.", err);
@@ -110,6 +112,9 @@ const dayOffsetInput = document.getElementById("day-offset");
 const applyOffsetBtn = document.getElementById("apply-offset");
 const simulatedDateEl = document.getElementById("simulated-date");
 const resetBtn = document.getElementById("reset-app");
+const planGoalSelect = document.getElementById("plan-goal");
+const planGrid = document.getElementById("plan-grid");
+const planHint = document.getElementById("plan-hint");
 const navItems = document.querySelectorAll(".bottom-nav .nav-item");
 const sections = document.querySelectorAll("[data-section]");
 let currentTab = "today";
@@ -352,6 +357,7 @@ const renderAll = (state) => {
   renderUnlock(state);
   renderToday(state);
   renderGoals(state);
+  renderWeeklyPlan(state);
   renderProgress(state);
   renderCalendar(state);
   renderSimulatedDate(state);
@@ -457,6 +463,109 @@ const setSimulationOffset = (value) => {
   init();
 };
 
+const WEEKDAYS = [
+  { key: "mon", label: "Montag" },
+  { key: "tue", label: "Dienstag" },
+  { key: "wed", label: "Mittwoch" },
+  { key: "thu", label: "Donnerstag" },
+  { key: "fri", label: "Freitag" },
+  { key: "sat", label: "Samstag" },
+  { key: "sun", label: "Sonntag" },
+];
+
+const getPlanForGoal = (state, goalId) => {
+  const plan = state.weeklyPlans[goalId];
+  if (plan) return plan;
+  const defaults = {};
+  WEEKDAYS.forEach((d) => {
+    defaults[d.key] = { active: false, text: "" };
+  });
+  return defaults;
+};
+
+const renderWeeklyPlan = (state) => {
+  if (!planGoalSelect || !planGrid || !planHint) return;
+
+  const previousSelection = planGoalSelect.value;
+  planGoalSelect.innerHTML = "";
+  if (state.goals.length === 0) {
+    const option = document.createElement("option");
+    option.textContent = "Zuerst ein Ziel anlegen";
+    option.value = "";
+    planGoalSelect.appendChild(option);
+    planGrid.innerHTML = "";
+    planHint.textContent = "";
+    return;
+  }
+
+  state.goals.forEach((goal) => {
+    const option = document.createElement("option");
+    option.value = goal.id;
+    option.textContent = goal.title;
+    planGoalSelect.appendChild(option);
+  });
+
+  const selectedGoalId = previousSelection || state.goals[0].id;
+  planGoalSelect.value = selectedGoalId;
+
+  const plan = getPlanForGoal(state, selectedGoalId);
+  planGrid.innerHTML = "";
+
+  let activeCount = 0;
+  WEEKDAYS.forEach((day) => {
+    const row = document.createElement("div");
+    row.className = "plan-row";
+
+    const label = document.createElement("div");
+    label.textContent = day.label;
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = plan[day.key]?.active || false;
+    if (checkbox.checked) activeCount += 1;
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = "z. B. 5 km Lauf / Schwimmen / Rest Day";
+    input.value = plan[day.key]?.text || "";
+    input.disabled = !checkbox.checked;
+
+    checkbox.addEventListener("change", () => {
+      const stateNow = loadState();
+      const currentPlan = getPlanForGoal(stateNow, selectedGoalId);
+      currentPlan[day.key] = {
+        active: checkbox.checked,
+        text: checkbox.checked ? input.value : "",
+      };
+      stateNow.weeklyPlans[selectedGoalId] = currentPlan;
+      saveState(stateNow);
+      renderWeeklyPlan(stateNow);
+    });
+
+    input.addEventListener("input", () => {
+      const stateNow = loadState();
+      const currentPlan = getPlanForGoal(stateNow, selectedGoalId);
+      currentPlan[day.key] = {
+        active: checkbox.checked,
+        text: input.value,
+      };
+      stateNow.weeklyPlans[selectedGoalId] = currentPlan;
+      saveState(stateNow);
+    });
+
+    row.appendChild(label);
+    row.appendChild(checkbox);
+    row.appendChild(input);
+    planGrid.appendChild(row);
+  });
+
+  if (activeCount < 4) {
+    planHint.textContent = `Bitte mindestens 4 Tage eintragen (aktuell ${activeCount}).`;
+  } else {
+    planHint.textContent = `Woche geplant: ${activeCount} Tage.`;
+  }
+};
+
 // ---------------------------
 // Initialisierung
 // ---------------------------
@@ -535,6 +644,12 @@ const init = () => {
     navItems.forEach((btn) => {
       btn.addEventListener("click", () => setActiveTab(btn.dataset.target));
     });
+
+    if (planGoalSelect) {
+      planGoalSelect.addEventListener("change", () => {
+        renderWeeklyPlan(loadState());
+      });
+    }
 
     const isInteractive = (target) =>
       target.closest("input, textarea, select, button, a");

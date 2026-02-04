@@ -87,6 +87,59 @@ body {
   line-height: 1.6;
 }
 
+.weekly-plan {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #efe8dd;
+}
+
+.plan-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.plan-controls select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d9d2c6;
+  background: #fff;
+}
+
+.plan-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.plan-row {
+  display: grid;
+  grid-template-columns: 110px 28px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #ece7df;
+}
+
+.plan-row input[type="text"] {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d9d2c6;
+  font-size: 0.95rem;
+}
+
+.plan-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
+.plan-hint {
+  margin-top: 8px;
+}
+
 .section-hidden {
   display: none;
 }
@@ -847,6 +900,16 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   }
   .goal-form select {
     max-width: none;
+  }
+  .plan-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .plan-row {
+    grid-template-columns: 1fr;
+  }
+  .plan-row input[type="text"] {
+    width: 100%;
   }
   .unlock-row {
     flex-direction: column;

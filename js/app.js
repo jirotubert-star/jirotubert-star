@@ -32,6 +32,13 @@ const todayISO = (offsetDays = 0) => {
   return date.toISOString().slice(0, 10); // YYYY-MM-DD
 };
 
+const weekdayKeyFromISO = (iso) => {
+  const date = new Date(iso + "T00:00:00");
+  const weekday = date.getDay(); // 0=Sun
+  const keys = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  return keys[weekday];
+};
+
 const daysBetween = (startISO, endISO) => {
   // Berechnet volle Tage zwischen zwei ISO-Daten.
   // Wir normalisieren auf Mitternacht, damit Tageswechsel zuverlässig sind.
@@ -153,7 +160,17 @@ const shouldUnlockNewTask = (state) => {
 const pickTaskFromGoals = (state) => {
   // Wählt ein Goal aus, das heute noch nicht in der Checkliste ist.
   const usedGoalIds = new Set(state.todayTasks.map((t) => t.goalId));
-  const candidates = state.goals.filter((g) => !usedGoalIds.has(g.id));
+  const today = todayISO(state.simulationOffsetDays);
+  const weekdayKey = weekdayKeyFromISO(today);
+  const candidates = state.goals.filter((g) => {
+    if (usedGoalIds.has(g.id)) return false;
+    const plan = getPlanForGoal(state, g.id);
+    if (!planHasAnyActive(plan)) return true;
+    const entry = plan[weekdayKey];
+    if (!entry) return true;
+    if (!entry.active) return false;
+    return true;
+  });
   if (candidates.length === 0) return null;
 
   // Zufällige Auswahl, damit die Erfahrung abwechslungsreich bleibt.
@@ -165,24 +182,40 @@ const ensureTodayTasks = (state) => {
   // Wenn das Datum wechselt, bleiben die Tasks sichtbar,
   // aber wir markieren sie als neue Tagesliste.
   const today = todayISO(state.simulationOffsetDays);
+  const weekdayKey = weekdayKeyFromISO(today);
 
   // Wenn wir noch keine Tasks für heute haben, setzen wir das Datum neu.
   if (!state.todayTasks.length || state.todayTasks[0].date !== today) {
-    state.todayTasks = state.todayTasks.map((task) => ({
-      ...task,
-      date: today,
-      done: false,
-      doneAt: null,
-    }));
+    const goalMap = new Map(state.goals.map((g) => [g.id, g]));
+    state.todayTasks = state.todayTasks
+      .map((task) => {
+        const goal = goalMap.get(task.goalId);
+        if (!goal) return null;
+        const plan = getPlanForGoal(state, goal.id);
+        const entry = plan[weekdayKey];
+        if (planHasAnyActive(plan) && entry && !entry.active) return null;
+        const label = entry && entry.active && entry.text ? entry.text : goal.title;
+        return {
+          ...task,
+          label,
+          date: today,
+          done: false,
+          doneAt: null,
+        };
+      })
+      .filter(Boolean);
   }
 
   // Erster Start: genau eine Aufgabe aus Zielen hinzufügen.
   if (state.goals.length > 0 && state.todayTasks.length === 0) {
     const firstGoal = state.goals[0];
+    const plan = getPlanForGoal(state, firstGoal.id);
+    const entry = plan[weekdayKey];
+    if (planHasAnyActive(plan) && entry && !entry.active) return;
     state.todayTasks.push({
       id: crypto.randomUUID(),
       goalId: firstGoal.id,
-      label: firstGoal.title,
+      label: entry && entry.active && entry.text ? entry.text : firstGoal.title,
       difficulty: firstGoal.difficulty,
       done: false,
       doneAt: null,
@@ -434,10 +467,14 @@ const addTaskFromGoal = (goalId) => {
   if (!goal) return;
 
   const today = todayISO(state.simulationOffsetDays);
+  const weekdayKey = weekdayKeyFromISO(today);
+  const plan = getPlanForGoal(state, goal.id);
+  const entry = plan[weekdayKey];
+  if (planHasAnyActive(plan) && entry && !entry.active) return;
   state.todayTasks.push({
     id: crypto.randomUUID(),
     goalId: goal.id,
-    label: goal.title,
+    label: entry && entry.active && entry.text ? entry.text : goal.title,
     difficulty: goal.difficulty,
     done: false,
     doneAt: null,
@@ -482,6 +519,9 @@ const getPlanForGoal = (state, goalId) => {
   });
   return defaults;
 };
+
+const planHasAnyActive = (plan) =>
+  WEEKDAYS.some((day) => plan[day.key]?.active);
 
 const renderWeeklyPlan = (state) => {
   if (!planGoalSelect || !planGrid || !planHint) return;

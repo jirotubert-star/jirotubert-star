@@ -54,6 +54,7 @@ const defaultState = () => ({
   streak: 0,
   totalDone: 0,
   simulationOffsetDays: 0,
+  completedDays: {},
 });
 
 const loadState = () => {
@@ -75,6 +76,7 @@ const loadState = () => {
       difficulty: task.difficulty || "medium",
       doneAt: task.doneAt || null,
     }));
+    normalized.completedDays = normalized.completedDays || {};
     return normalized;
   } catch (err) {
     console.warn("State konnte nicht geladen werden, zurücksetzen.", err);
@@ -100,6 +102,10 @@ const goalDifficulty = document.getElementById("goal-difficulty");
 const streakEl = document.getElementById("streak");
 const totalDoneEl = document.getElementById("total-done");
 const motivationEl = document.getElementById("motivation");
+const calPrev = document.getElementById("cal-prev");
+const calNext = document.getElementById("cal-next");
+const calTitle = document.getElementById("cal-title");
+const calGrid = document.getElementById("cal-grid");
 const dayOffsetInput = document.getElementById("day-offset");
 const applyOffsetBtn = document.getElementById("apply-offset");
 const simulatedDateEl = document.getElementById("simulated-date");
@@ -347,6 +353,7 @@ const renderAll = (state) => {
   renderToday(state);
   renderGoals(state);
   renderProgress(state);
+  renderCalendar(state);
   renderSimulatedDate(state);
   setActiveTab(currentTab);
 };
@@ -387,6 +394,14 @@ const toggleTask = (taskId, textEl, labelEl) => {
     }
   }
 
+  const today = todayISO(state.simulationOffsetDays);
+  const allDone = state.todayTasks.length > 0 && state.todayTasks.every((t) => t.done);
+  if (allDone) {
+    state.completedDays[today] = true;
+  } else {
+    delete state.completedDays[today];
+  }
+
   saveState(state);
   if (textEl) {
     textEl.classList.toggle("done", task.done);
@@ -404,6 +419,7 @@ const toggleTask = (taskId, textEl, labelEl) => {
     }
   }
   renderProgress(state);
+  renderCalendar(state);
 };
 
 const addTaskFromGoal = (goalId) => {
@@ -445,6 +461,7 @@ const setSimulationOffset = (value) => {
 // Initialisierung
 // ---------------------------
 let listenersBound = false;
+let calendarOffset = 0;
 
 const setActiveTab = (target) => {
   currentTab = target || "today";
@@ -503,6 +520,17 @@ const init = () => {
       dayOffsetInput.value = 0;
       renderAll(fresh);
     });
+
+    if (calPrev && calNext) {
+      calPrev.addEventListener("click", () => {
+        calendarOffset -= 1;
+        renderCalendar(loadState());
+      });
+      calNext.addEventListener("click", () => {
+        calendarOffset += 1;
+        renderCalendar(loadState());
+      });
+    }
 
     navItems.forEach((btn) => {
       btn.addEventListener("click", () => setActiveTab(btn.dataset.target));
@@ -624,6 +652,47 @@ function renderUnlock(state) {
 function renderSimulatedDate(state) {
   dayOffsetInput.value = state.simulationOffsetDays;
   simulatedDateEl.textContent = `Heute: ${todayISO(state.simulationOffsetDays)}`;
+}
+
+function renderCalendar(state) {
+  if (!calGrid || !calTitle) return;
+
+  const base = new Date();
+  base.setDate(1);
+  base.setMonth(base.getMonth() + calendarOffset);
+
+  const year = base.getFullYear();
+  const month = base.getMonth();
+  const monthName = base.toLocaleDateString("de-DE", { month: "long", year: "numeric" });
+  calTitle.textContent = monthName;
+
+  const firstDay = new Date(year, month, 1);
+  const startWeekday = (firstDay.getDay() + 6) % 7; // Monday=0
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  calGrid.innerHTML = "";
+  const headers = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+  headers.forEach((label) => {
+    const cell = document.createElement("div");
+    cell.className = "calendar-cell header";
+    cell.textContent = label;
+    calGrid.appendChild(cell);
+  });
+
+  for (let i = 0; i < startWeekday; i += 1) {
+    const filler = document.createElement("div");
+    filler.className = "calendar-cell filler";
+    calGrid.appendChild(filler);
+  }
+
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const cell = document.createElement("div");
+    cell.className = "calendar-cell";
+    const iso = new Date(year, month, day).toISOString().slice(0, 10);
+    if (state.completedDays?.[iso]) cell.classList.add("done");
+    cell.textContent = String(day);
+    calGrid.appendChild(cell);
+  }
 }
 
 function difficultyLabel(value) {

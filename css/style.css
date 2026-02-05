@@ -194,6 +194,7 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   border-radius: 12px;
   background: #ffffff;
   border: 1px solid #ece7df;
+  flex-wrap: wrap;
 }
 
 .goal-title {
@@ -217,12 +218,18 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   border-radius: 8px;
   border: 1px solid #d9d2c6;
   font-size: 0.95rem;
+  width: 100%;
 }
 
 .goal-edit-save,
 .goal-edit-cancel {
   padding: 6px 10px;
   font-size: 0.85rem;
+}
+
+.goals li .goal-edit-save,
+.goals li .goal-edit-cancel {
+  flex: 0 0 auto;
 }
 
 .checklist label {

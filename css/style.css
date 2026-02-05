@@ -199,6 +199,9 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
 .goal-title {
   flex: 1;
   min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .goal-edit {
@@ -912,10 +915,13 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
     flex-direction: column;
     align-items: flex-start;
   }
-  .checklist li,
-  .goals li {
+  .checklist li {
     flex-direction: column;
     align-items: flex-start;
+  }
+  .goals li {
+    flex-direction: row;
+    align-items: center;
   }
   .difficulty {
     align-self: flex-start;

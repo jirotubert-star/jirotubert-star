@@ -207,6 +207,7 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
 .goal-edit {
   padding: 6px 10px;
   font-size: 0.85rem;
+  min-height: 28px;
 }
 
 .goal-edit-input {
@@ -412,6 +413,9 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   font-size: 0.75rem;
   background: #e7f1ee;
   color: #2f6f62;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .difficulty.medium {

@@ -77,11 +77,11 @@ const loadState = () => {
     };
     normalized.goals = normalized.goals.map((goal) => ({
       ...goal,
-      difficulty: goal.difficulty || "medium",
+      difficulty: goal.difficulty || "noon",
     }));
     normalized.todayTasks = normalized.todayTasks.map((task) => ({
       ...task,
-      difficulty: task.difficulty || "medium",
+      difficulty: task.difficulty || "noon",
       doneAt: task.doneAt || null,
       isRestDay: task.isRestDay || false,
     }));
@@ -271,7 +271,14 @@ const renderToday = (state) => {
     todayList.appendChild(empty);
   } else {
     const today = todayISO(state.simulationOffsetDays);
-    state.todayTasks.forEach((task) => {
+    const order = { morning: 0, noon: 1, evening: 2 };
+    const sortedTasks = [...state.todayTasks].sort((a, b) => {
+      const aOrder = order[a.difficulty] ?? 3;
+      const bOrder = order[b.difficulty] ?? 3;
+      if (aOrder !== bOrder) return aOrder - bOrder;
+      return a.label.localeCompare(b.label, "de");
+    });
+    sortedTasks.forEach((task) => {
       const restDay = isRestDayForTask(state, task, today) || task.isRestDay;
       const li = document.createElement("li");
       const label = document.createElement("label");
@@ -954,9 +961,9 @@ function renderCalendar(state) {
 }
 
 function difficultyLabel(value) {
-  if (value === "easy") return "Einfach";
-  if (value === "hard") return "Schwer";
-  return "Mittel";
+  if (value === "morning") return "Morgens";
+  if (value === "evening") return "Abends";
+  return "Mittags";
 }
 
 init();

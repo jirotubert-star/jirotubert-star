@@ -425,12 +425,12 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   align-items: center;
 }
 
-.difficulty.medium {
+.difficulty.noon {
   background: #efe9df;
   color: #6b5a3a;
 }
 
-.difficulty.hard {
+.difficulty.evening {
   background: #f0e3e0;
   color: #7a3f35;
 }

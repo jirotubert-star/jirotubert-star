@@ -378,11 +378,20 @@ const renderGoals = (state) => {
     if (activeGoalIds.has(goal.id)) li.classList.add("active-goal");
     const title = document.createElement("span");
     title.textContent = goal.title;
+    title.className = "goal-title";
+
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.className = "btn ghost goal-edit";
+    editBtn.textContent = "Bearbeiten";
+    editBtn.addEventListener("click", () => startEditGoal(goal.id, goal.title));
+
     const badge = document.createElement("span");
     badge.className = `difficulty ${goal.difficulty}`;
     badge.textContent = difficultyLabel(goal.difficulty);
     li.appendChild(title);
     li.appendChild(badge);
+    li.appendChild(editBtn);
     goalsList.appendChild(li);
   });
 };
@@ -512,6 +521,31 @@ const setSimulationOffset = (value) => {
   state.simulationOffsetDays = value;
   saveState(state);
   init();
+};
+
+const startEditGoal = (goalId, currentTitle) => {
+  const newTitle = window.prompt("Ziel bearbeiten:", currentTitle);
+  if (!newTitle) return;
+  const trimmed = newTitle.trim();
+  if (!trimmed) return;
+
+  const state = loadState();
+  const goal = state.goals.find((g) => g.id === goalId);
+  if (!goal) return;
+
+  const oldTitle = goal.title;
+  goal.title = trimmed;
+
+  // Update today's tasks only if they still use the old goal title
+  state.todayTasks = state.todayTasks.map((task) => {
+    if (task.goalId !== goalId) return task;
+    const shouldUpdate = task.label === oldTitle;
+    if (!shouldUpdate) return task;
+    return { ...task, label: trimmed };
+  });
+
+  saveState(state);
+  renderAll(state);
 };
 
 const WEEKDAYS = [

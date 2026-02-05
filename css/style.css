@@ -206,6 +206,21 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   font-size: 0.85rem;
 }
 
+.goal-edit-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d9d2c6;
+  font-size: 0.95rem;
+}
+
+.goal-edit-save,
+.goal-edit-cancel {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+
 .checklist label {
   display: flex;
   align-items: center;

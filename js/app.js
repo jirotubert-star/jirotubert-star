@@ -380,18 +380,42 @@ const renderGoals = (state) => {
     title.textContent = goal.title;
     title.className = "goal-title";
 
-    const editBtn = document.createElement("button");
-    editBtn.type = "button";
-    editBtn.className = "btn ghost goal-edit";
-    editBtn.textContent = "Bearbeiten";
-    editBtn.addEventListener("click", () => startEditGoal(goal.id, goal.title));
-
     const badge = document.createElement("span");
     badge.className = `difficulty ${goal.difficulty}`;
     badge.textContent = difficultyLabel(goal.difficulty);
-    li.appendChild(title);
-    li.appendChild(badge);
-    li.appendChild(editBtn);
+
+    if (editingGoalId === goal.id) {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.value = goal.title;
+      input.className = "goal-edit-input";
+
+      const saveBtn = document.createElement("button");
+      saveBtn.type = "button";
+      saveBtn.className = "btn goal-edit-save";
+      saveBtn.textContent = "Speichern";
+      saveBtn.addEventListener("click", () => finishEditGoal(goal.id, input.value));
+
+      const cancelBtn = document.createElement("button");
+      cancelBtn.type = "button";
+      cancelBtn.className = "btn ghost goal-edit-cancel";
+      cancelBtn.textContent = "Abbrechen";
+      cancelBtn.addEventListener("click", () => cancelEditGoal());
+
+      li.appendChild(input);
+      li.appendChild(saveBtn);
+      li.appendChild(cancelBtn);
+    } else {
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.className = "btn ghost goal-edit";
+      editBtn.textContent = "Bearbeiten";
+      editBtn.addEventListener("click", () => startEditGoal(goal.id));
+
+      li.appendChild(title);
+      li.appendChild(badge);
+      li.appendChild(editBtn);
+    }
     goalsList.appendChild(li);
   });
 };
@@ -523,10 +547,20 @@ const setSimulationOffset = (value) => {
   init();
 };
 
-const startEditGoal = (goalId, currentTitle) => {
-  const newTitle = window.prompt("Ziel bearbeiten:", currentTitle);
-  if (!newTitle) return;
-  const trimmed = newTitle.trim();
+let editingGoalId = null;
+
+const startEditGoal = (goalId) => {
+  editingGoalId = goalId;
+  renderGoals(loadState());
+};
+
+const cancelEditGoal = () => {
+  editingGoalId = null;
+  renderGoals(loadState());
+};
+
+const finishEditGoal = (goalId, newTitle) => {
+  const trimmed = (newTitle || "").trim();
   if (!trimmed) return;
 
   const state = loadState();
@@ -545,6 +579,7 @@ const startEditGoal = (goalId, currentTitle) => {
   });
 
   saveState(state);
+  editingGoalId = null;
   renderAll(state);
 };
 

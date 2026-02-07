@@ -278,17 +278,9 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   margin-bottom: 12px;
 }
 
-.quick-task input {
-  flex: 1;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #d9d2c6;
-  font-size: 1rem;
-  background: #fff;
-}
-
 .goal-form input,
-.goal-form select {
+.goal-form select,
+.quick-task input {
   flex: 1;
   padding: 10px 12px;
   border-radius: 10px;

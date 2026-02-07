@@ -63,6 +63,7 @@ const defaultState = () => ({
   totalDone: 0,
   simulationOffsetDays: 0,
   completedDays: {},
+  daySummary: {},
   weeklyPlans: {},
 });
 
@@ -88,6 +89,7 @@ const loadState = () => {
     }));
     normalized.quickTasks = normalized.quickTasks || {};
     normalized.completedDays = normalized.completedDays || {};
+    normalized.daySummary = normalized.daySummary || {};
     normalized.weeklyPlans = normalized.weeklyPlans || {};
     return normalized;
   } catch (err) {
@@ -116,6 +118,7 @@ const goalDifficulty = document.getElementById("goal-difficulty");
 const streakEl = document.getElementById("streak");
 const totalDoneEl = document.getElementById("total-done");
 const motivationEl = document.getElementById("motivation");
+const consistencyEl = document.getElementById("consistency");
 const calPrev = document.getElementById("cal-prev");
 const calNext = document.getElementById("cal-next");
 const calTitle = document.getElementById("cal-title");
@@ -522,6 +525,9 @@ const renderGoals = (state) => {
 const renderProgress = (state) => {
   streakEl.textContent = state.streak;
   totalDoneEl.textContent = state.totalDone;
+  if (consistencyEl) {
+    consistencyEl.textContent = `${computeWeeklyConsistency(state)}%`;
+  }
 
   const message = MOTIVATION[Math.floor(Math.random() * MOTIVATION.length)];
   motivationEl.textContent = message;
@@ -582,6 +588,7 @@ const toggleTask = (taskId, textEl, labelEl) => {
   const quickList = Object.values(state.quickTasks || {});
   const combined = actionable.concat(quickList);
   const allDone = combined.length > 0 && combined.every((t) => t.done);
+  state.daySummary[today] = { done: combined.filter((t) => t.done).length, total: combined.length };
   if (allDone) {
     state.completedDays[today] = true;
   } else {
@@ -675,6 +682,7 @@ const toggleQuickTask = (taskId, textEl, labelEl) => {
   const quickList = Object.values(state.quickTasks || {});
   const combined = actionable.concat(quickList);
   const allDone = combined.length > 0 && combined.every((t) => t.done);
+  state.daySummary[today] = { done: combined.filter((t) => t.done).length, total: combined.length };
   if (allDone) {
     state.completedDays[today] = true;
   } else {
@@ -792,6 +800,31 @@ const isRestDayForTask = (state, task, isoDate) => {
   return !!(entry && !entry.active);
 };
 
+const computeWeeklyConsistency = (state) => {
+  const today = todayISO(state.simulationOffsetDays);
+  const date = new Date(today + "T00:00:00");
+  const day = date.getDay();
+  const mondayOffset = (day + 6) % 7;
+  const monday = new Date(date);
+  monday.setDate(date.getDate() - mondayOffset);
+
+  let plannedDays = 0;
+  let completedDays = 0;
+
+  for (let i = 0; i < 7; i += 1) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    const iso = d.toISOString().slice(0, 10);
+    const summary = state.daySummary?.[iso];
+    if (!summary || summary.total === 0) continue;
+    plannedDays += 1;
+    if (summary.done >= summary.total) completedDays += 1;
+  }
+
+  if (plannedDays === 0) return 0;
+  return Math.round((completedDays / plannedDays) * 100);
+};
+
 const renderWeeklyPlan = (state) => {
   if (!planGoalSelect || !planGrid || !planHint) return;
 
@@ -890,6 +923,11 @@ const setActiveTab = (target) => {
     const isActive = section.dataset.section === currentTab;
     section.classList.toggle("section-hidden", !isActive);
     section.hidden = !isActive;
+    if (isActive) {
+      section.classList.remove("section-enter");
+      void section.offsetHeight;
+      section.classList.add("section-enter");
+    }
   });
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
@@ -1123,16 +1161,20 @@ function renderCalendar(state) {
     const cell = document.createElement("div");
     cell.className = "calendar-cell";
     const iso = new Date(year, month, day).toISOString().slice(0, 10);
-    if (state.completedDays?.[iso]) cell.classList.add("done");
+  const summary = state.daySummary?.[iso];
+  if (summary) {
+    cell.title = `${summary.done}/${summary.total} erledigt`;
+  }
+  if (state.completedDays?.[iso]) cell.classList.add("done");
     cell.textContent = String(day);
     calGrid.appendChild(cell);
   }
 }
 
 function difficultyLabel(value) {
-  if (value === "morning") return "Morgens";
-  if (value === "evening") return "Abends";
-  return "Mittags";
+  if (value === "morning") return "🌅 Morgens";
+  if (value === "evening") return "🌙 Abends";
+  return "☀️ Mittags";
 }
 
 init();

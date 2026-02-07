@@ -230,6 +230,13 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
 .goal-delete {
   padding: 6px 10px;
   font-size: 0.85rem;
+  color: #7a3f35;
+  border-color: #e4c7c1;
+}
+
+.goal-delete:hover {
+  background: #f7e9e6;
+  color: #6a332b;
 }
 
 .goal-delete:disabled {

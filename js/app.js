@@ -65,6 +65,8 @@ const defaultState = () => ({
   completedDays: {},
   daySummary: {},
   weeklyPlans: {},
+  tutorialStep: 1,
+  tutorialCompleted: false,
 });
 
 const loadState = () => {
@@ -91,6 +93,8 @@ const loadState = () => {
     normalized.completedDays = normalized.completedDays || {};
     normalized.daySummary = normalized.daySummary || {};
     normalized.weeklyPlans = normalized.weeklyPlans || {};
+    normalized.tutorialStep = normalized.tutorialStep || 1;
+    normalized.tutorialCompleted = normalized.tutorialCompleted || false;
     return normalized;
   } catch (err) {
     console.warn("State konnte nicht geladen werden, zurücksetzen.", err);
@@ -132,12 +136,18 @@ const planGrid = document.getElementById("plan-grid");
 const planHint = document.getElementById("plan-hint");
 const navItems = document.querySelectorAll(".bottom-nav .nav-item");
 const sections = document.querySelectorAll("[data-section]");
+const tutorialSection = document.getElementById("tutorial");
+const tutorialTitle = document.getElementById("tutorial-title");
+const tutorialStepLabel = document.getElementById("tutorial-step");
+const tutorialText = document.getElementById("tutorial-text");
 let currentTab = "today";
 const tabOrder = ["today", "goals", "progress", "info"];
 let touchStartX = null;
 let touchStartY = null;
 let touchStartTime = null;
 let trackingPointerId = null;
+let tutorialStepCache = 1;
+let tutorialCompletedCache = false;
 
 // ---------------------------
 // Motivationstexte
@@ -533,6 +543,63 @@ const renderProgress = (state) => {
   motivationEl.textContent = message;
 };
 
+const isTabAllowed = (target) => {
+  if (tutorialCompletedCache) return true;
+  if (tutorialStepCache <= 1) return target === "goals";
+  if (tutorialStepCache === 2) return target === "goals" || target === "today";
+  return true;
+};
+
+const applyTutorial = (state) => {
+  const today = todayISO(state.simulationOffsetDays);
+  const actionable = state.todayTasks.filter(
+    (t) => !isRestDayForTask(state, t, today) && !t.isRestDay
+  );
+  const quickList = Object.values(state.quickTasks || {});
+  const anyDone = actionable.some((t) => t.done) || quickList.some((t) => t.done);
+
+  if (!state.tutorialCompleted) {
+    if (state.tutorialStep === 1 && state.goals.length > 0) {
+      state.tutorialStep = 2;
+    }
+    if (state.tutorialStep === 2 && anyDone) {
+      state.tutorialStep = 3;
+    }
+    if (state.tutorialStep >= 3) {
+      state.tutorialCompleted = true;
+    }
+  }
+
+  tutorialStepCache = state.tutorialStep;
+  tutorialCompletedCache = state.tutorialCompleted;
+
+  if (tutorialSection) {
+    if (state.tutorialCompleted) {
+      tutorialSection.style.display = "none";
+    } else {
+      tutorialSection.style.display = "block";
+      if (tutorialTitle) tutorialTitle.textContent = "Start";
+      if (tutorialStepLabel) tutorialStepLabel.textContent = `Schritt ${state.tutorialStep}/3`;
+      if (tutorialText) {
+        if (state.tutorialStep === 1) {
+          tutorialText.textContent = "Lege dein erstes Ziel an. Danach erscheint deine erste Tagesaufgabe.";
+        } else if (state.tutorialStep === 2) {
+          tutorialText.textContent = "Hake heute eine Aufgabe ab. Danach werden alle Bereiche freigeschaltet.";
+        } else {
+          tutorialText.textContent = "Super! Alle Bereiche sind jetzt freigeschaltet.";
+        }
+      }
+    }
+  }
+
+  navItems.forEach((btn) => {
+    const allowed = isTabAllowed(btn.dataset.target);
+    btn.disabled = !allowed;
+  });
+
+  return state;
+};
+
 const renderAll = (state) => {
   renderWelcome(state);
   renderUnlock(state);
@@ -542,6 +609,8 @@ const renderAll = (state) => {
   renderProgress(state);
   renderCalendar(state);
   renderSimulatedDate(state);
+  const updated = applyTutorial(state);
+  saveState(updated);
   setActiveTab(currentTab);
 };
 
@@ -915,7 +984,8 @@ let listenersBound = false;
 let calendarOffset = 0;
 
 const setActiveTab = (target) => {
-  currentTab = target || "today";
+  const desired = target || "today";
+  currentTab = isTabAllowed(desired) ? desired : "goals";
   navItems.forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.target === currentTab);
   });
@@ -935,9 +1005,15 @@ const setActiveTab = (target) => {
 const goToAdjacentTab = (direction) => {
   const index = tabOrder.indexOf(currentTab);
   if (index === -1) return;
-  const nextIndex = direction === "next" ? index + 1 : index - 1;
-  if (nextIndex < 0 || nextIndex >= tabOrder.length) return;
-  setActiveTab(tabOrder[nextIndex]);
+  let nextIndex = direction === "next" ? index + 1 : index - 1;
+  while (nextIndex >= 0 && nextIndex < tabOrder.length) {
+    const candidate = tabOrder[nextIndex];
+    if (isTabAllowed(candidate)) {
+      setActiveTab(candidate);
+      return;
+    }
+    nextIndex = direction === "next" ? nextIndex + 1 : nextIndex - 1;
+  }
 };
 
 const init = () => {
@@ -946,7 +1022,7 @@ const init = () => {
   updateStreak(state);
   saveState(state);
   renderAll(state);
-  setActiveTab("today");
+  setActiveTab("goals");
 
   if (!listenersBound) {
     goalForm.addEventListener("submit", (event) => {
@@ -975,6 +1051,7 @@ const init = () => {
       goalInput.value = "";
       dayOffsetInput.value = 0;
       renderAll(fresh);
+      setActiveTab("goals");
     });
 
     if (calPrev && calNext) {

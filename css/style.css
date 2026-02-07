@@ -67,6 +67,15 @@ body {
   animation: fadeUp 450ms ease both;
 }
 
+.tutorial {
+  border: 1px dashed #cbd7d1;
+  background: linear-gradient(135deg, #f6f1e7, #f0f7f4);
+}
+
+.nav-item[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
 .section-enter {
   animation: slideIn 220ms ease both;
 }

@@ -407,10 +407,8 @@ const renderGoals = (state) => {
       removeBtn.type = "button";
       removeBtn.className = "btn ghost goal-delete";
       removeBtn.textContent = "Entfernen";
-      removeBtn.disabled = activeGoalIds.has(goal.id);
-      removeBtn.title = removeBtn.disabled
-        ? "Aktive Ziele können nicht entfernt werden."
-        : "Ziel entfernen";
+      removeBtn.disabled = false;
+      removeBtn.title = "Ziel entfernen";
       removeBtn.addEventListener("click", () => deleteGoal(goal.id));
 
       li.appendChild(input);
@@ -596,9 +594,6 @@ const finishEditGoal = (goalId, newTitle) => {
 
 const deleteGoal = (goalId) => {
   const state = loadState();
-  const isActive = state.todayTasks.some((task) => task.goalId === goalId);
-  if (isActive) return;
-
   state.goals = state.goals.filter((g) => g.id !== goalId);
   delete state.weeklyPlans[goalId];
   state.todayTasks = state.todayTasks.filter((t) => t.goalId !== goalId);

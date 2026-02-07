@@ -234,7 +234,12 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   border-color: #e4c7c1;
 }
 
-.goal-delete:hover {
+.btn.ghost.goal-delete {
+  color: #7a3f35;
+  border-color: #e4c7c1;
+}
+
+.btn.ghost.goal-delete:hover {
   background: #f7e9e6;
   color: #6a332b;
 }

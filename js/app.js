@@ -56,6 +56,7 @@ const defaultState = () => ({
   // todayTasks enthält Aufgaben für das aktuelle Datum.
   // Jede Aufgabe referenziert ein Ziel über goalId.
   todayTasks: [],
+  quickTasks: {},
   lastTaskUnlockDate: null,
   lastActiveDate: null,
   streak: 0,
@@ -85,6 +86,7 @@ const loadState = () => {
       doneAt: task.doneAt || null,
       isRestDay: task.isRestDay || false,
     }));
+    normalized.quickTasks = normalized.quickTasks || {};
     normalized.completedDays = normalized.completedDays || {};
     normalized.weeklyPlans = normalized.weeklyPlans || {};
     return normalized;
@@ -106,6 +108,8 @@ const todayList = document.getElementById("today-list");
 const todayCount = document.getElementById("today-count");
 const unlockControls = document.getElementById("unlock-controls");
 const goalsList = document.getElementById("goals-list");
+const quickTaskForm = document.getElementById("quick-task-form");
+const quickTaskInput = document.getElementById("quick-task-input");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
 const goalDifficulty = document.getElementById("goal-difficulty");
@@ -206,6 +210,9 @@ const ensureTodayTasks = (state) => {
         };
       })
       .filter(Boolean);
+
+    // Quick tasks are daily-only; clear them on a new day.
+    state.quickTasks = {};
   }
 
   // Erster Start: genau eine Aufgabe aus Zielen hinzufügen.
@@ -265,7 +272,8 @@ const renderWelcome = (state) => {
 const renderToday = (state) => {
   todayList.innerHTML = "";
 
-  if (state.todayTasks.length === 0) {
+  const quickTaskEntries = Object.values(state.quickTasks || {});
+  if (state.todayTasks.length === 0 && quickTaskEntries.length === 0) {
     const empty = document.createElement("li");
     empty.textContent = "Noch keine Tagesaufgaben – füge ein Ziel hinzu.";
     todayList.appendChild(empty);
@@ -364,9 +372,91 @@ const renderToday = (state) => {
       }
       todayList.appendChild(li);
     });
+
+    quickTaskEntries.forEach((task) => {
+      const li = document.createElement("li");
+      const label = document.createElement("label");
+      label.className = "neon-checkbox";
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = task.done;
+
+      const frame = document.createElement("div");
+      frame.className = "neon-checkbox__frame";
+
+      const box = document.createElement("div");
+      box.className = "neon-checkbox__box";
+
+      const checkContainer = document.createElement("div");
+      checkContainer.className = "neon-checkbox__check-container";
+
+      const check = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      check.setAttribute("class", "neon-checkbox__check");
+      check.setAttribute("viewBox", "0 0 24 24");
+      const checkPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      checkPath.setAttribute("d", "M5 12l5 5L19 7");
+      check.appendChild(checkPath);
+
+      const glow = document.createElement("div");
+      glow.className = "neon-checkbox__glow";
+
+      const borders = document.createElement("div");
+      borders.className = "neon-checkbox__borders";
+      for (let i = 0; i < 4; i += 1) {
+        borders.appendChild(document.createElement("span"));
+      }
+
+      const particles = document.createElement("div");
+      particles.className = "neon-checkbox__particles";
+      for (let i = 0; i < 12; i += 1) {
+        particles.appendChild(document.createElement("span"));
+      }
+
+      const rings = document.createElement("div");
+      rings.className = "neon-checkbox__rings";
+      for (let i = 0; i < 3; i += 1) {
+        const ring = document.createElement("div");
+        ring.className = "ring";
+        rings.appendChild(ring);
+      }
+
+      const sparks = document.createElement("div");
+      sparks.className = "neon-checkbox__sparks";
+      for (let i = 0; i < 4; i += 1) {
+        sparks.appendChild(document.createElement("span"));
+      }
+
+      checkContainer.appendChild(check);
+      frame.appendChild(box);
+      frame.appendChild(checkContainer);
+      frame.appendChild(glow);
+      frame.appendChild(borders);
+      frame.appendChild(particles);
+      frame.appendChild(rings);
+      frame.appendChild(sparks);
+
+      const text = document.createElement("span");
+      text.className = "task-text";
+      text.textContent = task.label;
+      if (task.done) text.classList.add("done");
+
+      const badge = document.createElement("span");
+      badge.className = "difficulty noon";
+      badge.textContent = "Einmalig";
+
+      label.appendChild(checkbox);
+      label.appendChild(frame);
+      label.appendChild(text);
+      li.appendChild(label);
+      li.appendChild(badge);
+      li.dataset.taskId = task.id;
+      checkbox.addEventListener("change", () => toggleQuickTask(task.id, text, label));
+      todayList.appendChild(li);
+    });
   }
 
-  todayCount.textContent = `${state.todayTasks.length} Aufgaben`;
+  todayCount.textContent = `${state.todayTasks.length + quickTaskEntries.length} Aufgaben`;
 };
 
 const renderGoals = (state) => {
@@ -489,7 +579,9 @@ const toggleTask = (taskId, textEl, labelEl) => {
   const actionable = state.todayTasks.filter(
     (t) => !isRestDayForTask(state, t, today) && !t.isRestDay
   );
-  const allDone = actionable.length > 0 && actionable.every((t) => t.done);
+  const quickList = Object.values(state.quickTasks || {});
+  const combined = actionable.concat(quickList);
+  const allDone = combined.length > 0 && combined.every((t) => t.done);
   if (allDone) {
     state.completedDays[today] = true;
   } else {
@@ -547,6 +639,61 @@ const addRandomTask = () => {
   const goal = pickTaskFromGoals(state);
   if (!goal) return;
   addTaskFromGoal(goal.id);
+};
+
+const addQuickTask = (label) => {
+  const state = loadState();
+  const today = todayISO(state.simulationOffsetDays);
+  const id = crypto.randomUUID();
+  state.quickTasks[id] = {
+    id,
+    label,
+    done: false,
+    date: today,
+  };
+  saveState(state);
+  renderAll(state);
+};
+
+const toggleQuickTask = (taskId, textEl, labelEl) => {
+  const state = loadState();
+  const task = state.quickTasks[taskId];
+  if (!task) return;
+  task.done = !task.done;
+  if (task.done) {
+    const today = todayISO(state.simulationOffsetDays);
+    if (task.doneAt !== today) {
+      state.totalDone += 1;
+      task.doneAt = today;
+      updateStreak(state);
+    }
+  }
+  const today = todayISO(state.simulationOffsetDays);
+  const actionable = state.todayTasks.filter(
+    (t) => !isRestDayForTask(state, t, today) && !t.isRestDay
+  );
+  const quickList = Object.values(state.quickTasks || {});
+  const combined = actionable.concat(quickList);
+  const allDone = combined.length > 0 && combined.every((t) => t.done);
+  if (allDone) {
+    state.completedDays[today] = true;
+  } else {
+    delete state.completedDays[today];
+  }
+  saveState(state);
+  if (textEl) {
+    textEl.classList.toggle("done", task.done);
+  }
+  if (labelEl && task.done) {
+    todayList.querySelectorAll(".neon-checkbox.burst").forEach((node) => {
+      node.classList.remove("burst");
+    });
+    void labelEl.offsetHeight;
+    labelEl.classList.add("burst");
+    setTimeout(() => labelEl.classList.remove("burst"), 700);
+  }
+  renderProgress(state);
+  renderCalendar(state);
 };
 
 const setSimulationOffset = (value) => {
@@ -806,6 +953,16 @@ const init = () => {
     navItems.forEach((btn) => {
       btn.addEventListener("click", () => setActiveTab(btn.dataset.target));
     });
+
+    if (quickTaskForm) {
+      quickTaskForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const value = quickTaskInput.value.trim();
+        if (!value) return;
+        addQuickTask(value);
+        quickTaskInput.value = "";
+      });
+    }
 
     if (planGoalSelect) {
       planGoalSelect.addEventListener("change", () => {

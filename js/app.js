@@ -403,15 +403,19 @@ const renderGoals = (state) => {
       saveBtn.textContent = "Speichern";
       saveBtn.addEventListener("click", () => finishEditGoal(goal.id, input.value));
 
-      const cancelBtn = document.createElement("button");
-      cancelBtn.type = "button";
-      cancelBtn.className = "btn ghost goal-edit-cancel";
-      cancelBtn.textContent = "Abbrechen";
-      cancelBtn.addEventListener("click", () => cancelEditGoal());
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "btn ghost goal-delete";
+      removeBtn.textContent = "Entfernen";
+      removeBtn.disabled = activeGoalIds.has(goal.id);
+      removeBtn.title = removeBtn.disabled
+        ? "Aktive Ziele können nicht entfernt werden."
+        : "Ziel entfernen";
+      removeBtn.addEventListener("click", () => deleteGoal(goal.id));
 
       li.appendChild(input);
       li.appendChild(saveBtn);
-      li.appendChild(cancelBtn);
+      li.appendChild(removeBtn);
     } else {
       const editBtn = document.createElement("button");
       editBtn.type = "button";
@@ -419,20 +423,9 @@ const renderGoals = (state) => {
       editBtn.textContent = "Bearbeiten";
       editBtn.addEventListener("click", () => startEditGoal(goal.id));
 
-      const deleteBtn = document.createElement("button");
-      deleteBtn.type = "button";
-      deleteBtn.className = "btn ghost goal-delete";
-      deleteBtn.textContent = "Entfernen";
-      deleteBtn.disabled = activeGoalIds.has(goal.id);
-      deleteBtn.title = deleteBtn.disabled
-        ? "Aktive Ziele können nicht entfernt werden."
-        : "Ziel entfernen";
-      deleteBtn.addEventListener("click", () => deleteGoal(goal.id));
-
       li.appendChild(title);
       li.appendChild(badge);
       li.appendChild(editBtn);
-      li.appendChild(deleteBtn);
     }
     goalsList.appendChild(li);
   });

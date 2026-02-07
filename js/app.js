@@ -665,6 +665,8 @@ const toggleTask = (taskId, textEl, labelEl) => {
   }
 
   saveState(state);
+  applyTutorial(state);
+  saveState(state);
   if (textEl) {
     textEl.classList.toggle("done", task.done);
   }
@@ -757,6 +759,8 @@ const toggleQuickTask = (taskId, textEl, labelEl) => {
   } else {
     delete state.completedDays[today];
   }
+  saveState(state);
+  applyTutorial(state);
   saveState(state);
   if (textEl) {
     textEl.classList.toggle("done", task.done);

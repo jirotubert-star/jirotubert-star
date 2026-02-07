@@ -419,9 +419,20 @@ const renderGoals = (state) => {
       editBtn.textContent = "Bearbeiten";
       editBtn.addEventListener("click", () => startEditGoal(goal.id));
 
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "btn ghost goal-delete";
+      deleteBtn.textContent = "Entfernen";
+      deleteBtn.disabled = activeGoalIds.has(goal.id);
+      deleteBtn.title = deleteBtn.disabled
+        ? "Aktive Ziele können nicht entfernt werden."
+        : "Ziel entfernen";
+      deleteBtn.addEventListener("click", () => deleteGoal(goal.id));
+
       li.appendChild(title);
       li.appendChild(badge);
       li.appendChild(editBtn);
+      li.appendChild(deleteBtn);
     }
     goalsList.appendChild(li);
   });
@@ -587,6 +598,19 @@ const finishEditGoal = (goalId, newTitle) => {
 
   saveState(state);
   editingGoalId = null;
+  renderAll(state);
+};
+
+const deleteGoal = (goalId) => {
+  const state = loadState();
+  const isActive = state.todayTasks.some((task) => task.goalId === goalId);
+  if (isActive) return;
+
+  state.goals = state.goals.filter((g) => g.id !== goalId);
+  delete state.weeklyPlans[goalId];
+  state.todayTasks = state.todayTasks.filter((t) => t.goalId !== goalId);
+
+  saveState(state);
   renderAll(state);
 };
 

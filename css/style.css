@@ -227,6 +227,16 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   font-size: 0.85rem;
 }
 
+.goal-delete {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+
+.goal-delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .goals li .goal-edit-save,
 .goals li .goal-edit-cancel {
   flex: 0 0 auto;

@@ -1026,7 +1026,8 @@ const init = () => {
   updateStreak(state);
   saveState(state);
   renderAll(state);
-  setActiveTab("goals");
+  const startTab = state.tutorialCompleted || state.tutorialStep >= 2 ? "today" : "goals";
+  setActiveTab(startTab);
 
   if (!listenersBound) {
     goalForm.addEventListener("submit", (event) => {

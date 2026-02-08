@@ -69,6 +69,7 @@ const defaultState = () => ({
   tutorialStep: 1,
   tutorialCompleted: false,
   proEnabled: false,
+  templatesOpenedOnce: false,
 });
 
 const loadState = () => {
@@ -99,6 +100,7 @@ const loadState = () => {
     normalized.tutorialStep = normalized.tutorialStep || 1;
     normalized.tutorialCompleted = normalized.tutorialCompleted || false;
     normalized.proEnabled = normalized.proEnabled || false;
+    normalized.templatesOpenedOnce = normalized.templatesOpenedOnce || false;
     return normalized;
   } catch (err) {
     console.warn("State konnte nicht geladen werden, zurücksetzen.", err);
@@ -709,6 +711,9 @@ const applyMode = (state) => {
   }
   if (templatesSection) {
     templatesSection.style.display = state.proEnabled ? "block" : "none";
+    if (state.proEnabled && !state.templatesOpenedOnce) {
+      templatesSection.open = false;
+    }
   }
   const versionEl = document.getElementById("version");
   if (versionEl) {
@@ -1438,8 +1443,19 @@ const init = () => {
       modeSwitch.addEventListener("change", () => {
         const stateNow = loadState();
         stateNow.proEnabled = modeSwitch.checked;
+        if (!stateNow.proEnabled) {
+          stateNow.templatesOpenedOnce = false;
+        }
         saveState(stateNow);
         applyMode(stateNow);
+      });
+    }
+    if (templatesSection) {
+      templatesSection.addEventListener("toggle", () => {
+        if (!templatesSection.open) return;
+        const stateNow = loadState();
+        stateNow.templatesOpenedOnce = true;
+        saveState(stateNow);
       });
     }
 

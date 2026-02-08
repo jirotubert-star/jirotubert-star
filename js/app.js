@@ -708,7 +708,7 @@ const applyMode = (state) => {
   }
   const versionEl = document.getElementById("version");
   if (versionEl) {
-    versionEl.textContent = state.proEnabled ? "Version 1.4.x Pro" : "Version 1.3.7 Normal";
+    versionEl.textContent = state.proEnabled ? "Version 1.4.4 Pro" : "Version 1.3.7 Normal";
   }
 };
 

@@ -142,6 +142,7 @@ const planHint = document.getElementById("plan-hint");
 const modeSwitch = document.getElementById("mode-switch");
 const modeHint = document.getElementById("mode-hint");
 const templateCategories = document.getElementById("template-categories");
+const templatesSection = document.getElementById("templates-section");
 const navItems = document.querySelectorAll(".bottom-nav .nav-item");
 const sections = document.querySelectorAll("[data-section]");
 const tutorialSection = document.getElementById("tutorial");
@@ -706,9 +707,12 @@ const applyMode = (state) => {
   if (modeHint) {
     modeHint.style.display = state.proEnabled ? "block" : "none";
   }
+  if (templatesSection) {
+    templatesSection.style.display = state.proEnabled ? "block" : "none";
+  }
   const versionEl = document.getElementById("version");
   if (versionEl) {
-    versionEl.textContent = state.proEnabled ? "Version 1.4.4 Pro" : "Version 1.3.7 Normal";
+    versionEl.textContent = state.proEnabled ? "Version 1.4.6 Pro" : "Version 1.3.7 Normal";
   }
 };
 

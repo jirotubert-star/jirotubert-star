@@ -68,6 +68,7 @@ const defaultState = () => ({
   weeklyPlans: {},
   tutorialStep: 1,
   tutorialCompleted: false,
+  proEnabled: false,
 });
 
 const loadState = () => {
@@ -97,6 +98,7 @@ const loadState = () => {
     normalized.weeklyPlans = normalized.weeklyPlans || {};
     normalized.tutorialStep = normalized.tutorialStep || 1;
     normalized.tutorialCompleted = normalized.tutorialCompleted || false;
+    normalized.proEnabled = normalized.proEnabled || false;
     return normalized;
   } catch (err) {
     console.warn("State konnte nicht geladen werden, zurücksetzen.", err);
@@ -137,6 +139,8 @@ const resetBtn = document.getElementById("reset-app");
 const planGoalSelect = document.getElementById("plan-goal");
 const planGrid = document.getElementById("plan-grid");
 const planHint = document.getElementById("plan-hint");
+const modeSwitch = document.getElementById("mode-switch");
+const modeHint = document.getElementById("mode-hint");
 const navItems = document.querySelectorAll(".bottom-nav .nav-item");
 const sections = document.querySelectorAll("[data-section]");
 const tutorialSection = document.getElementById("tutorial");
@@ -694,6 +698,15 @@ const applyTutorial = (state) => {
   return state;
 };
 
+const applyMode = (state) => {
+  if (modeSwitch) {
+    modeSwitch.checked = !!state.proEnabled;
+  }
+  if (modeHint) {
+    modeHint.style.display = state.proEnabled ? "block" : "none";
+  }
+};
+
 const renderAll = (state) => {
   renderWelcome(state);
   renderUnlock(state);
@@ -704,6 +717,7 @@ const renderAll = (state) => {
   renderCalendar(state);
   renderSimulatedDate(state);
   const updated = applyTutorial(state);
+  applyMode(updated);
   saveState(updated);
   setActiveTab(currentTab);
 };
@@ -1222,6 +1236,14 @@ const init = () => {
     if (planGoalSelect) {
       planGoalSelect.addEventListener("change", () => {
         renderWeeklyPlan(loadState());
+      });
+    }
+    if (modeSwitch) {
+      modeSwitch.addEventListener("change", () => {
+        const stateNow = loadState();
+        stateNow.proEnabled = modeSwitch.checked;
+        saveState(stateNow);
+        applyMode(stateNow);
       });
     }
 

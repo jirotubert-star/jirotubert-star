@@ -100,15 +100,6 @@
             <span class="soft-note">Tag komplett erledigt</span>
           </div>
         </div>
-        <div class="test-controls">
-          <div class="test-title">Testphase: Tagesanzahl simulieren</div>
-          <div class="test-row">
-            <label for="day-offset">Tag‑Offset</label>
-            <input id="day-offset" type="number" min="-30" max="30" step="1" value="0" />
-            <button id="apply-offset" class="btn ghost" type="button">Anwenden</button>
-          </div>
-          <div class="soft-note" id="simulated-date">Heute: --</div>
-        </div>
         <div class="stats">
           <div class="stat">
             <div class="stat-value" id="streak">0</div>
@@ -170,14 +161,26 @@
             Konten, keine Cloud und keine Tracker verwendet.
           </p>
         </div>
+        <div class="info-block">
+          <h3>System</h3>
+          <div class="test-controls">
+            <div class="test-title">Tagesanzahl simulieren</div>
+            <div class="test-row">
+              <label for="day-offset">Tag‑Offset</label>
+              <input id="day-offset" type="number" min="-30" max="30" step="1" value="0" />
+              <button id="apply-offset" class="btn ghost" type="button">Anwenden</button>
+            </div>
+            <div class="soft-note" id="simulated-date">Heute: --</div>
+          </div>
+          <button id="reset-app" class="btn ghost" type="button">Reset</button>
+        </div>
       </section>
     </main>
 
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <button id="reset-app" class="btn ghost" type="button">Reset</button>
-      <span class="soft-note" id="version">Version 1.3.2</span>
+      <span class="soft-note" id="version">Version 1.3.3</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">

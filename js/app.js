@@ -118,8 +118,7 @@ const unlockControls = document.getElementById("unlock-controls");
 const goalsList = document.getElementById("goals-list");
 const quickTaskForm = document.getElementById("quick-task-form");
 const quickTaskInput = document.getElementById("quick-task-input");
-const quickTaskTomorrowForm = document.getElementById("quick-task-tomorrow-form");
-const quickTaskTomorrowInput = document.getElementById("quick-task-tomorrow-input");
+const quickTaskTomorrowBtn = document.getElementById("quick-task-tomorrow");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
 const goalDifficulty = document.getElementById("goal-difficulty");
@@ -1211,13 +1210,12 @@ const init = () => {
         quickTaskInput.value = "";
       });
     }
-    if (quickTaskTomorrowForm) {
-      quickTaskTomorrowForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const value = quickTaskTomorrowInput.value.trim();
+    if (quickTaskTomorrowBtn) {
+      quickTaskTomorrowBtn.addEventListener("click", () => {
+        const value = quickTaskInput.value.trim();
         if (!value) return;
         addQuickTaskTomorrow(value);
-        quickTaskTomorrowInput.value = "";
+        quickTaskInput.value = "";
       });
     }
 

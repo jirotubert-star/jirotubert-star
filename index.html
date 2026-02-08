@@ -43,13 +43,11 @@
         </div>
         <form id="quick-task-form" class="quick-task" autocomplete="off">
           <label class="sr-only" for="quick-task-input">Einmalige Aufgabe</label>
-          <input id="quick-task-input" type="text" placeholder="Einmalige Aufgabe hinzufügen (z. B. Einkaufen)" />
-          <button type="submit" class="btn">Hinzufügen</button>
-        </form>
-        <form id="quick-task-tomorrow-form" class="quick-task" autocomplete="off">
-          <label class="sr-only" for="quick-task-tomorrow-input">Einmalige Aufgabe für morgen</label>
-          <input id="quick-task-tomorrow-input" type="text" placeholder="Einmalige Aufgabe für morgen (z. B. Arzttermin)" />
-          <button type="submit" class="btn ghost">Für morgen</button>
+          <input id="quick-task-input" type="text" placeholder="Einmalige Aufgabe (z. B. Einkaufen)" />
+          <div class="quick-task-actions">
+            <button id="quick-task-today" type="submit" class="btn">Hinzufügen</button>
+            <button id="quick-task-tomorrow" type="button" class="btn ghost">Für morgen</button>
+          </div>
         </form>
         <div id="unlock-controls" class="unlock" aria-live="polite"></div>
         <ul id="today-list" class="checklist" aria-live="polite"></ul>
@@ -185,7 +183,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.3.5</span>
+      <span class="soft-note" id="version">Version 1.3.6</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">

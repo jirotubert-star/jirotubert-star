@@ -309,10 +309,22 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   display: flex;
   gap: 10px;
   margin-bottom: 12px;
+  align-items: center;
 }
 
 .quick-task .btn.ghost {
   border-color: #cbd7d1;
+}
+
+.quick-task-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  width: 220px;
+}
+
+.quick-task-actions .btn {
+  width: 100%;
 }
 
 .subhead {
@@ -1020,6 +1032,9 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   }
   .quick-task {
     flex-direction: column;
+  }
+  .quick-task-actions {
+    width: 100%;
   }
   .goal-form input,
   .goal-form select,

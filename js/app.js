@@ -705,6 +705,10 @@ const applyMode = (state) => {
   if (modeHint) {
     modeHint.style.display = state.proEnabled ? "block" : "none";
   }
+  const versionEl = document.getElementById("version");
+  if (versionEl) {
+    versionEl.textContent = state.proEnabled ? "Version 1.4.x Pro" : "Version 1.3.7 Normal";
+  }
 };
 
 const renderAll = (state) => {

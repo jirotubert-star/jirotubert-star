@@ -46,6 +46,11 @@
           <input id="quick-task-input" type="text" placeholder="Einmalige Aufgabe hinzufügen (z. B. Einkaufen)" />
           <button type="submit" class="btn">Hinzufügen</button>
         </form>
+        <form id="quick-task-tomorrow-form" class="quick-task" autocomplete="off">
+          <label class="sr-only" for="quick-task-tomorrow-input">Einmalige Aufgabe für morgen</label>
+          <input id="quick-task-tomorrow-input" type="text" placeholder="Einmalige Aufgabe für morgen (z. B. Arzttermin)" />
+          <button type="submit" class="btn ghost">Für morgen</button>
+        </form>
         <div id="unlock-controls" class="unlock" aria-live="polite"></div>
         <ul id="today-list" class="checklist" aria-live="polite"></ul>
       </section>
@@ -180,7 +185,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.3.4</span>
+      <span class="soft-note" id="version">Version 1.3.5</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">

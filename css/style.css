@@ -94,6 +94,26 @@ body {
   border-bottom: none;
 }
 
+.info-block summary {
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+}
+
+.info-block summary::-webkit-details-marker {
+  display: none;
+}
+
+.info-block summary::after {
+  content: "▾";
+  float: right;
+  color: var(--muted);
+}
+
+.info-block[open] summary::after {
+  content: "▴";
+}
+
 .info-list {
   margin: 8px 0 0 18px;
   color: var(--muted);

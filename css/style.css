@@ -114,6 +114,47 @@ body {
   content: "▴";
 }
 
+.templates {
+  margin-top: 12px;
+}
+
+.template-grid {
+  display: grid;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.template-category {
+  border: 1px solid #ece7df;
+  border-radius: 12px;
+  padding: 10px;
+  background: #ffffff;
+}
+
+.template-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.template-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.template-chip {
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid #d9d2c6;
+  background: #f6f3ec;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.template-chip:hover {
+  background: #efe8dd;
+}
+
 .switch-row {
   display: flex;
   align-items: center;

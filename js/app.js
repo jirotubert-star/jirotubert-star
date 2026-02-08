@@ -141,6 +141,7 @@ const planGrid = document.getElementById("plan-grid");
 const planHint = document.getElementById("plan-hint");
 const modeSwitch = document.getElementById("mode-switch");
 const modeHint = document.getElementById("mode-hint");
+const templateCategories = document.getElementById("template-categories");
 const navItems = document.querySelectorAll(".bottom-nav .nav-item");
 const sections = document.querySelectorAll("[data-section]");
 const tutorialSection = document.getElementById("tutorial");
@@ -717,6 +718,7 @@ const renderAll = (state) => {
   renderToday(state);
   renderGoals(state);
   renderWeeklyPlan(state);
+  renderTemplates();
   renderProgress(state);
   renderCalendar(state);
   renderSimulatedDate(state);
@@ -985,6 +987,159 @@ const WEEKDAYS = [
   { key: "sun", label: "Sonntag" },
 ];
 
+const TEMPLATE_CATEGORIES = [
+  {
+    title: "Fitness & Bewegung",
+    items: [
+      "10.000 Schritte",
+      "5 km Lauf",
+      "Krafttraining 20 Min",
+      "Mobility 10 Min",
+      "2 L Wasser täglich",
+      "Treppen statt Aufzug",
+      "Dehnen 8 Min",
+      "Radfahren 30 Min",
+      "Schwimmen 30 Min",
+      "Spaziergang 20 Min",
+    ],
+  },
+  {
+    title: "Ausdauer & Cardio",
+    items: [
+      "Intervalltraining 15 Min",
+      "Zügiger Walk 30 Min",
+      "Rudern 20 Min",
+      "Treppenläufe 10 Min",
+      "Seilspringen 5 Min",
+      "2 L Wasser täglich",
+      "Ergometer 20 Min",
+      "Joggen 20 Min",
+      "Atemtraining 5 Min",
+      "Cooldown 5 Min",
+    ],
+  },
+  {
+    title: "Ernährung",
+    items: [
+      "Proteinreiche Mahlzeit",
+      "Gemüse zu jeder Mahlzeit",
+      "Zuckerfrei heute",
+      "2 L Wasser täglich",
+      "Intervallfasten 14/10",
+      "Kein Softdrink",
+      "Gesundes Frühstück",
+      "Küchen‑Reset 10 Min",
+      "Supplements morgens",
+      "Spätessen vermeiden",
+    ],
+  },
+  {
+    title: "Schlaf & Erholung",
+    items: [
+      "22:30 ins Bett",
+      "Abendroutine 15 Min",
+      "Bildschirmfrei 30 Min",
+      "Nickerchen 20 Min",
+      "Tagebuch 5 Min",
+      "Stretching 10 Min",
+      "Koffein nur bis 14 Uhr",
+      "Schlafraum lüften",
+      "Wasser neben Bett",
+      "Atemübung 5 Min",
+    ],
+  },
+  {
+    title: "Lernen",
+    items: [
+      "20 Min Lesen",
+      "1 Kapitel Kurs",
+      "Vokabeln 15 Min",
+      "Notizen ordnen",
+      "1 Übungsaufgabe",
+      "Wiederholung 10 Min",
+      "Lernziel definieren",
+      "Karteikarten 10 Min",
+      "Podcast 15 Min",
+      "Zusammenfassung schreiben",
+    ],
+  },
+  {
+    title: "Fokus & Produktivität",
+    items: [
+      "1 Deep‑Work‑Block",
+      "Inbox auf Null",
+      "Top‑3 Aufgaben",
+      "Meeting‑Notizen",
+      "Ablenkungen aus",
+      "5‑Minuten Planung",
+      "1 schwierige Aufgabe",
+      "Dateien sortieren",
+      "Arbeitsplatz reset",
+      "Pomodoro x2",
+    ],
+  },
+  {
+    title: "Mindset",
+    items: [
+      "Dankbarkeit 3 Punkte",
+      "Kurze Meditation",
+      "Affirmation schreiben",
+      "1 Erkenntnis notieren",
+      "Negatives reframen",
+      "Zielvisualisierung",
+      "Mini‑Reflexion",
+      "Atemübung 4‑7‑8",
+      "Heute stolz sein",
+      "Abendlicher Rückblick",
+    ],
+  },
+  {
+    title: "Haushalt",
+    items: [
+      "10 Min Aufräumen",
+      "Wäsche starten",
+      "Bad kurz reinigen",
+      "Geschirr sofort",
+      "Müll rausbringen",
+      "Küche wischen",
+      "Bett machen",
+      "Oberflächen abwischen",
+      "Schreibtisch clean",
+      "Einkaufsliste",
+    ],
+  },
+  {
+    title: "Soziales",
+    items: [
+      "Nachricht an Freund",
+      "Anruf Familie",
+      "Danke sagen",
+      "Treffen planen",
+      "Kurzes Check‑in",
+      "Kompliment geben",
+      "Hilfsangebot",
+      "Antworten auf Mails",
+      "Geburtstag merken",
+      "Zeit bewusst teilen",
+    ],
+  },
+  {
+    title: "Selbstentwicklung",
+    items: [
+      "Neue Gewohnheit testen",
+      "Skill 20 Min üben",
+      "1 kleiner Mut‑Schritt",
+      "Feedback einholen",
+      "Lernziel definieren",
+      "Plan für morgen",
+      "Eigenes Projekt 30 Min",
+      "Ziel reviewen",
+      "Fortschritt tracken",
+      "Mini‑Challenge",
+    ],
+  },
+];
+
 const getPlanForGoal = (state, goalId) => {
   const plan = state.weeklyPlans[goalId];
   if (plan) return plan;
@@ -1124,6 +1279,39 @@ const renderWeeklyPlan = (state) => {
   } else {
     planHint.textContent = `Woche geplant: ${activeCount} Tage.`;
   }
+};
+
+const renderTemplates = () => {
+  if (!templateCategories) return;
+  templateCategories.innerHTML = "";
+
+  TEMPLATE_CATEGORIES.forEach((category) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "template-category";
+
+    const title = document.createElement("div");
+    title.className = "template-title";
+    title.textContent = category.title;
+
+    const items = document.createElement("div");
+    items.className = "template-items";
+
+    category.items.forEach((item) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "template-chip";
+      chip.textContent = item;
+      chip.addEventListener("click", () => {
+        const timeOfDay = goalDifficulty ? goalDifficulty.value : "noon";
+        addGoal(item, timeOfDay);
+      });
+      items.appendChild(chip);
+    });
+
+    wrapper.appendChild(title);
+    wrapper.appendChild(items);
+    templateCategories.appendChild(wrapper);
+  });
 };
 
 // ---------------------------

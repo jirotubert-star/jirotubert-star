@@ -408,6 +408,33 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   width: 100%;
 }
 
+.side-quest-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.side-quest-form select {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d9d2c6;
+  font-size: 1rem;
+  background: #fff;
+}
+
+.side-quest-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.side-quest-remove {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
 .subhead {
   margin: 6px 0 8px;
   color: var(--muted);
@@ -1116,6 +1143,9 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   }
   .quick-task-actions {
     width: 100%;
+  }
+  .side-quest-form {
+    flex-direction: column;
   }
   .goal-form input,
   .goal-form select,

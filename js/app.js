@@ -58,6 +58,7 @@ const defaultState = () => ({
   todayTasks: [],
   quickTasks: {},
   quickTasksTomorrow: {},
+  sideQuests: [],
   lastTaskUnlockDate: null,
   lastActiveDate: null,
   streak: 0,
@@ -94,6 +95,7 @@ const loadState = () => {
     }));
     normalized.quickTasks = normalized.quickTasks || {};
     normalized.quickTasksTomorrow = normalized.quickTasksTomorrow || {};
+    normalized.sideQuests = normalized.sideQuests || [];
     normalized.completedDays = normalized.completedDays || {};
     normalized.daySummary = normalized.daySummary || {};
     normalized.weeklyPlans = normalized.weeklyPlans || {};
@@ -123,6 +125,8 @@ const goalsList = document.getElementById("goals-list");
 const quickTaskForm = document.getElementById("quick-task-form");
 const quickTaskInput = document.getElementById("quick-task-input");
 const quickTaskTomorrowBtn = document.getElementById("quick-task-tomorrow");
+const sideQuestForm = document.getElementById("side-quest-form");
+const sideQuestSelect = document.getElementById("side-quest-select");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
 const goalDifficulty = document.getElementById("goal-difficulty");
@@ -296,10 +300,17 @@ const renderWelcome = (state) => {
 
 const renderToday = (state) => {
   todayList.innerHTML = "";
+  renderSideQuestOptions(state);
 
   const quickTaskEntries = Object.values(state.quickTasks || {});
   const quickTomorrowEntries = Object.values(state.quickTasksTomorrow || {});
-  if (state.todayTasks.length === 0 && quickTaskEntries.length === 0) {
+  const sideQuestEntries = state.sideQuests || [];
+  if (
+    state.todayTasks.length === 0 &&
+    quickTaskEntries.length === 0 &&
+    quickTomorrowEntries.length === 0 &&
+    sideQuestEntries.length === 0
+  ) {
     const empty = document.createElement("li");
     empty.textContent = "Noch keine Tagesaufgaben – füge ein Ziel hinzu.";
     todayList.appendChild(empty);
@@ -478,6 +489,39 @@ const renderToday = (state) => {
       li.appendChild(badge);
       li.dataset.taskId = task.id;
       checkbox.addEventListener("change", () => toggleQuickTask(task.id, text, label));
+      todayList.appendChild(li);
+    });
+
+    if (sideQuestEntries.length > 0) {
+      const head = document.createElement("li");
+      head.className = "subhead";
+      head.textContent = "Side Quest";
+      todayList.appendChild(head);
+    }
+
+    sideQuestEntries.forEach((quest) => {
+      const li = document.createElement("li");
+      const row = document.createElement("div");
+      row.className = "side-quest-row";
+
+      const text = document.createElement("span");
+      text.className = "task-text";
+      text.textContent = quest.label;
+
+      const badge = document.createElement("span");
+      badge.className = "difficulty noon";
+      badge.textContent = "Zukunft";
+
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "btn ghost side-quest-remove";
+      removeBtn.textContent = "Entfernen";
+      removeBtn.addEventListener("click", () => removeSideQuest(quest.goalId));
+
+      row.appendChild(text);
+      row.appendChild(badge);
+      row.appendChild(removeBtn);
+      li.appendChild(row);
       todayList.appendChild(li);
     });
 
@@ -717,7 +761,7 @@ const applyMode = (state) => {
   }
   const versionEl = document.getElementById("version");
   if (versionEl) {
-    versionEl.textContent = state.proEnabled ? "Version 1.4.6 Pro" : "Version 1.3.7 Normal";
+    versionEl.textContent = state.proEnabled ? "Version 1.4.8 Pro" : "Version 1.3.7 Normal";
   }
 };
 
@@ -870,6 +914,58 @@ const addQuickTaskTomorrow = (label) => {
   renderAll(state);
 };
 
+const renderSideQuestOptions = (state) => {
+  if (!sideQuestSelect) return;
+  const selected = new Set((state.sideQuests || []).map((q) => q.goalId));
+  const options = state.goals.filter((g) => !selected.has(g.id));
+
+  sideQuestSelect.innerHTML = "";
+  if (state.sideQuests.length >= 5) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "Maximal 5 Side Quests erreicht";
+    sideQuestSelect.appendChild(option);
+    sideQuestSelect.disabled = true;
+    return;
+  }
+
+  if (options.length === 0) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "Keine weiteren Ziele verfügbar";
+    sideQuestSelect.appendChild(option);
+    sideQuestSelect.disabled = true;
+    return;
+  }
+
+  options.forEach((goal) => {
+    const option = document.createElement("option");
+    option.value = goal.id;
+    option.textContent = goal.title;
+    sideQuestSelect.appendChild(option);
+  });
+  sideQuestSelect.disabled = false;
+};
+
+const addSideQuest = (goalId) => {
+  const state = loadState();
+  if ((state.sideQuests || []).length >= 5) return;
+  if (state.sideQuests.some((q) => q.goalId === goalId)) return;
+  const goal = state.goals.find((g) => g.id === goalId);
+  if (!goal) return;
+
+  state.sideQuests.push({ goalId: goal.id, label: goal.title });
+  saveState(state);
+  renderAll(state);
+};
+
+const removeSideQuest = (goalId) => {
+  const state = loadState();
+  state.sideQuests = (state.sideQuests || []).filter((q) => q.goalId !== goalId);
+  saveState(state);
+  renderAll(state);
+};
+
 const toggleQuickTask = (taskId, textEl, labelEl) => {
   const state = loadState();
   const task = state.quickTasks[taskId];
@@ -981,6 +1077,7 @@ const deleteGoal = (goalId) => {
   state.goals = state.goals.filter((g) => g.id !== goalId);
   delete state.weeklyPlans[goalId];
   state.todayTasks = state.todayTasks.filter((t) => t.goalId !== goalId);
+  state.sideQuests = (state.sideQuests || []).filter((q) => q.goalId !== goalId);
 
   saveState(state);
   renderAll(state);
@@ -1431,6 +1528,13 @@ const init = () => {
         if (!value) return;
         addQuickTaskTomorrow(value);
         quickTaskInput.value = "";
+      });
+    }
+    if (sideQuestForm) {
+      sideQuestForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (!sideQuestSelect || !sideQuestSelect.value) return;
+        addSideQuest(sideQuestSelect.value);
       });
     }
 

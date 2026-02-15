@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-user.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-user.png" />
-    <link rel="manifest" href="site.webmanifest?v=1608" />
+    <link rel="manifest" href="site.webmanifest?v=1609" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -160,48 +160,48 @@
       <section class="panel" aria-labelledby="info-title" data-section="info">
         <div class="panel-head">
           <h2 id="info-title">Einstellungen</h2>
-          <span class="soft-note">App‑Optionen und Hinweise</span>
+          <span class="soft-note" id="info-subtitle">App‑Optionen und Hinweise</span>
         </div>
         <details class="info-block">
-          <summary>Info</summary>
-          <p>
+          <summary id="info-summary-main">Info</summary>
+          <p id="info-main-p1">
             Motivation schwankt – Disziplin ist verlässlicher. OneStep startet bewusst
             langsam: In den ersten drei Tagen gibt es nur eine einfache Aufgabe. Das
             bringt vielleicht noch keinen körperlichen Fortschritt, aber es baut die
             erste Gewohnheit auf.
           </p>
-          <p>
+          <p id="info-main-p2">
             Es geht nicht darum, so schnell und so viel wie möglich zu trainieren.
             Entscheidend ist ein mentaler Schalter: Eine bestimmte Aufgabe wird
             automatisch und wiederholbar – genau dann entsteht nachhaltiger Fortschritt.
           </p>
         </details>
         <details class="info-block">
-          <summary>So entsteht deine Tagesliste</summary>
+          <summary id="info-summary-list">So entsteht deine Tagesliste</summary>
           <ul class="info-list">
-            <li>Du legst Life Goals an – sie bilden deinen Aufgaben‑Pool.</li>
-            <li>Beim Start wird genau ein Ziel als Tagesaufgabe gewählt.</li>
-            <li>Alle 3 Tage kannst du eine weitere Aufgabe hinzufügen oder zufällig auswählen.</li>
-            <li>Erledigte Aufgaben bleiben sichtbar – damit du deinen Rhythmus erkennst.</li>
+            <li id="info-list-1">Du legst Life Goals an – sie bilden deinen Aufgaben‑Pool.</li>
+            <li id="info-list-2">Beim Start wird genau ein Ziel als Tagesaufgabe gewählt.</li>
+            <li id="info-list-3">Alle 3 Tage kannst du eine weitere Aufgabe hinzufügen oder zufällig auswählen.</li>
+            <li id="info-list-4">Erledigte Aufgaben bleiben sichtbar – damit du deinen Rhythmus erkennst.</li>
           </ul>
         </details>
         <details class="info-block">
-          <summary>Schwierigkeiten &amp; Balance</summary>
+          <summary id="info-summary-balance">Schwierigkeiten &amp; Balance</summary>
           <ul class="info-list">
-            <li>Einfach: kleine, sichere Schritte für Kontinuität.</li>
-            <li>Mittel: stabiler Fortschritt ohne Überforderung.</li>
-            <li>Schwer: gezielte Herausforderung, wenn die Basis steht.</li>
+            <li id="info-balance-1">Einfach: kleine, sichere Schritte für Kontinuität.</li>
+            <li id="info-balance-2">Mittel: stabiler Fortschritt ohne Überforderung.</li>
+            <li id="info-balance-3">Schwer: gezielte Herausforderung, wenn die Basis steht.</li>
           </ul>
         </details>
         <details class="info-block">
-          <summary>Datenschutz</summary>
-          <p>
+          <summary id="info-summary-privacy">Datenschutz</summary>
+          <p id="info-privacy-p1">
             Alle Daten bleiben lokal in deinem Browser gespeichert. Es werden keine
             Konten, keine Cloud und keine Tracker verwendet.
           </p>
         </details>
         <div class="info-block">
-          <h3>Version</h3>
+          <h3 id="settings-version-title">Version</h3>
           <label class="switch-row" for="mode-switch">
             <span>Pro‑Version aktivieren</span>
             <input id="mode-switch" type="checkbox" />
@@ -219,11 +219,11 @@
           </label>
         </div>
         <div class="info-block">
-          <h3>System</h3>
+          <h3 id="settings-system-title">System</h3>
           <div class="test-controls">
             <div class="test-title">Tagesanzahl simulieren</div>
             <div class="test-row">
-              <label for="day-offset">Tag‑Offset</label>
+              <label id="day-offset-label" for="day-offset">Tag‑Offset</label>
               <input id="day-offset" type="number" min="-30" max="30" step="1" value="0" />
               <button id="apply-offset" class="btn ghost" type="button">Anwenden</button>
             </div>
@@ -237,7 +237,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.6.8</span>
+      <span class="soft-note" id="version">Version 1.6.9</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">

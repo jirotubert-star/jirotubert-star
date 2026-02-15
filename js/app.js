@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.8";
+const APP_VERSION = "1.6.9";
 const LANGUAGE_KEY = "onestep_language_v1";
 const SUPPORTED_LANGS = ["de", "en", "ru", "es", "fr"];
 let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "";
@@ -336,6 +336,28 @@ const STATIC_TEXT = {
     footer1: "OneStep · Minimalistische Fortschritts-App",
     footer2: "Lokal gespeichert in deinem Browser",
     navSettings: "Einstellungen",
+    btnEdit: "Bearbeiten",
+    btnSave: "Speichern",
+    btnRemove: "Entfernen",
+    deleteGoalTitle: "Ziel entfernen",
+    infoSubtitle: "App-Optionen und Hinweise",
+    infoMainSummary: "Info",
+    infoMainP1: "Kleine Schritte schlagen Perfektion.",
+    infoMainP2: "Konstanz ist wichtiger als Intensität.",
+    infoListSummary: "So entsteht deine Tagesliste",
+    infoList1: "Life Goals sind dein Aufgaben-Pool.",
+    infoList2: "Zu Beginn startet ein Goal als Tagesaufgabe.",
+    infoList3: "Alle 3 Tage kannst du eine Aufgabe ergänzen.",
+    infoList4: "Erledigte Aufgaben bleiben sichtbar.",
+    infoBalanceSummary: "Schwierigkeiten & Balance",
+    infoBalance1: "Einfach: kleiner, sicherer Schritt.",
+    infoBalance2: "Mittel: stabiler Fortschritt.",
+    infoBalance3: "Schwer: gezielte Herausforderung.",
+    infoPrivacySummary: "Datenschutz",
+    infoPrivacyP1: "Alle Daten bleiben lokal im Browser.",
+    settingsVersionTitle: "Version",
+    settingsSystemTitle: "System",
+    dayOffsetLabel: "Tag-Offset",
   },
   en: {
     welcomeTitle: "Welcome to OneStep",
@@ -360,6 +382,28 @@ const STATIC_TEXT = {
     footer1: "OneStep · Minimal progress app",
     footer2: "Stored locally in your browser",
     navSettings: "Settings",
+    btnEdit: "Edit",
+    btnSave: "Save",
+    btnRemove: "Remove",
+    deleteGoalTitle: "Remove goal",
+    infoSubtitle: "App options and notes",
+    infoMainSummary: "Info",
+    infoMainP1: "Small steps beat perfection.",
+    infoMainP2: "Consistency matters more than intensity.",
+    infoListSummary: "How your day list is built",
+    infoList1: "Life Goals are your task pool.",
+    infoList2: "At start, one goal becomes your daily task.",
+    infoList3: "Every 3 days you can add another task.",
+    infoList4: "Completed tasks stay visible.",
+    infoBalanceSummary: "Difficulty & balance",
+    infoBalance1: "Easy: small safe step.",
+    infoBalance2: "Medium: steady progress.",
+    infoBalance3: "Hard: focused challenge.",
+    infoPrivacySummary: "Privacy",
+    infoPrivacyP1: "All data stays local in your browser.",
+    settingsVersionTitle: "Version",
+    settingsSystemTitle: "System",
+    dayOffsetLabel: "Day offset",
   },
   ru: {
     welcomeTitle: "Добро пожаловать в OneStep",
@@ -384,6 +428,28 @@ const STATIC_TEXT = {
     footer1: "OneStep · Минималистичный прогресс",
     footer2: "Данные хранятся локально",
     navSettings: "Настройки",
+    btnEdit: "Изменить",
+    btnSave: "Сохранить",
+    btnRemove: "Удалить",
+    deleteGoalTitle: "Удалить цель",
+    infoSubtitle: "Параметры и информация",
+    infoMainSummary: "Инфо",
+    infoMainP1: "Маленькие шаги лучше идеала.",
+    infoMainP2: "Регулярность важнее интенсивности.",
+    infoListSummary: "Как формируется список дня",
+    infoList1: "Life Goals — это пул задач.",
+    infoList2: "Сначала одна цель становится задачей дня.",
+    infoList3: "Каждые 3 дня можно добавить задачу.",
+    infoList4: "Выполненные задачи остаются видимыми.",
+    infoBalanceSummary: "Сложность и баланс",
+    infoBalance1: "Легко: маленький шаг.",
+    infoBalance2: "Средне: стабильный прогресс.",
+    infoBalance3: "Сложно: целевой вызов.",
+    infoPrivacySummary: "Конфиденциальность",
+    infoPrivacyP1: "Все данные хранятся локально в браузере.",
+    settingsVersionTitle: "Версия",
+    settingsSystemTitle: "Система",
+    dayOffsetLabel: "Смещение дня",
   },
   es: {
     welcomeTitle: "Bienvenido a OneStep",
@@ -408,6 +474,28 @@ const STATIC_TEXT = {
     footer1: "OneStep · Progreso minimalista",
     footer2: "Guardado local en tu navegador",
     navSettings: "Ajustes",
+    btnEdit: "Editar",
+    btnSave: "Guardar",
+    btnRemove: "Eliminar",
+    deleteGoalTitle: "Eliminar meta",
+    infoSubtitle: "Opciones y notas",
+    infoMainSummary: "Info",
+    infoMainP1: "Los pasos pequeños superan la perfección.",
+    infoMainP2: "La constancia importa más que la intensidad.",
+    infoListSummary: "Cómo se crea tu lista diaria",
+    infoList1: "Life Goals es tu pool de tareas.",
+    infoList2: "Al inicio, una meta pasa a Today.",
+    infoList3: "Cada 3 días puedes añadir otra tarea.",
+    infoList4: "Las tareas hechas siguen visibles.",
+    infoBalanceSummary: "Dificultad y equilibrio",
+    infoBalance1: "Fácil: paso pequeño y seguro.",
+    infoBalance2: "Medio: progreso estable.",
+    infoBalance3: "Difícil: reto enfocado.",
+    infoPrivacySummary: "Privacidad",
+    infoPrivacyP1: "Todos los datos se guardan localmente.",
+    settingsVersionTitle: "Versión",
+    settingsSystemTitle: "Sistema",
+    dayOffsetLabel: "Desfase de día",
   },
   fr: {
     welcomeTitle: "Bienvenue sur OneStep",
@@ -432,6 +520,28 @@ const STATIC_TEXT = {
     footer1: "OneStep · Progrès minimaliste",
     footer2: "Stocké localement dans le navigateur",
     navSettings: "Réglages",
+    btnEdit: "Modifier",
+    btnSave: "Enregistrer",
+    btnRemove: "Supprimer",
+    deleteGoalTitle: "Supprimer l'objectif",
+    infoSubtitle: "Options et informations",
+    infoMainSummary: "Info",
+    infoMainP1: "Les petits pas battent la perfection.",
+    infoMainP2: "La régularité compte plus que l'intensité.",
+    infoListSummary: "Comment la liste du jour est créée",
+    infoList1: "Life Goals est ton pool de tâches.",
+    infoList2: "Au départ, un objectif devient la tâche du jour.",
+    infoList3: "Tous les 3 jours tu peux ajouter une tâche.",
+    infoList4: "Les tâches terminées restent visibles.",
+    infoBalanceSummary: "Difficulté et équilibre",
+    infoBalance1: "Facile : petit pas sûr.",
+    infoBalance2: "Moyen : progression stable.",
+    infoBalance3: "Difficile : défi ciblé.",
+    infoPrivacySummary: "Confidentialité",
+    infoPrivacyP1: "Toutes les données restent locales au navigateur.",
+    settingsVersionTitle: "Version",
+    settingsSystemTitle: "Système",
+    dayOffsetLabel: "Décalage de jour",
   },
 };
 
@@ -664,6 +774,24 @@ const applyStaticTranslations = () => {
   setText("goals-title", s.goalsTitle);
   setText("progress-title", s.progressTitle);
   setText("info-title", s.infoTitle);
+  setText("info-subtitle", s.infoSubtitle);
+  setText("info-summary-main", s.infoMainSummary);
+  setText("info-main-p1", s.infoMainP1);
+  setText("info-main-p2", s.infoMainP2);
+  setText("info-summary-list", s.infoListSummary);
+  setText("info-list-1", s.infoList1);
+  setText("info-list-2", s.infoList2);
+  setText("info-list-3", s.infoList3);
+  setText("info-list-4", s.infoList4);
+  setText("info-summary-balance", s.infoBalanceSummary);
+  setText("info-balance-1", s.infoBalance1);
+  setText("info-balance-2", s.infoBalance2);
+  setText("info-balance-3", s.infoBalance3);
+  setText("info-summary-privacy", s.infoPrivacySummary);
+  setText("info-privacy-p1", s.infoPrivacyP1);
+  setText("settings-version-title", s.settingsVersionTitle);
+  setText("settings-system-title", s.settingsSystemTitle);
+  setText("day-offset-label", s.dayOffsetLabel);
 
   if (quickTaskInput) quickTaskInput.placeholder = t("quickTaskPlaceholder");
   if (goalInput) goalInput.placeholder = "Goal / Ziel";
@@ -1194,7 +1322,7 @@ const renderToday = (state) => {
         const removeBtn = document.createElement("button");
         removeBtn.type = "button";
         removeBtn.className = "btn ghost side-quest-remove";
-        removeBtn.textContent = "Entfernen";
+        removeBtn.textContent = (STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).btnRemove;
         removeBtn.addEventListener("click", () => removeSideQuest(goal.id));
 
         labelEl.appendChild(checkbox);
@@ -1335,15 +1463,15 @@ const renderGoals = (state) => {
       const saveBtn = document.createElement("button");
       saveBtn.type = "button";
       saveBtn.className = "btn goal-edit-save";
-      saveBtn.textContent = "Speichern";
+      saveBtn.textContent = (STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).btnSave;
       saveBtn.addEventListener("click", () => finishEditGoal(goal.id, input.value));
 
       const removeBtn = document.createElement("button");
       removeBtn.type = "button";
       removeBtn.className = "btn ghost goal-delete";
-      removeBtn.textContent = "Entfernen";
+      removeBtn.textContent = (STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).btnRemove;
       removeBtn.disabled = false;
-      removeBtn.title = "Ziel entfernen";
+      removeBtn.title = (STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).deleteGoalTitle;
       removeBtn.addEventListener("click", () => deleteGoal(goal.id));
 
       li.appendChild(input);
@@ -1353,7 +1481,7 @@ const renderGoals = (state) => {
       const editBtn = document.createElement("button");
       editBtn.type = "button";
       editBtn.className = "btn ghost goal-edit";
-      editBtn.textContent = "Bearbeiten";
+      editBtn.textContent = (STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).btnEdit;
       editBtn.addEventListener("click", () => startEditGoal(goal.id));
 
       li.appendChild(title);

@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.1";
+const APP_VERSION = "1.5.2";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -70,6 +70,7 @@ const defaultState = () => ({
   weeklyPlans: {},
   tutorialStep: 1,
   tutorialCompleted: false,
+  onboardingStartDate: null,
   proEnabled: false,
   templatesOpenedOnce: false,
 });
@@ -102,6 +103,15 @@ const loadState = () => {
     normalized.weeklyPlans = normalized.weeklyPlans || {};
     normalized.tutorialStep = normalized.tutorialStep || 1;
     normalized.tutorialCompleted = normalized.tutorialCompleted || false;
+    normalized.onboardingStartDate = normalized.onboardingStartDate || null;
+    if (!normalized.onboardingStartDate && normalized.goals.length > 0) {
+      const datedGoals = normalized.goals
+        .map((g) => g.createdAt)
+        .filter((d) => typeof d === "string" && d.length >= 10)
+        .sort();
+      normalized.onboardingStartDate =
+        datedGoals[0] || todayISO(normalized.simulationOffsetDays);
+    }
     normalized.proEnabled = normalized.proEnabled || false;
     normalized.templatesOpenedOnce = normalized.templatesOpenedOnce || false;
     return normalized;
@@ -146,6 +156,7 @@ const resetBtn = document.getElementById("reset-app");
 const planGoalSelect = document.getElementById("plan-goal");
 const planGrid = document.getElementById("plan-grid");
 const planHint = document.getElementById("plan-hint");
+const weeklyPlanSection = document.querySelector(".weekly-plan");
 const modeSwitch = document.getElementById("mode-switch");
 const modeHint = document.getElementById("mode-hint");
 const templateCategories = document.getElementById("template-categories");
@@ -175,6 +186,40 @@ const MOTIVATION = [
   "Langsamer Fortschritt ist echter Fortschritt.",
   "Deine Energie zählt. Ein kleiner Schritt reicht.",
 ];
+
+const getOnboardingDay = (state) => {
+  if (!state.onboardingStartDate) return 1;
+  const day = daysBetween(
+    state.onboardingStartDate,
+    todayISO(state.simulationOffsetDays)
+  ) + 1;
+  return Math.max(1, day);
+};
+
+const getFeatureAccess = (state) => {
+  const day = getOnboardingDay(state);
+  return {
+    day,
+    weeklyPlan: day >= 4,
+    quickTasks: day >= 7,
+    sideQuest: day >= 10,
+    onboardingActive: day <= 12,
+  };
+};
+
+const applyFeatureGating = (state) => {
+  const access = getFeatureAccess(state);
+
+  if (weeklyPlanSection) {
+    weeklyPlanSection.style.display = access.weeklyPlan ? "block" : "none";
+  }
+  if (quickTaskForm) {
+    quickTaskForm.style.display = access.quickTasks ? "grid" : "none";
+  }
+  if (sideQuestForm) {
+    sideQuestForm.style.display = access.sideQuest ? "grid" : "none";
+  }
+};
 
 // ---------------------------
 // Task-Logik: 3-Tage-Freischaltung
@@ -720,10 +765,24 @@ const applyTutorial = (state) => {
   tutorialStepCache = state.tutorialStep;
   tutorialCompletedCache = state.tutorialCompleted;
 
+  const access = getFeatureAccess(state);
+  const unlockMessages = {
+    4: {
+      title: "Neu freigeschaltet: Wochenplan",
+      text: "Heute ist der Wochenplan aktiv. Plane mindestens 4 Tage, damit deine Routine stabil und realistisch bleibt.",
+    },
+    7: {
+      title: "Neu freigeschaltet: Einmalige Aufgaben",
+      text: "Heute sind einmalige Aufgaben aktiv. Nutze sie für spontane To-dos, ohne deine Hauptziele zu verwässern.",
+    },
+    10: {
+      title: "Neu freigeschaltet: Side Quest",
+      text: "Heute ist Side Quest aktiv. Wähle bis zu 5 Ziele, die später Teil deiner Routine werden sollen.",
+    },
+  };
+
   if (tutorialSection) {
-    if (state.tutorialCompleted) {
-      tutorialSection.style.display = "none";
-    } else {
+    if (!state.tutorialCompleted) {
       tutorialSection.style.display = "block";
       if (tutorialTitle) tutorialTitle.textContent = "Start";
       if (tutorialStepLabel) tutorialStepLabel.textContent = `Schritt ${state.tutorialStep}/3`;
@@ -736,6 +795,29 @@ const applyTutorial = (state) => {
           tutorialText.textContent = "Super! Alle Bereiche sind jetzt freigeschaltet.";
         }
       }
+    } else if (access.onboardingActive) {
+      tutorialSection.style.display = "block";
+      const unlock = unlockMessages[access.day];
+      if (tutorialStepLabel) tutorialStepLabel.textContent = `Tag ${access.day}/12`;
+      if (unlock) {
+        if (tutorialTitle) tutorialTitle.textContent = unlock.title;
+        if (tutorialText) tutorialText.textContent = unlock.text;
+      } else {
+        if (tutorialTitle) tutorialTitle.textContent = "Onboarding aktiv";
+        if (tutorialText) {
+          if (access.day <= 3) {
+            tutorialText.textContent = "Fokus auf die Hauptfunktionen: Ziele anlegen und Today-Liste abhaken. Weitere Funktionen werden schrittweise freigeschaltet.";
+          } else if (access.day <= 6) {
+            tutorialText.textContent = "Nutze jetzt den Wochenplan, um deine Tage zu strukturieren. Die nächsten Funktionen folgen in den kommenden Tagen.";
+          } else if (access.day <= 9) {
+            tutorialText.textContent = "Einmalige Aufgaben sind aktiv. Hauptaufgaben bleiben Priorität, einmalige Aufgaben sind nur Ergänzung.";
+          } else {
+            tutorialText.textContent = "Side Quests sind aktiv. Nutze sie für zukünftige Routinen, während deine Kernziele stabil bleiben.";
+          }
+        }
+      }
+    } else {
+      tutorialSection.style.display = "none";
     }
   }
 
@@ -772,6 +854,7 @@ const renderAll = (state) => {
   renderProgress(state);
   renderCalendar(state);
   renderSimulatedDate(state);
+  applyFeatureGating(state);
   const updated = applyTutorial(state);
   applyMode(updated);
   saveState(updated);
@@ -783,12 +866,17 @@ const renderAll = (state) => {
 // ---------------------------
 const addGoal = (title, difficulty) => {
   const state = loadState();
+  const today = todayISO(state.simulationOffsetDays);
+
+  if (!state.onboardingStartDate) {
+    state.onboardingStartDate = today;
+  }
 
   state.goals.push({
     id: crypto.randomUUID(),
     title,
     difficulty,
-    createdAt: todayISO(state.simulationOffsetDays),
+    createdAt: today,
   });
 
   ensureTodayTasks(state);
@@ -885,6 +973,7 @@ const addRandomTask = () => {
 
 const addQuickTask = (label) => {
   const state = loadState();
+  if (!getFeatureAccess(state).quickTasks) return;
   const today = todayISO(state.simulationOffsetDays);
   const id = crypto.randomUUID();
   state.quickTasks[id] = {
@@ -899,6 +988,7 @@ const addQuickTask = (label) => {
 
 const addQuickTaskTomorrow = (label) => {
   const state = loadState();
+  if (!getFeatureAccess(state).quickTasks) return;
   const tomorrow = todayISO(state.simulationOffsetDays + 1);
   const id = crypto.randomUUID();
   state.quickTasksTomorrow[id] = {
@@ -946,6 +1036,7 @@ const renderSideQuestOptions = (state) => {
 
 const addSideQuest = (goalId) => {
   const state = loadState();
+  if (!getFeatureAccess(state).sideQuest) return;
   if ((state.sideQuests || []).length >= 5) return;
   if (state.sideQuests.some((q) => q.goalId === goalId)) return;
   const goal = state.goals.find((g) => g.id === goalId);

@@ -1,16 +1,16 @@
-## Hi there 👋
+# OneStep
 
-<!--
-**jirotubert-star/jirotubert-star** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnheiten und Fortschrittstracking.
 
-Here are some ideas to get you started:
+## Projektstruktur
+- `index.html`: App-Shell und UI-Bereiche (Today, Goals, Progress, Info)
+- `js/app.js`: Zustand, LocalStorage, Render-Logik, Interaktionen
+- `css/style.css`: Styling und Animationen
+- `site.webmanifest`: PWA-Metadaten
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## Version
+- Aktuell: `1.6.0`
+
+## Aenderungsprotokoll
+- `1.6.0` (2026-02-15): HTML-Head auf neue Icon-/Manifest-Referenzen aktualisiert (`v1600`), App-Version auf `1.6.0` angehoben.
+- `1.6.0` (2026-02-15): Versionsupdate auf `1.6.0`; Manifest-Cache-Buster in `index.html` auf `v=1600` gesetzt; Dokumentation initialisiert.

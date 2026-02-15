@@ -19,9 +19,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.6.19`
+- Aktuell: `1.6.20`
 
 ## Aenderungsprotokoll
+- `1.6.20` (2026-02-15): Onboarding-Text tageabhaengig gemacht: innerhalb von Tag `1-12` erscheinen jetzt unterschiedliche Hinweise je nach Phase (frueh/mittel/spaet), statt eines statischen Standardtexts; Manifest-Cache-Buster auf `v=1620`.
 - `1.6.19` (2026-02-15): Archivierungsfunktion entfernt: keine Archivieren/Wiederherstellen-Buttons mehr, keine getrennte Archivliste und keine Archiv-Filter in Today/Unlock/Weekly Plan/Onboarding; Manifest-Cache-Buster auf `v=1619`.
 - `1.6.18` (2026-02-15): Hauptaufgaben-Checkbox gefixt: Today-Liste wird nach dem Abhaken leicht verzoegert neu gerendert, damit die Burst-Animation sichtbar bleibt; Manifest-Cache-Buster auf `v=1618`.
 - `1.6.17` (2026-02-15): Gesamt-Upgrade umgesetzt: klareres Onboarding (Checkliste + CTA), Backup-Import mit Validierung und Overwrite/Merge-Entscheidung, neue Progress-Insights (Wochenquote/Monatsquote/starker Wochentag), Goals-Archiv + Drag-and-drop-Sortierung, robusteres Update-Banner (Retry + Release-Hinweis), Privacy/Impressum-Seiten und lokales Fehlerlog; Manifest-Cache-Buster auf `v=1617`.

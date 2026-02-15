@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.18";
+const APP_VERSION = "1.5.19";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -146,7 +146,6 @@ const goalDifficulty = document.getElementById("goal-difficulty");
 const streakEl = document.getElementById("streak");
 const totalDoneEl = document.getElementById("total-done");
 const motivationEl = document.getElementById("motivation");
-const consistencyEl = document.getElementById("consistency");
 const activeWeekEl = document.getElementById("active-week");
 const perfectWeekEl = document.getElementById("perfect-week");
 const perfectRecordEl = document.getElementById("perfect-record");
@@ -842,9 +841,6 @@ const renderGoals = (state) => {
 const renderProgress = (state) => {
   streakEl.textContent = state.streak;
   totalDoneEl.textContent = state.totalDone;
-  if (consistencyEl) {
-    consistencyEl.textContent = `${computeWeeklyConsistency(state)}%`;
-  }
   const currentISO = todayISO(state.simulationOffsetDays);
   const weeklyStats = getWeeklyCompletionStats(state, currentISO);
   const records = getPersonalWeeklyRecords(state);
@@ -1548,31 +1544,6 @@ const isRestDayForTask = (state, task, isoDate) => {
   const weekdayKey = weekdayKeyFromISO(isoDate);
   const entry = plan[weekdayKey];
   return !!(entry && !entry.active);
-};
-
-const computeWeeklyConsistency = (state) => {
-  const today = todayISO(state.simulationOffsetDays);
-  const date = new Date(today + "T00:00:00");
-  const day = date.getDay();
-  const mondayOffset = (day + 6) % 7;
-  const monday = new Date(date);
-  monday.setDate(date.getDate() - mondayOffset);
-
-  let plannedDays = 0;
-  let completedDays = 0;
-
-  for (let i = 0; i < 7; i += 1) {
-    const d = new Date(monday);
-    d.setDate(monday.getDate() + i);
-    const iso = d.toISOString().slice(0, 10);
-    const summary = state.daySummary?.[iso];
-    if (!summary || summary.total === 0) continue;
-    plannedDays += 1;
-    if (summary.done >= summary.total) completedDays += 1;
-  }
-
-  if (plannedDays === 0) return 0;
-  return Math.round((completedDays / plannedDays) * 100);
 };
 
 const getWeekStartFromDate = (date) => {

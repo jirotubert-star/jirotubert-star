@@ -40,19 +40,9 @@ body {
 }
 
 .logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
   font-size: clamp(1.8rem, 3vw, 2.4rem);
   font-weight: 600;
   letter-spacing: 0.02em;
-}
-
-.logo-mark {
-  width: clamp(34px, 4.2vw, 46px);
-  height: clamp(34px, 4.2vw, 46px);
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(31, 42, 46, 0.14);
 }
 
 .tagline {

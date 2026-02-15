@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.2";
+const APP_VERSION = "1.5.3";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -769,7 +769,7 @@ const applyTutorial = (state) => {
   const unlockMessages = {
     4: {
       title: "Neu freigeschaltet: Wochenplan",
-      text: "Heute ist der Wochenplan aktiv. Plane mindestens 4 Tage, damit deine Routine stabil und realistisch bleibt.",
+      text: "Heute ist der Wochenplan aktiv. Du findest ihn bei Goals ganz unten. Plane mindestens 4 Tage, damit deine Routine stabil und realistisch bleibt.",
     },
     7: {
       title: "Neu freigeschaltet: Einmalige Aufgaben",
@@ -784,6 +784,7 @@ const applyTutorial = (state) => {
   if (tutorialSection) {
     if (!state.tutorialCompleted) {
       tutorialSection.style.display = "block";
+      tutorialSection.classList.remove("unlock-highlight");
       if (tutorialTitle) tutorialTitle.textContent = "Start";
       if (tutorialStepLabel) tutorialStepLabel.textContent = `Schritt ${state.tutorialStep}/3`;
       if (tutorialText) {
@@ -798,6 +799,7 @@ const applyTutorial = (state) => {
     } else if (access.onboardingActive) {
       tutorialSection.style.display = "block";
       const unlock = unlockMessages[access.day];
+      tutorialSection.classList.toggle("unlock-highlight", !!unlock);
       if (tutorialStepLabel) tutorialStepLabel.textContent = `Tag ${access.day}/12`;
       if (unlock) {
         if (tutorialTitle) tutorialTitle.textContent = unlock.title;
@@ -818,6 +820,7 @@ const applyTutorial = (state) => {
       }
     } else {
       tutorialSection.style.display = "none";
+      tutorialSection.classList.remove("unlock-highlight");
     }
   }
 

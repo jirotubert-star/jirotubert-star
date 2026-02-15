@@ -72,6 +72,12 @@ body {
   background: linear-gradient(135deg, #f6f1e7, #f0f7f4);
 }
 
+.tutorial.unlock-highlight {
+  border: 1px solid #6ca482;
+  background: linear-gradient(135deg, #edf8ef, #dff2e4);
+  box-shadow: 0 0 0 3px rgba(108, 164, 130, 0.18), var(--shadow);
+}
+
 .nav-item[disabled] {
   opacity: 0.45;
   cursor: not-allowed;

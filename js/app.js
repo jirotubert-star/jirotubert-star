@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.12";
+const APP_VERSION = "1.5.13";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -373,7 +373,7 @@ const renderToday = (state) => {
           sideQuestForm.classList.remove("unlock-celebrate");
           void sideQuestForm.offsetHeight;
           sideQuestForm.classList.add("unlock-celebrate");
-          setTimeout(() => sideQuestForm.classList.remove("unlock-celebrate"), 1300);
+          setTimeout(() => sideQuestForm.classList.remove("unlock-celebrate"), 1850);
         }, SIDE_QUEST_REVEAL_SCROLL_MS);
       });
     }

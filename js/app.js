@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.6";
+const APP_VERSION = "1.5.7";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -1021,7 +1021,10 @@ const addQuickTaskTomorrow = (label) => {
 const renderSideQuestOptions = (state) => {
   if (!sideQuestSelect) return;
   const selected = new Set((state.sideQuests || []).map((q) => q.goalId));
-  const options = state.goals.filter((g) => !selected.has(g.id));
+  const activeTodayGoalIds = new Set((state.todayTasks || []).map((task) => task.goalId));
+  const options = state.goals.filter(
+    (g) => !selected.has(g.id) && !activeTodayGoalIds.has(g.id)
+  );
 
   sideQuestSelect.innerHTML = "";
   if (state.sideQuests.length >= 5) {
@@ -1056,6 +1059,7 @@ const addSideQuest = (goalId) => {
   if (!getFeatureAccess(state).sideQuest) return;
   if ((state.sideQuests || []).length >= 5) return;
   if (state.sideQuests.some((q) => q.goalId === goalId)) return;
+  if (state.todayTasks.some((task) => task.goalId === goalId)) return;
   const goal = state.goals.find((g) => g.id === goalId);
   if (!goal) return;
 

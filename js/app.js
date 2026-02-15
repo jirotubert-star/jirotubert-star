@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.3";
+const APP_VERSION = "1.5.4";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -870,6 +870,7 @@ const renderAll = (state) => {
 const addGoal = (title, difficulty) => {
   const state = loadState();
   const today = todayISO(state.simulationOffsetDays);
+  const hadNoGoals = state.goals.length === 0;
 
   if (!state.onboardingStartDate) {
     state.onboardingStartDate = today;
@@ -886,6 +887,9 @@ const addGoal = (title, difficulty) => {
   updateStreak(state);
   saveState(state);
   renderAll(state);
+  if (hadNoGoals) {
+    setActiveTab("today");
+  }
 };
 
 const toggleTask = (taskId, textEl, labelEl) => {

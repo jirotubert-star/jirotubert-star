@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.16";
+const APP_VERSION = "1.5.17";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -147,6 +147,10 @@ const streakEl = document.getElementById("streak");
 const totalDoneEl = document.getElementById("total-done");
 const motivationEl = document.getElementById("motivation");
 const consistencyEl = document.getElementById("consistency");
+const activeWeekEl = document.getElementById("active-week");
+const perfectWeekEl = document.getElementById("perfect-week");
+const activeRecordEl = document.getElementById("active-record");
+const perfectRecordEl = document.getElementById("perfect-record");
 const calPrev = document.getElementById("cal-prev");
 const calNext = document.getElementById("cal-next");
 const calTitle = document.getElementById("cal-title");
@@ -841,6 +845,21 @@ const renderProgress = (state) => {
   totalDoneEl.textContent = state.totalDone;
   if (consistencyEl) {
     consistencyEl.textContent = `${computeWeeklyConsistency(state)}%`;
+  }
+  const currentISO = todayISO(state.simulationOffsetDays);
+  const weeklyStats = getWeeklyCompletionStats(state, currentISO);
+  const records = getPersonalWeeklyRecords(state);
+  if (activeWeekEl) {
+    activeWeekEl.textContent = String(weeklyStats.activeDays);
+  }
+  if (perfectWeekEl) {
+    perfectWeekEl.textContent = String(weeklyStats.perfectDays);
+  }
+  if (activeRecordEl) {
+    activeRecordEl.textContent = `Rekord: ${records.activeRecord}`;
+  }
+  if (perfectRecordEl) {
+    perfectRecordEl.textContent = `Rekord: ${records.perfectRecord}`;
   }
 
   const message = MOTIVATION[Math.floor(Math.random() * MOTIVATION.length)];
@@ -1558,6 +1577,61 @@ const computeWeeklyConsistency = (state) => {
 
   if (plannedDays === 0) return 0;
   return Math.round((completedDays / plannedDays) * 100);
+};
+
+const getWeekStartFromDate = (date) => {
+  const weekStart = new Date(date);
+  const day = weekStart.getDay();
+  const mondayOffset = (day + 6) % 7;
+  weekStart.setDate(weekStart.getDate() - mondayOffset);
+  weekStart.setHours(0, 0, 0, 0);
+  return weekStart;
+};
+
+const getWeeklyCompletionStats = (state, anchorISO) => {
+  const anchorDate = new Date(anchorISO + "T00:00:00");
+  const monday = getWeekStartFromDate(anchorDate);
+  let activeDays = 0;
+  let perfectDays = 0;
+
+  for (let i = 0; i < 7; i += 1) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    const iso = d.toISOString().slice(0, 10);
+    const summary = state.daySummary?.[iso];
+    if (!summary || summary.total <= 0) continue;
+    const ratio = summary.done / summary.total;
+    if (ratio >= 0.5) activeDays += 1;
+    if (ratio >= 1) perfectDays += 1;
+  }
+
+  return { activeDays, perfectDays };
+};
+
+const getPersonalWeeklyRecords = (state) => {
+  const byWeek = {};
+  const summaryEntries = Object.entries(state.daySummary || {});
+
+  summaryEntries.forEach(([iso, summary]) => {
+    if (!summary || summary.total <= 0) return;
+    const date = new Date(iso + "T00:00:00");
+    const weekStartISO = getWeekStartFromDate(date).toISOString().slice(0, 10);
+    if (!byWeek[weekStartISO]) {
+      byWeek[weekStartISO] = { activeDays: 0, perfectDays: 0 };
+    }
+    const ratio = summary.done / summary.total;
+    if (ratio >= 0.5) byWeek[weekStartISO].activeDays += 1;
+    if (ratio >= 1) byWeek[weekStartISO].perfectDays += 1;
+  });
+
+  let activeRecord = 0;
+  let perfectRecord = 0;
+  Object.values(byWeek).forEach((week) => {
+    if (week.activeDays > activeRecord) activeRecord = week.activeDays;
+    if (week.perfectDays > perfectRecord) perfectRecord = week.perfectDays;
+  });
+
+  return { activeRecord, perfectRecord };
 };
 
 const renderWeeklyPlan = (state) => {

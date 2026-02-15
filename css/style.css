@@ -698,6 +698,12 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   font-size: 0.9rem;
 }
 
+.stat-sub {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
 .motivation {
   color: var(--muted);
 }

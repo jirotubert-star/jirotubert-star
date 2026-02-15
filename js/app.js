@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.0";
+const APP_VERSION = "1.6.1";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities

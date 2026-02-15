@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.20";
+const APP_VERSION = "1.6.21";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -72,7 +72,7 @@ const I18N = {
     tutorialS2: "Hake heute eine Aufgabe ab.",
     tutorialDone: "Super! Alles ist freigeschaltet.",
     unlockWeekTitle: "Neu: Wochenplan",
-    unlockWeekText: "Wochenplan ist jetzt aktiv.",
+    unlockWeekText: "Schau dir jetzt den Wochenplan an.",
     unlockQuickTitle: "Neu: Einmalige Aufgaben",
     unlockQuickText: "Einmalige Aufgaben sind jetzt aktiv.",
     unlockSideTitle: "Neu: Side Quest",
@@ -2063,17 +2063,21 @@ const applyTutorial = (state) => {
 
   if (tutorialSection) {
     if (tutorialChecklist) {
+      const showChecklist = !state.tutorialCompleted || access.day < 4;
+      tutorialChecklist.style.display = showChecklist ? "" : "none";
       tutorialChecklist.innerHTML = "";
-      [
-        { label: s.tutorialCheck1, done: hasLanguage },
-        { label: s.tutorialCheck2, done: hasGoal },
-        { label: s.tutorialCheck3, done: firstTaskDone },
-      ].forEach((item) => {
-        const li = document.createElement("li");
-        li.textContent = item.label;
-        li.classList.toggle("is-done", item.done);
-        tutorialChecklist.appendChild(li);
-      });
+      if (showChecklist) {
+        [
+          { label: s.tutorialCheck1, done: hasLanguage },
+          { label: s.tutorialCheck2, done: hasGoal },
+          { label: s.tutorialCheck3, done: firstTaskDone },
+        ].forEach((item) => {
+          const li = document.createElement("li");
+          li.textContent = item.label;
+          li.classList.toggle("is-done", item.done);
+          tutorialChecklist.appendChild(li);
+        });
+      }
     }
     if (!state.tutorialCompleted) {
       tutorialSection.style.display = "block";

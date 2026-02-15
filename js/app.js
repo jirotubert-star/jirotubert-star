@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.15";
+const APP_VERSION = "1.5.16";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -1087,6 +1087,16 @@ const addTaskFromGoal = (goalId) => {
     done: false,
     doneAt: null,
     date: today,
+  });
+
+  // If this goal was tracked as a side quest, remove it once it joins the main routine.
+  state.sideQuests = (state.sideQuests || []).filter((q) => q.goalId !== goalId);
+  Object.keys(state.sideQuestChecks || {}).forEach((dateKey) => {
+    if (!state.sideQuestChecks[dateKey]) return;
+    delete state.sideQuestChecks[dateKey][goalId];
+    if (Object.keys(state.sideQuestChecks[dateKey]).length === 0) {
+      delete state.sideQuestChecks[dateKey];
+    }
   });
 
   state.lastTaskUnlockDate = today;

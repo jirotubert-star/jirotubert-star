@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.11";
+const APP_VERSION = "1.6.12";
 const LANGUAGE_KEY = "onestep_language_v1";
 const SUPPORTED_LANGS = ["de", "en", "ru", "es", "fr"];
 let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "";

@@ -713,7 +713,7 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   width: 14px;
   height: 14px;
   border-radius: 4px;
-  background: #eef8f1;
+  background: hsl(145, 62%, 68%);
   border: 2px solid #2f8b5c;
   box-shadow:
     0 0 0 2px rgba(47, 139, 92, 0.35),

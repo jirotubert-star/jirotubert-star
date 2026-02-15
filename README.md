@@ -19,9 +19,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.6.10`
+- Aktuell: `1.6.11`
 
 ## Aenderungsprotokoll
+- `1.6.11` (2026-02-15): Kalender-Legende angepasst: das gruene Legenden-Kaestchen nutzt jetzt den gleichen visuellen Stil wie ein voll erfuellter Kalendertag; Manifest-Cache-Buster auf `v=1611`.
 - `1.6.10` (2026-02-15): Vollstaendige i18n-Abdeckung: fehlende Life-Goals-/Settings-Texte, lokalisierte Vorlagen (Kategorien + Items), lokalisierte Wochenplan-Ueberschrift inkl. Wochentage und Labels; Manifest-Cache-Buster auf `v=1610`.
 - `1.6.7` (2026-02-15): Erststart-Sprachauswahl hinzugefuegt (Deutsch, Englisch, Russisch, Spanisch, Franzoesisch) und zentrale UI-/Hinweistexte in kurze Sprachvarianten ueberfuehrt; Manifest-Cache-Buster auf `v=1607`.
 - `1.6.6` (2026-02-15): Vollstaendige Offline-Nutzung als installierte Home-Screen-App aktiviert: `service-worker.js` hinzugefuegt, Registrierung in `js/app.js` integriert und Build-Output um Service-Worker-Datei erweitert; Manifest-Cache-Buster auf `v=1606`.

@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.23";
+const APP_VERSION = "1.6.24";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -76,7 +76,7 @@ const I18N = {
     unlockQuickTitle: "Neu: Einmalige Aufgaben",
     unlockQuickText: "Einmalige Aufgaben sind jetzt aktiv.",
     unlockSideTitle: "Neu: Side Quest",
-    unlockSideText: "Side Quest ist jetzt aktiv.",
+    unlockSideText: "Side Quests sind jetzt verfügbar. Dafür musst du zuerst alle Hauptaufgaben erledigen.",
     onboardingTitle: "Onboarding aktiv",
     onboardingText: "Bleib bei kleinen, täglichen Schritten.",
     onboardingTextEarly: "Tag 1-3: Starte ruhig mit nur einem klaren Schritt.",
@@ -143,7 +143,7 @@ const I18N = {
     unlockQuickTitle: "New: One-time tasks",
     unlockQuickText: "One-time tasks are now unlocked.",
     unlockSideTitle: "New: Side Quest",
-    unlockSideText: "Side Quest is now unlocked.",
+    unlockSideText: "Side quests are now available. To use them, complete all main tasks first.",
     onboardingTitle: "Onboarding active",
     onboardingText: "Keep it small and daily.",
     onboardingTextEarly: "Day 1-3: Start calm with one clear step.",
@@ -204,7 +204,7 @@ const I18N = {
     unlockQuickTitle: "Новое: разовые задачи",
     unlockQuickText: "Разовые задачи теперь доступны.",
     unlockSideTitle: "Новое: Side Quest",
-    unlockSideText: "Side Quest теперь доступен.",
+    unlockSideText: "Side quests теперь доступны. Сначала выполни все основные задачи.",
     onboardingTitle: "Онбординг активен",
     onboardingText: "Маленькие шаги каждый день.",
     onboardingTextEarly: "День 1-3: начни спокойно с одного шага.",
@@ -265,7 +265,7 @@ const I18N = {
     unlockQuickTitle: "Nuevo: tareas puntuales",
     unlockQuickText: "Las tareas puntuales ya están activas.",
     unlockSideTitle: "Nuevo: Side Quest",
-    unlockSideText: "Side Quest ya está activo.",
+    unlockSideText: "Los side quests ya están disponibles. Para usarlos, completa primero todas las tareas principales.",
     onboardingTitle: "Onboarding activo",
     onboardingText: "Pequeños pasos cada día.",
     onboardingTextEarly: "Día 1-3: empieza con calma con un paso claro.",
@@ -326,7 +326,7 @@ const I18N = {
     unlockQuickTitle: "Nouveau : tâches ponctuelles",
     unlockQuickText: "Les tâches ponctuelles sont actives.",
     unlockSideTitle: "Nouveau : Side Quest",
-    unlockSideText: "Side Quest est maintenant actif.",
+    unlockSideText: "Les side quests sont maintenant disponibles. Pour les utiliser, termine d'abord toutes les tâches principales.",
     onboardingTitle: "Onboarding actif",
     onboardingText: "Petits pas chaque jour.",
     onboardingTextEarly: "Jour 1-3 : commence calmement avec un seul pas clair.",
@@ -1334,7 +1334,7 @@ const getFeatureAccess = (state) => {
     day,
     weeklyPlan: day >= 4,
     quickTasks: day >= 7,
-    sideQuest: day >= 10,
+    sideQuest: day >= 9,
     onboardingActive: day <= 12,
   };
 };
@@ -2060,7 +2060,7 @@ const applyTutorial = (state) => {
       title: t("unlockQuickTitle"),
       text: t("unlockQuickText"),
     },
-    10: {
+    9: {
       title: t("unlockSideTitle"),
       text: t("unlockSideText"),
     },

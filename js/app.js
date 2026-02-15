@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.17";
+const APP_VERSION = "1.6.18";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -996,6 +996,7 @@ let tutorialStepCache = 1;
 let tutorialCompletedCache = false;
 let sideQuestVisibleCache = false;
 let toastTimer = null;
+let todayRenderTimer = null;
 let waitingServiceWorker = null;
 let isRefreshingFromServiceWorker = false;
 let swRegistrationRef = null;
@@ -2301,7 +2302,14 @@ const toggleTask = (taskId, textEl, labelEl) => {
       setTimeout(() => labelEl.classList.remove("burst"), 700);
     }
   }
-  renderToday(state);
+
+  clearTimeout(todayRenderTimer);
+  if (task.done) {
+    // Delay full list rerender so the check burst remains visible.
+    todayRenderTimer = setTimeout(() => renderToday(state), 360);
+  } else {
+    renderToday(state);
+  }
   renderProgress(state);
   renderCalendar(state);
 };

@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.17";
+const APP_VERSION = "1.5.18";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -149,7 +149,6 @@ const motivationEl = document.getElementById("motivation");
 const consistencyEl = document.getElementById("consistency");
 const activeWeekEl = document.getElementById("active-week");
 const perfectWeekEl = document.getElementById("perfect-week");
-const activeRecordEl = document.getElementById("active-record");
 const perfectRecordEl = document.getElementById("perfect-record");
 const calPrev = document.getElementById("cal-prev");
 const calNext = document.getElementById("cal-next");
@@ -854,9 +853,6 @@ const renderProgress = (state) => {
   }
   if (perfectWeekEl) {
     perfectWeekEl.textContent = String(weeklyStats.perfectDays);
-  }
-  if (activeRecordEl) {
-    activeRecordEl.textContent = `Rekord: ${records.activeRecord}`;
   }
   if (perfectRecordEl) {
     perfectRecordEl.textContent = `Rekord: ${records.perfectRecord}`;

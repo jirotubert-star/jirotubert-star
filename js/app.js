@@ -20,8 +20,10 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.16";
+const APP_VERSION = "1.6.17";
+const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
+const ERROR_LOG_KEY = "onestep_error_log_v1";
 const SUPPORTED_LANGS = ["de", "en", "ru", "es", "fr"];
 let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "";
 
@@ -487,6 +489,25 @@ const STATIC_TEXT = {
     templateSummary: "Vorlagen (10 Kategorien)",
     updateAvailable: "Neue Version verfügbar",
     updateNow: "Jetzt aktualisieren",
+    updateRetry: "Erneut prüfen",
+    updateNote: "Bugfixes und Verbesserungen sind bereit.",
+    tutorialCheck1: "Sprache festlegen",
+    tutorialCheck2: "Erstes Ziel erstellen",
+    tutorialCheck3: "Erste Aufgabe erledigen",
+    tutorialCta1: "Zu Einstellungen",
+    tutorialCta2: "Ziel erstellen",
+    tutorialCta3: "Zu Today",
+    progressWeekRate: "Wochenquote",
+    progressMonthRate: "Monatsquote",
+    progressBestDay: "Stärkster Wochentag",
+    archiveBtn: "Archivieren",
+    restoreBtn: "Wiederherstellen",
+    archivedTitle: "Archivierte Ziele",
+    dragHint: "Ziehen zum Sortieren",
+    backupOverwritePrompt: "Backup komplett überschreiben?",
+    backupMergePrompt: "Nicht überschreiben. Backup mit aktuellen Daten zusammenführen?",
+    legalPrivacy: "Datenschutzseite öffnen",
+    legalImprint: "Impressum öffnen",
   },
   en: {
     welcomeTitle: "Welcome to OneStep",
@@ -545,6 +566,25 @@ const STATIC_TEXT = {
     templateSummary: "Templates (10 categories)",
     updateAvailable: "New version available",
     updateNow: "Update now",
+    updateRetry: "Check again",
+    updateNote: "Bug fixes and improvements are ready.",
+    tutorialCheck1: "Set language",
+    tutorialCheck2: "Create first goal",
+    tutorialCheck3: "Complete first task",
+    tutorialCta1: "Open settings",
+    tutorialCta2: "Create goal",
+    tutorialCta3: "Go to Today",
+    progressWeekRate: "Week rate",
+    progressMonthRate: "Month rate",
+    progressBestDay: "Strongest weekday",
+    archiveBtn: "Archive",
+    restoreBtn: "Restore",
+    archivedTitle: "Archived goals",
+    dragHint: "Drag to sort",
+    backupOverwritePrompt: "Overwrite all current data with backup?",
+    backupMergePrompt: "Do not overwrite. Merge backup with current data?",
+    legalPrivacy: "Open privacy page",
+    legalImprint: "Open imprint",
   },
   ru: {
     welcomeTitle: "Добро пожаловать в OneStep",
@@ -603,6 +643,25 @@ const STATIC_TEXT = {
     templateSummary: "Шаблоны (10 категорий)",
     updateAvailable: "Доступна новая версия",
     updateNow: "Обновить сейчас",
+    updateRetry: "Проверить снова",
+    updateNote: "Исправления и улучшения готовы.",
+    tutorialCheck1: "Выбрать язык",
+    tutorialCheck2: "Создать первую цель",
+    tutorialCheck3: "Выполнить первую задачу",
+    tutorialCta1: "Открыть настройки",
+    tutorialCta2: "Создать цель",
+    tutorialCta3: "Открыть Today",
+    progressWeekRate: "Процент недели",
+    progressMonthRate: "Процент месяца",
+    progressBestDay: "Лучший день недели",
+    archiveBtn: "В архив",
+    restoreBtn: "Восстановить",
+    archivedTitle: "Архив целей",
+    dragHint: "Перетащите для сортировки",
+    backupOverwritePrompt: "Полностью перезаписать данные из резервной копии?",
+    backupMergePrompt: "Не перезаписывать. Объединить резервную копию с текущими данными?",
+    legalPrivacy: "Открыть страницу конфиденциальности",
+    legalImprint: "Открыть выходные данные",
   },
   es: {
     welcomeTitle: "Bienvenido a OneStep",
@@ -661,6 +720,25 @@ const STATIC_TEXT = {
     templateSummary: "Plantillas (10 categorías)",
     updateAvailable: "Nueva versión disponible",
     updateNow: "Actualizar ahora",
+    updateRetry: "Comprobar de nuevo",
+    updateNote: "Hay correcciones y mejoras disponibles.",
+    tutorialCheck1: "Elegir idioma",
+    tutorialCheck2: "Crear primera meta",
+    tutorialCheck3: "Completar primera tarea",
+    tutorialCta1: "Abrir ajustes",
+    tutorialCta2: "Crear meta",
+    tutorialCta3: "Ir a Today",
+    progressWeekRate: "Ratio semanal",
+    progressMonthRate: "Ratio mensual",
+    progressBestDay: "Mejor día de la semana",
+    archiveBtn: "Archivar",
+    restoreBtn: "Restaurar",
+    archivedTitle: "Metas archivadas",
+    dragHint: "Arrastra para ordenar",
+    backupOverwritePrompt: "¿Sobrescribir todos los datos actuales con la copia?",
+    backupMergePrompt: "No sobrescribir. ¿Combinar copia y datos actuales?",
+    legalPrivacy: "Abrir página de privacidad",
+    legalImprint: "Abrir aviso legal",
   },
   fr: {
     welcomeTitle: "Bienvenue sur OneStep",
@@ -719,6 +797,25 @@ const STATIC_TEXT = {
     templateSummary: "Modèles (10 catégories)",
     updateAvailable: "Nouvelle version disponible",
     updateNow: "Mettre à jour",
+    updateRetry: "Vérifier encore",
+    updateNote: "Des correctifs et améliorations sont prêts.",
+    tutorialCheck1: "Choisir la langue",
+    tutorialCheck2: "Créer le premier objectif",
+    tutorialCheck3: "Terminer la première tâche",
+    tutorialCta1: "Ouvrir réglages",
+    tutorialCta2: "Créer objectif",
+    tutorialCta3: "Aller à Today",
+    progressWeekRate: "Taux semaine",
+    progressMonthRate: "Taux mois",
+    progressBestDay: "Jour le plus fort",
+    archiveBtn: "Archiver",
+    restoreBtn: "Restaurer",
+    archivedTitle: "Objectifs archivés",
+    dragHint: "Glisser pour trier",
+    backupOverwritePrompt: "Écraser toutes les données actuelles avec la sauvegarde ?",
+    backupMergePrompt: "Ne pas écraser. Fusionner la sauvegarde avec les données actuelles ?",
+    legalPrivacy: "Ouvrir la page confidentialité",
+    legalImprint: "Ouvrir les mentions légales",
   },
 };
 
@@ -789,6 +886,7 @@ const loadState = () => {
     normalized.goals = normalized.goals.map((goal) => ({
       ...goal,
       difficulty: goal.difficulty || "noon",
+      archived: !!goal.archived,
     }));
     normalized.todayTasks = normalized.todayTasks.map((task) => ({
       ...task,
@@ -872,15 +970,22 @@ const tutorialSection = document.getElementById("tutorial");
 const tutorialTitle = document.getElementById("tutorial-title");
 const tutorialStepLabel = document.getElementById("tutorial-step");
 const tutorialText = document.getElementById("tutorial-text");
+const tutorialChecklist = document.getElementById("tutorial-checklist");
+const tutorialCtaBtn = document.getElementById("tutorial-cta");
 const toastEl = document.getElementById("toast");
 const languageModal = document.getElementById("language-modal");
 const languageButtons = document.querySelectorAll("[data-lang]");
 const updateBanner = document.getElementById("update-banner");
 const updateBannerText = document.getElementById("update-banner-text");
+const updateBannerNote = document.getElementById("update-banner-note");
 const updateBannerBtn = document.getElementById("update-banner-btn");
+const updateBannerRetryBtn = document.getElementById("update-banner-retry");
 const exportDataBtn = document.getElementById("export-data");
 const importDataBtn = document.getElementById("import-data");
 const importFileInput = document.getElementById("import-file");
+const progressWeekRateEl = document.getElementById("progress-week-rate");
+const progressMonthRateEl = document.getElementById("progress-month-rate");
+const progressBestDayEl = document.getElementById("progress-best-day");
 let currentTab = "today";
 const tabOrder = ["today", "goals", "progress", "info"];
 let touchStartX = null;
@@ -893,6 +998,8 @@ let sideQuestVisibleCache = false;
 let toastTimer = null;
 let waitingServiceWorker = null;
 let isRefreshingFromServiceWorker = false;
+let swRegistrationRef = null;
+let draggingGoalId = null;
 const SIDE_QUEST_REVEAL_SCROLL_MS = 520;
 
 // ---------------------------
@@ -904,6 +1011,22 @@ const triggerHaptic = (ms = 12) => {
   if (typeof navigator === "undefined") return;
   if (typeof navigator.vibrate !== "function") return;
   navigator.vibrate(ms);
+};
+
+const logClientError = (type, payload) => {
+  try {
+    const current = JSON.parse(localStorage.getItem(ERROR_LOG_KEY) || "[]");
+    const entry = {
+      type,
+      payload: String(payload || "unknown").slice(0, 500),
+      at: new Date().toISOString(),
+      appVersion: APP_VERSION,
+    };
+    const next = [entry, ...current].slice(0, 20);
+    localStorage.setItem(ERROR_LOG_KEY, JSON.stringify(next));
+  } catch (_err) {
+    // Ignore logging failures to avoid recursive errors.
+  }
 };
 
 const showToast = (message) => {
@@ -935,6 +1058,10 @@ const showLanguageModalIfNeeded = () => {
 const showUpdateBanner = (worker) => {
   if (!updateBanner || !worker) return;
   waitingServiceWorker = worker;
+  if (updateBannerNote) {
+    const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+    updateBannerNote.textContent = `${s.updateNote} v${APP_VERSION}`;
+  }
   updateBanner.hidden = false;
   updateBanner.classList.add("show");
 };
@@ -947,15 +1074,75 @@ const hideUpdateBanner = () => {
 
 const requestServiceWorkerUpdate = () => {
   if (!waitingServiceWorker) return;
+  hideUpdateBanner();
   waitingServiceWorker.postMessage({ type: "SKIP_WAITING" });
+};
+
+const retryServiceWorkerUpdateCheck = async () => {
+  if (!swRegistrationRef) return;
+  try {
+    await swRegistrationRef.update();
+  } catch (error) {
+    logClientError("sw_update_retry", error?.message || error);
+  }
+};
+
+const validateImportedState = (state) => {
+  if (!state || typeof state !== "object") return false;
+  if (!Array.isArray(state.goals)) return false;
+  if (!Array.isArray(state.todayTasks)) return false;
+  if (typeof state.weeklyPlans !== "object") return false;
+  return true;
+};
+
+const dedupeBy = (arr, toKey) => {
+  const seen = new Set();
+  return arr.filter((item) => {
+    const key = toKey(item);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
+const mergeStates = (current, incoming) => {
+  const merged = {
+    ...current,
+    ...incoming,
+  };
+  merged.goals = dedupeBy(
+    [...(current.goals || []), ...(incoming.goals || [])],
+    (goal) => goal.id || `${goal.title}-${goal.difficulty}`
+  );
+  merged.todayTasks = dedupeBy(
+    [...(current.todayTasks || []), ...(incoming.todayTasks || [])],
+    (task) => task.id || `${task.goalId}-${task.date}-${task.label}`
+  );
+  merged.quickTasks = { ...(current.quickTasks || {}), ...(incoming.quickTasks || {}) };
+  merged.quickTasksTomorrow = {
+    ...(current.quickTasksTomorrow || {}),
+    ...(incoming.quickTasksTomorrow || {}),
+  };
+  merged.sideQuests = dedupeBy(
+    [...(current.sideQuests || []), ...(incoming.sideQuests || [])],
+    (quest) => quest.goalId || JSON.stringify(quest)
+  );
+  merged.weeklyPlans = { ...(current.weeklyPlans || {}), ...(incoming.weeklyPlans || {}) };
+  merged.completedDays = { ...(current.completedDays || {}), ...(incoming.completedDays || {}) };
+  merged.daySummary = { ...(current.daySummary || {}), ...(incoming.daySummary || {}) };
+  merged.streak = Math.max(Number(current.streak || 0), Number(incoming.streak || 0));
+  merged.totalDone = Math.max(Number(current.totalDone || 0), Number(incoming.totalDone || 0));
+  return merged;
 };
 
 const exportBackup = () => {
   const payload = {
+    schemaVersion: BACKUP_SCHEMA_VERSION,
     version: APP_VERSION,
     exportedAt: new Date().toISOString(),
     language: currentLanguage || "de",
     state: loadState(),
+    errorLog: JSON.parse(localStorage.getItem(ERROR_LOG_KEY) || "[]"),
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -975,15 +1162,24 @@ const importBackup = async (file) => {
     const raw = await file.text();
     const parsed = JSON.parse(raw);
     const importedState = parsed?.state || parsed;
-    if (!importedState || typeof importedState !== "object") {
+    if (!validateImportedState(importedState)) {
       throw new Error("invalid backup");
     }
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(importedState));
+    const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+    const overwrite = window.confirm(s.backupOverwritePrompt);
+    if (!overwrite) {
+      const merge = window.confirm(s.backupMergePrompt);
+      if (!merge) return;
+    }
+    const nextState = overwrite ? importedState : mergeStates(loadState(), importedState);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
     const importLanguage = parsed?.language;
     if (SUPPORTED_LANGS.includes(importLanguage)) {
       currentLanguage = importLanguage;
       localStorage.setItem(LANGUAGE_KEY, importLanguage);
+    }
+    if (Array.isArray(parsed?.errorLog)) {
+      localStorage.setItem(ERROR_LOG_KEY, JSON.stringify(parsed.errorLog.slice(0, 20)));
     }
 
     applyStaticTranslations();
@@ -1049,7 +1245,9 @@ const applyStaticTranslations = () => {
   setText("weekly-plan-note", s.weeklyPlanHintMinDays);
   setText("plan-goal-label", s.planGoalLabel);
   if (updateBannerText) updateBannerText.textContent = s.updateAvailable;
+  if (updateBannerNote) updateBannerNote.textContent = s.updateNote;
   if (updateBannerBtn) updateBannerBtn.textContent = s.updateNow;
+  if (updateBannerRetryBtn) updateBannerRetryBtn.textContent = s.updateRetry;
 
   if (quickTaskInput) quickTaskInput.placeholder = t("quickTaskPlaceholder");
   if (goalInput) goalInput.placeholder = t("goalPlaceholder");
@@ -1067,6 +1265,15 @@ const applyStaticTranslations = () => {
   if (exportDataBtn) exportDataBtn.textContent = s.exportData;
   if (importDataBtn) importDataBtn.textContent = s.importData;
   if (simulatedDateEl) simulatedDateEl.textContent = `${s.simPrefix}: --`;
+  if (progressWeekRateEl) progressWeekRateEl.textContent = `${s.progressWeekRate}: 0%`;
+  if (progressMonthRateEl) progressMonthRateEl.textContent = `${s.progressMonthRate}: 0%`;
+  if (progressBestDayEl) progressBestDayEl.textContent = `${s.progressBestDay}: -`;
+
+  const legalLinks = document.querySelectorAll("#info-summary-privacy ~ p a");
+  if (legalLinks.length >= 2) {
+    legalLinks[0].textContent = s.legalPrivacy;
+    legalLinks[1].textContent = s.legalImprint;
+  }
 
   const legend = document.querySelector(".calendar-legend .soft-note");
   if (legend) legend.textContent = s.calLegend;
@@ -1159,6 +1366,7 @@ const pickTaskFromGoals = (state) => {
   const today = todayISO(state.simulationOffsetDays);
   const weekdayKey = weekdayKeyFromISO(today);
   const candidates = state.goals.filter((g) => {
+    if (g.archived) return false;
     if (usedGoalIds.has(g.id)) return false;
     const plan = getPlanForGoal(state, g.id);
     if (!planHasAnyActive(plan)) return true;
@@ -1182,7 +1390,7 @@ const ensureTodayTasks = (state) => {
 
   // Wenn wir noch keine Tasks für heute haben, setzen wir das Datum neu.
   if (!state.todayTasks.length || state.todayTasks[0].date !== today) {
-    const goalMap = new Map(state.goals.map((g) => [g.id, g]));
+    const goalMap = new Map(state.goals.filter((g) => !g.archived).map((g) => [g.id, g]));
     state.todayTasks = state.todayTasks
       .map((task) => {
         const goal = goalMap.get(task.goalId);
@@ -1208,8 +1416,9 @@ const ensureTodayTasks = (state) => {
   }
 
   // Erster Start: genau eine Aufgabe aus Zielen hinzufügen.
-  if (state.goals.length > 0 && state.todayTasks.length === 0) {
-    const firstGoal = state.goals[0];
+  const activeGoals = state.goals.filter((goal) => !goal.archived);
+  if (activeGoals.length > 0 && state.todayTasks.length === 0) {
+    const firstGoal = activeGoals[0];
     const plan = getPlanForGoal(state, firstGoal.id);
     const entry = plan[weekdayKey];
     const hasActivePlan = planHasAnyActive(plan);
@@ -1258,7 +1467,8 @@ const updateStreak = (state) => {
 // Rendering
 // ---------------------------
 const renderWelcome = (state) => {
-  welcomeSection.style.display = state.goals.length === 0 ? "block" : "none";
+  const activeGoals = state.goals.filter((goal) => !goal.archived);
+  welcomeSection.style.display = activeGoals.length === 0 ? "block" : "none";
 };
 
 const renderToday = (state) => {
@@ -1695,16 +1905,37 @@ const renderToday = (state) => {
 const renderGoals = (state) => {
   goalsList.innerHTML = "";
   const activeGoalIds = new Set(state.todayTasks.map((task) => task.goalId));
+  const activeGoals = state.goals.filter((goal) => !goal.archived);
+  const archivedGoals = state.goals.filter((goal) => goal.archived);
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
 
-  if (state.goals.length === 0) {
+  if (activeGoals.length === 0 && archivedGoals.length === 0) {
     const empty = document.createElement("li");
     empty.textContent = t("emptyGoals");
     goalsList.appendChild(empty);
     return;
   }
 
-  state.goals.forEach((goal) => {
+  activeGoals.forEach((goal) => {
     const li = document.createElement("li");
+    li.draggable = true;
+    li.dataset.goalId = goal.id;
+    li.title = s.dragHint;
+    li.addEventListener("dragstart", () => {
+      draggingGoalId = goal.id;
+      li.classList.add("dragging-goal");
+    });
+    li.addEventListener("dragend", () => {
+      draggingGoalId = null;
+      li.classList.remove("dragging-goal");
+    });
+    li.addEventListener("dragover", (event) => event.preventDefault());
+    li.addEventListener("drop", (event) => {
+      event.preventDefault();
+      if (!draggingGoalId || draggingGoalId === goal.id) return;
+      reorderGoal(draggingGoalId, goal.id);
+    });
+
     if (activeGoalIds.has(goal.id)) li.classList.add("active-goal");
     const title = document.createElement("span");
     title.textContent = goal.title;
@@ -1723,15 +1954,15 @@ const renderGoals = (state) => {
       const saveBtn = document.createElement("button");
       saveBtn.type = "button";
       saveBtn.className = "btn goal-edit-save";
-      saveBtn.textContent = (STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).btnSave;
+      saveBtn.textContent = s.btnSave;
       saveBtn.addEventListener("click", () => finishEditGoal(goal.id, input.value));
 
       const removeBtn = document.createElement("button");
       removeBtn.type = "button";
       removeBtn.className = "btn ghost goal-delete";
-      removeBtn.textContent = (STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).btnRemove;
+      removeBtn.textContent = s.btnRemove;
       removeBtn.disabled = false;
-      removeBtn.title = (STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).deleteGoalTitle;
+      removeBtn.title = s.deleteGoalTitle;
       removeBtn.addEventListener("click", () => deleteGoal(goal.id));
 
       li.appendChild(input);
@@ -1741,23 +1972,64 @@ const renderGoals = (state) => {
       const editBtn = document.createElement("button");
       editBtn.type = "button";
       editBtn.className = "btn ghost goal-edit";
-      editBtn.textContent = (STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).btnEdit;
+      editBtn.textContent = s.btnEdit;
       editBtn.addEventListener("click", () => startEditGoal(goal.id));
+
+      const archiveBtn = document.createElement("button");
+      archiveBtn.type = "button";
+      archiveBtn.className = "btn ghost goal-edit";
+      archiveBtn.textContent = s.archiveBtn;
+      archiveBtn.addEventListener("click", () => archiveGoal(goal.id));
 
       li.appendChild(title);
       li.appendChild(badge);
       li.appendChild(editBtn);
+      li.appendChild(archiveBtn);
     }
     goalsList.appendChild(li);
   });
+
+  if (archivedGoals.length > 0) {
+    const archiveHead = document.createElement("li");
+    archiveHead.className = "subhead";
+    archiveHead.textContent = `${s.archivedTitle} (${archivedGoals.length})`;
+    goalsList.appendChild(archiveHead);
+    archivedGoals.forEach((goal) => {
+      const li = document.createElement("li");
+      const title = document.createElement("span");
+      title.textContent = goal.title;
+      title.className = "goal-title";
+
+      const restoreBtn = document.createElement("button");
+      restoreBtn.type = "button";
+      restoreBtn.className = "btn ghost goal-edit";
+      restoreBtn.textContent = s.restoreBtn;
+      restoreBtn.addEventListener("click", () => restoreGoal(goal.id));
+
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "btn ghost goal-delete";
+      removeBtn.textContent = s.btnRemove;
+      removeBtn.addEventListener("click", () => deleteGoal(goal.id));
+
+      li.appendChild(title);
+      li.appendChild(restoreBtn);
+      li.appendChild(removeBtn);
+      goalsList.appendChild(li);
+    });
+  }
 };
 
 const renderProgress = (state) => {
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
   streakEl.textContent = state.streak;
   totalDoneEl.textContent = state.totalDone;
   const currentISO = todayISO(state.simulationOffsetDays);
   const weeklyStats = getWeeklyCompletionStats(state, currentISO);
   const records = getPersonalWeeklyRecords(state);
+  const weekRate = getWeeklyRate(state, currentISO);
+  const monthRate = getMonthlyRate(state, currentISO);
+  const bestWeekday = getBestWeekday(state);
   if (activeWeekEl) {
     activeWeekEl.textContent = String(weeklyStats.activeDays);
   }
@@ -1766,6 +2038,15 @@ const renderProgress = (state) => {
   }
   if (perfectRecordEl) {
     perfectRecordEl.textContent = `${t("record")}: ${records.perfectRecord}`;
+  }
+  if (progressWeekRateEl) {
+    progressWeekRateEl.textContent = `${s.progressWeekRate}: ${weekRate}%`;
+  }
+  if (progressMonthRateEl) {
+    progressMonthRateEl.textContent = `${s.progressMonthRate}: ${monthRate}%`;
+  }
+  if (progressBestDayEl) {
+    progressBestDayEl.textContent = `${s.progressBestDay}: ${bestWeekday}`;
   }
 
   const message = MOTIVATION[Math.floor(Math.random() * MOTIVATION.length)];
@@ -1780,12 +2061,16 @@ const isTabAllowed = (target) => {
 };
 
 const applyTutorial = (state) => {
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
   const today = todayISO(state.simulationOffsetDays);
   const actionable = state.todayTasks.filter(
     (t) => !isRestDayForTask(state, t, today) && !t.isRestDay
   );
   const quickList = Object.values(state.quickTasks || {});
   const anyDone = actionable.some((t) => t.done) || quickList.some((t) => t.done);
+  const hasLanguage = !!currentLanguage;
+  const hasGoal = state.goals.some((goal) => !goal.archived);
+  const firstTaskDone = anyDone;
 
   if (!state.tutorialCompleted) {
     if (state.tutorialStep === 1 && state.goals.length > 0) {
@@ -1819,6 +2104,19 @@ const applyTutorial = (state) => {
   };
 
   if (tutorialSection) {
+    if (tutorialChecklist) {
+      tutorialChecklist.innerHTML = "";
+      [
+        { label: s.tutorialCheck1, done: hasLanguage },
+        { label: s.tutorialCheck2, done: hasGoal },
+        { label: s.tutorialCheck3, done: firstTaskDone },
+      ].forEach((item) => {
+        const li = document.createElement("li");
+        li.textContent = item.label;
+        li.classList.toggle("is-done", item.done);
+        tutorialChecklist.appendChild(li);
+      });
+    }
     if (!state.tutorialCompleted) {
       tutorialSection.style.display = "block";
       tutorialSection.classList.remove("unlock-highlight");
@@ -1831,6 +2129,22 @@ const applyTutorial = (state) => {
           tutorialText.textContent = t("tutorialS2");
         } else {
           tutorialText.textContent = t("tutorialDone");
+        }
+      }
+      if (tutorialCtaBtn) {
+        tutorialCtaBtn.hidden = false;
+        if (!hasLanguage) {
+          tutorialCtaBtn.textContent = s.tutorialCta1;
+          tutorialCtaBtn.dataset.action = "language";
+          tutorialCtaBtn.dataset.target = "";
+        } else if (!hasGoal) {
+          tutorialCtaBtn.textContent = s.tutorialCta2;
+          tutorialCtaBtn.dataset.action = "tab";
+          tutorialCtaBtn.dataset.target = "goals";
+        } else {
+          tutorialCtaBtn.textContent = s.tutorialCta3;
+          tutorialCtaBtn.dataset.action = "tab";
+          tutorialCtaBtn.dataset.target = "today";
         }
       }
     } else if (access.onboardingActive) {
@@ -1847,9 +2161,11 @@ const applyTutorial = (state) => {
           tutorialText.textContent = t("onboardingText");
         }
       }
+      if (tutorialCtaBtn) tutorialCtaBtn.hidden = true;
     } else {
       tutorialSection.style.display = "none";
       tutorialSection.classList.remove("unlock-highlight");
+      if (tutorialCtaBtn) tutorialCtaBtn.hidden = true;
     }
   }
 
@@ -1900,7 +2216,7 @@ const renderAll = (state) => {
 const addGoal = (title, difficulty) => {
   const state = loadState();
   const today = todayISO(state.simulationOffsetDays);
-  const hadNoGoals = state.goals.length === 0;
+  const hadNoGoals = state.goals.filter((goal) => !goal.archived).length === 0;
 
   if (!state.onboardingStartDate) {
     state.onboardingStartDate = today;
@@ -1911,6 +2227,7 @@ const addGoal = (title, difficulty) => {
     title,
     difficulty,
     createdAt: today,
+    archived: false,
   });
 
   ensureTodayTasks(state);
@@ -2073,7 +2390,7 @@ const renderSideQuestOptions = (state) => {
   const selected = new Set((state.sideQuests || []).map((q) => q.goalId));
   const activeTodayGoalIds = new Set((state.todayTasks || []).map((task) => task.goalId));
   const options = state.goals.filter(
-    (g) => !selected.has(g.id) && !activeTodayGoalIds.has(g.id)
+    (g) => !g.archived && !selected.has(g.id) && !activeTodayGoalIds.has(g.id)
   );
 
   sideQuestSelect.innerHTML = "";
@@ -2255,6 +2572,48 @@ const finishEditGoal = (goalId, newTitle) => {
   renderAll(state);
 };
 
+const reorderGoal = (sourceGoalId, targetGoalId) => {
+  const state = loadState();
+  const goals = [...state.goals];
+  const sourceIndex = goals.findIndex((goal) => goal.id === sourceGoalId);
+  const targetIndex = goals.findIndex((goal) => goal.id === targetGoalId);
+  if (sourceIndex === -1 || targetIndex === -1) return;
+  const [moved] = goals.splice(sourceIndex, 1);
+  goals.splice(targetIndex, 0, moved);
+  state.goals = goals;
+  saveState(state);
+  renderGoals(state);
+  renderWeeklyPlan(state);
+  renderUnlock(state);
+};
+
+const archiveGoal = (goalId) => {
+  const state = loadState();
+  const goal = state.goals.find((g) => g.id === goalId);
+  if (!goal) return;
+  goal.archived = true;
+  state.todayTasks = state.todayTasks.filter((task) => task.goalId !== goalId);
+  state.sideQuests = (state.sideQuests || []).filter((q) => q.goalId !== goalId);
+  Object.keys(state.sideQuestChecks || {}).forEach((dateKey) => {
+    if (!state.sideQuestChecks[dateKey]) return;
+    delete state.sideQuestChecks[dateKey][goalId];
+    if (Object.keys(state.sideQuestChecks[dateKey]).length === 0) {
+      delete state.sideQuestChecks[dateKey];
+    }
+  });
+  saveState(state);
+  renderAll(state);
+};
+
+const restoreGoal = (goalId) => {
+  const state = loadState();
+  const goal = state.goals.find((g) => g.id === goalId);
+  if (!goal) return;
+  goal.archived = false;
+  saveState(state);
+  renderAll(state);
+};
+
 const deleteGoal = (goalId) => {
   const state = loadState();
   state.goals = state.goals.filter((g) => g.id !== goalId);
@@ -2379,12 +2738,79 @@ const getPersonalWeeklyRecords = (state) => {
   return { activeRecord, perfectRecord };
 };
 
+const getWeeklyRate = (state, anchorISO) => {
+  const anchorDate = new Date(anchorISO + "T00:00:00");
+  const monday = getWeekStartFromDate(anchorDate);
+  let done = 0;
+  let total = 0;
+  for (let i = 0; i < 7; i += 1) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    const iso = d.toISOString().slice(0, 10);
+    const summary = state.daySummary?.[iso];
+    if (!summary || summary.total <= 0) continue;
+    done += summary.done;
+    total += summary.total;
+  }
+  if (total <= 0) return 0;
+  return Math.round((done / total) * 100);
+};
+
+const getMonthlyRate = (state, anchorISO) => {
+  const anchorDate = new Date(anchorISO + "T00:00:00");
+  const year = anchorDate.getFullYear();
+  const month = anchorDate.getMonth();
+  let done = 0;
+  let total = 0;
+  Object.entries(state.daySummary || {}).forEach(([iso, summary]) => {
+    if (!summary || summary.total <= 0) return;
+    const date = new Date(iso + "T00:00:00");
+    if (date.getFullYear() !== year || date.getMonth() !== month) return;
+    done += summary.done;
+    total += summary.total;
+  });
+  if (total <= 0) return 0;
+  return Math.round((done / total) * 100);
+};
+
+const getBestWeekday = (state) => {
+  const dayStats = {
+    mon: { done: 0, total: 0 },
+    tue: { done: 0, total: 0 },
+    wed: { done: 0, total: 0 },
+    thu: { done: 0, total: 0 },
+    fri: { done: 0, total: 0 },
+    sat: { done: 0, total: 0 },
+    sun: { done: 0, total: 0 },
+  };
+  Object.entries(state.daySummary || {}).forEach(([iso, summary]) => {
+    if (!summary || summary.total <= 0) return;
+    const key = weekdayKeyFromISO(iso);
+    if (!dayStats[key]) return;
+    dayStats[key].done += summary.done;
+    dayStats[key].total += summary.total;
+  });
+  let bestKey = null;
+  let bestRate = -1;
+  Object.entries(dayStats).forEach(([key, stats]) => {
+    if (stats.total <= 0) return;
+    const rate = stats.done / stats.total;
+    if (rate > bestRate) {
+      bestRate = rate;
+      bestKey = key;
+    }
+  });
+  if (!bestKey) return "-";
+  return getWeekdayLabel(bestKey);
+};
+
 const renderWeeklyPlan = (state) => {
   if (!planGoalSelect || !planGrid || !planHint) return;
 
   const previousSelection = planGoalSelect.value;
   planGoalSelect.innerHTML = "";
-  if (state.goals.length === 0) {
+  const activeGoals = state.goals.filter((goal) => !goal.archived);
+  if (activeGoals.length === 0) {
     const option = document.createElement("option");
     option.textContent = t("emptyGoals");
     option.value = "";
@@ -2394,14 +2820,14 @@ const renderWeeklyPlan = (state) => {
     return;
   }
 
-  state.goals.forEach((goal) => {
+  activeGoals.forEach((goal) => {
     const option = document.createElement("option");
     option.value = goal.id;
     option.textContent = goal.title;
     planGoalSelect.appendChild(option);
   });
 
-  const selectedGoalId = previousSelection || state.goals[0].id;
+  const selectedGoalId = previousSelection || activeGoals[0].id;
   planGoalSelect.value = selectedGoalId;
 
   const plan = getPlanForGoal(state, selectedGoalId);
@@ -2573,6 +2999,7 @@ const init = () => {
       // Vollständiger Reset: State + Sprache löschen, Defaults speichern, UI neu rendern.
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(LANGUAGE_KEY);
+      localStorage.removeItem(ERROR_LOG_KEY);
       currentLanguage = "";
       const fresh = defaultState();
       saveState(fresh);
@@ -2720,6 +3147,9 @@ const init = () => {
     if (updateBannerBtn) {
       updateBannerBtn.addEventListener("click", requestServiceWorkerUpdate);
     }
+    if (updateBannerRetryBtn) {
+      updateBannerRetryBtn.addEventListener("click", retryServiceWorkerUpdateCheck);
+    }
     if (exportDataBtn) {
       exportDataBtn.addEventListener("click", exportBackup);
     }
@@ -2728,6 +3158,17 @@ const init = () => {
       importFileInput.addEventListener("change", () => {
         const file = importFileInput.files?.[0];
         if (file) importBackup(file);
+      });
+    }
+    if (tutorialCtaBtn) {
+      tutorialCtaBtn.addEventListener("click", () => {
+        const action = tutorialCtaBtn.dataset.action || "tab";
+        if (action === "language") {
+          if (languageModal) languageModal.hidden = false;
+          return;
+        }
+        const target = tutorialCtaBtn.dataset.target || "today";
+        setActiveTab(target);
       });
     }
 
@@ -2743,7 +3184,7 @@ function renderUnlock(state) {
 
   const eligible = shouldUnlockNewTask(state);
   const candidates = state.goals.filter(
-    (g) => !state.todayTasks.some((t) => t.goalId === g.id)
+    (g) => !g.archived && !state.todayTasks.some((t) => t.goalId === g.id)
   );
 
   if (!eligible || candidates.length === 0) {
@@ -2861,6 +3302,7 @@ const registerServiceWorker = () => {
   window.addEventListener("load", async () => {
     try {
       const registration = await navigator.serviceWorker.register("./service-worker.js");
+      swRegistrationRef = registration;
       if (registration.waiting) {
         showUpdateBanner(registration.waiting);
       }
@@ -2873,12 +3315,24 @@ const registerServiceWorker = () => {
           }
         });
       });
+      setInterval(() => {
+        retryServiceWorkerUpdateCheck();
+      }, 10 * 60 * 1000);
     } catch (error) {
       console.warn("Service Worker Registrierung fehlgeschlagen", error);
+      logClientError("sw_register", error?.message || error);
       hideUpdateBanner();
     }
   });
 };
+
+window.addEventListener("error", (event) => {
+  logClientError("window_error", event?.message || "unknown");
+});
+
+window.addEventListener("unhandledrejection", (event) => {
+  logClientError("unhandled_rejection", event?.reason || "unknown");
+});
 
 registerServiceWorker();
 init();

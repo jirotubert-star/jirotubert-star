@@ -121,6 +121,17 @@ body {
   box-shadow: 0 0 0 3px rgba(108, 164, 130, 0.18), var(--shadow);
 }
 
+.tutorial-checklist {
+  margin: 8px 0 10px 18px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.tutorial-checklist li.is-done {
+  color: #2f6f62;
+  text-decoration: line-through;
+}
+
 .nav-item[disabled] {
   opacity: 0.45;
   cursor: not-allowed;
@@ -445,6 +456,11 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
 .goals li .goal-edit-save,
 .goals li .goal-edit-cancel {
   flex: 0 0 auto;
+}
+
+.goals li.dragging-goal {
+  opacity: 0.6;
+  border-style: dashed;
 }
 
 .checklist label {
@@ -789,6 +805,12 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
 
 .motivation {
   color: var(--muted);
+}
+
+.progress-insights {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 
 .unlock {
@@ -1339,9 +1361,9 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   padding: 10px 12px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
   gap: 10px;
   opacity: 0;
   pointer-events: none;
@@ -1360,6 +1382,17 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   min-height: 36px;
   padding: 8px 12px;
   font-size: 0.9rem;
+}
+
+.update-banner-content {
+  display: grid;
+  gap: 2px;
+}
+
+.update-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .language-modal {
@@ -1532,6 +1565,14 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
     bottom: calc(142px + var(--safe-bottom));
     width: calc(100% - 20px);
     padding: 10px;
+    grid-template-columns: 1fr;
+  }
+  .update-banner-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+  .update-banner-actions .btn {
+    flex: 1;
   }
   .update-banner .btn {
     min-height: 34px;

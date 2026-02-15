@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-user.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-user.png" />
-    <link rel="manifest" href="site.webmanifest?v=1616" />
+    <link rel="manifest" href="site.webmanifest?v=1617" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -44,6 +44,8 @@
           <span class="soft-note" id="tutorial-step">Schritt 1/3</span>
         </div>
         <p id="tutorial-text"></p>
+        <ul id="tutorial-checklist" class="tutorial-checklist"></ul>
+        <button id="tutorial-cta" type="button" class="btn ghost" hidden>Zum nächsten Schritt</button>
       </section>
       <!-- Welcome: shown only when no goals exist -->
       <section id="welcome" class="panel welcome" aria-live="polite" data-section="today">
@@ -153,6 +155,11 @@
             <div class="stat-sub" id="perfect-record">Rekord: 0</div>
           </div>
         </div>
+        <div class="progress-insights">
+          <div class="soft-note" id="progress-week-rate">Wochenquote: 0%</div>
+          <div class="soft-note" id="progress-month-rate">Monatsquote: 0%</div>
+          <div class="soft-note" id="progress-best-day">Stärkster Wochentag: -</div>
+        </div>
         <p id="motivation" class="motivation"></p>
       </section>
 
@@ -199,6 +206,8 @@
             Alle Daten bleiben lokal in deinem Browser gespeichert. Es werden keine
             Konten, keine Cloud und keine Tracker verwendet.
           </p>
+          <p><a href="privacy.html" target="_blank" rel="noopener noreferrer">Datenschutzseite öffnen</a></p>
+          <p><a href="impressum.html" target="_blank" rel="noopener noreferrer">Impressum öffnen</a></p>
         </details>
         <div class="info-block">
           <h3 id="settings-version-title">Version</h3>
@@ -245,7 +254,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.6.16</span>
+      <span class="soft-note" id="version">Version 1.6.17</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">
@@ -267,8 +276,14 @@
       </button>
     </nav>
     <div id="update-banner" class="update-banner" hidden>
-      <span id="update-banner-text">Neue Version verfügbar</span>
-      <button id="update-banner-btn" type="button" class="btn">Jetzt aktualisieren</button>
+      <div class="update-banner-content">
+        <span id="update-banner-text">Neue Version verfügbar</span>
+        <span id="update-banner-note" class="soft-note">Bugfixes und Verbesserungen sind bereit.</span>
+      </div>
+      <div class="update-banner-actions">
+        <button id="update-banner-retry" type="button" class="btn ghost">Erneut prüfen</button>
+        <button id="update-banner-btn" type="button" class="btn">Jetzt aktualisieren</button>
+      </div>
     </div>
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 

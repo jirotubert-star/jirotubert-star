@@ -9,6 +9,8 @@ mkdirSync(distDir, { recursive: true });
 
 const requiredItems = [
   "index.html",
+  "privacy.html",
+  "impressum.html",
   "site.webmanifest",
   "service-worker.js",
   "css",

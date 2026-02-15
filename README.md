@@ -19,9 +19,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.6.16`
+- Aktuell: `1.6.17`
 
 ## Aenderungsprotokoll
+- `1.6.17` (2026-02-15): Gesamt-Upgrade umgesetzt: klareres Onboarding (Checkliste + CTA), Backup-Import mit Validierung und Overwrite/Merge-Entscheidung, neue Progress-Insights (Wochenquote/Monatsquote/starker Wochentag), Goals-Archiv + Drag-and-drop-Sortierung, robusteres Update-Banner (Retry + Release-Hinweis), Privacy/Impressum-Seiten und lokales Fehlerlog; Manifest-Cache-Buster auf `v=1617`.
 - `1.6.16` (2026-02-15): Backup/Restore ergaenzt: Export als JSON-Datei, Import aus JSON inklusive Wiederherstellung von Sprache und App-State; Manifest-Cache-Buster auf `v=1616`.
 - `1.6.15` (2026-02-15): PWA-Update-Flow verbessert: Update-Banner mit Aktion "Jetzt aktualisieren" eingebaut, Service Worker auf `SKIP_WAITING`-Message umgestellt und automatischer Reload nach Aktivierung neuer Version ergänzt; Manifest-Cache-Buster auf `v=1615`.
 - `1.6.14` (2026-02-15): Reset als kompletter Neuanfang umgesetzt: beim Zuruecksetzen wird jetzt auch die gespeicherte Sprache geloescht, die laufende Sprache zurueckgesetzt und der Sprachdialog sofort wieder angezeigt; Manifest-Cache-Buster auf `v=1614`.

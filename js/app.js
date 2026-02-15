@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.14";
+const APP_VERSION = "1.6.16";
 const LANGUAGE_KEY = "onestep_language_v1";
 const SUPPORTED_LANGS = ["de", "en", "ru", "es", "fr"];
 let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "";
@@ -474,11 +474,19 @@ const STATIC_TEXT = {
     infoPrivacyP1: "Alle Daten bleiben lokal im Browser.",
     settingsVersionTitle: "Version",
     settingsSystemTitle: "System",
+    backupTitle: "Backup",
+    exportData: "Daten exportieren",
+    importData: "Daten importieren",
+    toastExportSuccess: "Backup exportiert",
+    toastImportSuccess: "Backup importiert",
+    toastImportError: "Import fehlgeschlagen",
     dayOffsetLabel: "Tag-Offset",
     weeklyPlanTitle: "Wochenplan",
     weeklyPlanHintMinDays: "Mindestens 4 Tage eintragen",
     planGoalLabel: "Ziel",
     templateSummary: "Vorlagen (10 Kategorien)",
+    updateAvailable: "Neue Version verfügbar",
+    updateNow: "Jetzt aktualisieren",
   },
   en: {
     welcomeTitle: "Welcome to OneStep",
@@ -524,11 +532,19 @@ const STATIC_TEXT = {
     infoPrivacyP1: "All data stays local in your browser.",
     settingsVersionTitle: "Version",
     settingsSystemTitle: "System",
+    backupTitle: "Backup",
+    exportData: "Export data",
+    importData: "Import data",
+    toastExportSuccess: "Backup exported",
+    toastImportSuccess: "Backup imported",
+    toastImportError: "Import failed",
     dayOffsetLabel: "Day offset",
     weeklyPlanTitle: "Weekly plan",
     weeklyPlanHintMinDays: "Set at least 4 days",
     planGoalLabel: "Goal",
     templateSummary: "Templates (10 categories)",
+    updateAvailable: "New version available",
+    updateNow: "Update now",
   },
   ru: {
     welcomeTitle: "Добро пожаловать в OneStep",
@@ -574,11 +590,19 @@ const STATIC_TEXT = {
     infoPrivacyP1: "Все данные хранятся локально в браузере.",
     settingsVersionTitle: "Версия",
     settingsSystemTitle: "Система",
+    backupTitle: "Резервная копия",
+    exportData: "Экспорт данных",
+    importData: "Импорт данных",
+    toastExportSuccess: "Резервная копия экспортирована",
+    toastImportSuccess: "Резервная копия импортирована",
+    toastImportError: "Ошибка импорта",
     dayOffsetLabel: "Смещение дня",
     weeklyPlanTitle: "План недели",
     weeklyPlanHintMinDays: "Заполни минимум 4 дня",
     planGoalLabel: "Цель",
     templateSummary: "Шаблоны (10 категорий)",
+    updateAvailable: "Доступна новая версия",
+    updateNow: "Обновить сейчас",
   },
   es: {
     welcomeTitle: "Bienvenido a OneStep",
@@ -624,11 +648,19 @@ const STATIC_TEXT = {
     infoPrivacyP1: "Todos los datos se guardan localmente.",
     settingsVersionTitle: "Versión",
     settingsSystemTitle: "Sistema",
+    backupTitle: "Copia de seguridad",
+    exportData: "Exportar datos",
+    importData: "Importar datos",
+    toastExportSuccess: "Copia exportada",
+    toastImportSuccess: "Copia importada",
+    toastImportError: "Error al importar",
     dayOffsetLabel: "Desfase de día",
     weeklyPlanTitle: "Plan semanal",
     weeklyPlanHintMinDays: "Añade al menos 4 días",
     planGoalLabel: "Meta",
     templateSummary: "Plantillas (10 categorías)",
+    updateAvailable: "Nueva versión disponible",
+    updateNow: "Actualizar ahora",
   },
   fr: {
     welcomeTitle: "Bienvenue sur OneStep",
@@ -674,11 +706,19 @@ const STATIC_TEXT = {
     infoPrivacyP1: "Toutes les données restent locales au navigateur.",
     settingsVersionTitle: "Version",
     settingsSystemTitle: "Système",
+    backupTitle: "Sauvegarde",
+    exportData: "Exporter les données",
+    importData: "Importer les données",
+    toastExportSuccess: "Sauvegarde exportée",
+    toastImportSuccess: "Sauvegarde importée",
+    toastImportError: "Échec de l'import",
     dayOffsetLabel: "Décalage de jour",
     weeklyPlanTitle: "Plan hebdo",
     weeklyPlanHintMinDays: "Ajoute au moins 4 jours",
     planGoalLabel: "Objectif",
     templateSummary: "Modèles (10 catégories)",
+    updateAvailable: "Nouvelle version disponible",
+    updateNow: "Mettre à jour",
   },
 };
 
@@ -835,6 +875,12 @@ const tutorialText = document.getElementById("tutorial-text");
 const toastEl = document.getElementById("toast");
 const languageModal = document.getElementById("language-modal");
 const languageButtons = document.querySelectorAll("[data-lang]");
+const updateBanner = document.getElementById("update-banner");
+const updateBannerText = document.getElementById("update-banner-text");
+const updateBannerBtn = document.getElementById("update-banner-btn");
+const exportDataBtn = document.getElementById("export-data");
+const importDataBtn = document.getElementById("import-data");
+const importFileInput = document.getElementById("import-file");
 let currentTab = "today";
 const tabOrder = ["today", "goals", "progress", "info"];
 let touchStartX = null;
@@ -845,6 +891,8 @@ let tutorialStepCache = 1;
 let tutorialCompletedCache = false;
 let sideQuestVisibleCache = false;
 let toastTimer = null;
+let waitingServiceWorker = null;
+let isRefreshingFromServiceWorker = false;
 const SIDE_QUEST_REVEAL_SCROLL_MS = 520;
 
 // ---------------------------
@@ -882,6 +930,72 @@ const setLanguage = (lang) => {
 const showLanguageModalIfNeeded = () => {
   if (!languageModal) return;
   languageModal.hidden = !!currentLanguage;
+};
+
+const showUpdateBanner = (worker) => {
+  if (!updateBanner || !worker) return;
+  waitingServiceWorker = worker;
+  updateBanner.hidden = false;
+  updateBanner.classList.add("show");
+};
+
+const hideUpdateBanner = () => {
+  if (!updateBanner) return;
+  updateBanner.classList.remove("show");
+  updateBanner.hidden = true;
+};
+
+const requestServiceWorkerUpdate = () => {
+  if (!waitingServiceWorker) return;
+  waitingServiceWorker.postMessage({ type: "SKIP_WAITING" });
+};
+
+const exportBackup = () => {
+  const payload = {
+    version: APP_VERSION,
+    exportedAt: new Date().toISOString(),
+    language: currentLanguage || "de",
+    state: loadState(),
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `onestep-backup-${todayISO()}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  showToast((STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).toastExportSuccess);
+};
+
+const importBackup = async (file) => {
+  if (!file) return;
+  try {
+    const raw = await file.text();
+    const parsed = JSON.parse(raw);
+    const importedState = parsed?.state || parsed;
+    if (!importedState || typeof importedState !== "object") {
+      throw new Error("invalid backup");
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(importedState));
+    const importLanguage = parsed?.language;
+    if (SUPPORTED_LANGS.includes(importLanguage)) {
+      currentLanguage = importLanguage;
+      localStorage.setItem(LANGUAGE_KEY, importLanguage);
+    }
+
+    applyStaticTranslations();
+    renderAll(loadState());
+    showLanguageModalIfNeeded();
+    showToast((STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).toastImportSuccess);
+  } catch (error) {
+    console.warn("Backup-Import fehlgeschlagen", error);
+    showToast((STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).toastImportError);
+  } finally {
+    if (importFileInput) importFileInput.value = "";
+  }
 };
 
 const applyStaticTranslations = () => {
@@ -928,11 +1042,14 @@ const applyStaticTranslations = () => {
   setText("info-privacy-p1", s.infoPrivacyP1);
   setText("settings-version-title", s.settingsVersionTitle);
   setText("settings-system-title", s.settingsSystemTitle);
+  setText("backup-title", s.backupTitle);
   setText("day-offset-label", s.dayOffsetLabel);
   setText("templates-summary", s.templateSummary);
   setText("weekly-plan-title", s.weeklyPlanTitle);
   setText("weekly-plan-note", s.weeklyPlanHintMinDays);
   setText("plan-goal-label", s.planGoalLabel);
+  if (updateBannerText) updateBannerText.textContent = s.updateAvailable;
+  if (updateBannerBtn) updateBannerBtn.textContent = s.updateNow;
 
   if (quickTaskInput) quickTaskInput.placeholder = t("quickTaskPlaceholder");
   if (goalInput) goalInput.placeholder = t("goalPlaceholder");
@@ -947,6 +1064,8 @@ const applyStaticTranslations = () => {
   if (goalSubmit) goalSubmit.textContent = t("btnAdd");
   if (applyOffsetBtn) applyOffsetBtn.textContent = s.applyBtn;
   if (resetBtn) resetBtn.textContent = s.resetBtn;
+  if (exportDataBtn) exportDataBtn.textContent = s.exportData;
+  if (importDataBtn) importDataBtn.textContent = s.importData;
   if (simulatedDateEl) simulatedDateEl.textContent = `${s.simPrefix}: --`;
 
   const legend = document.querySelector(".calendar-legend .soft-note");
@@ -2598,6 +2717,19 @@ const init = () => {
     languageButtons.forEach((btn) => {
       btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
     });
+    if (updateBannerBtn) {
+      updateBannerBtn.addEventListener("click", requestServiceWorkerUpdate);
+    }
+    if (exportDataBtn) {
+      exportDataBtn.addEventListener("click", exportBackup);
+    }
+    if (importDataBtn && importFileInput) {
+      importDataBtn.addEventListener("click", () => importFileInput.click());
+      importFileInput.addEventListener("change", () => {
+        const file = importFileInput.files?.[0];
+        if (file) importBackup(file);
+      });
+    }
 
     listenersBound = true;
   }
@@ -2721,10 +2853,30 @@ function difficultyLabel(value) {
 
 const registerServiceWorker = () => {
   if (!("serviceWorker" in navigator)) return;
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js").catch((error) => {
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (isRefreshingFromServiceWorker) return;
+    isRefreshingFromServiceWorker = true;
+    window.location.reload();
+  });
+  window.addEventListener("load", async () => {
+    try {
+      const registration = await navigator.serviceWorker.register("./service-worker.js");
+      if (registration.waiting) {
+        showUpdateBanner(registration.waiting);
+      }
+      registration.addEventListener("updatefound", () => {
+        const installing = registration.installing;
+        if (!installing) return;
+        installing.addEventListener("statechange", () => {
+          if (installing.state === "installed" && navigator.serviceWorker.controller) {
+            showUpdateBanner(installing);
+          }
+        });
+      });
+    } catch (error) {
       console.warn("Service Worker Registrierung fehlgeschlagen", error);
-    });
+      hideUpdateBanner();
+    }
   });
 };
 

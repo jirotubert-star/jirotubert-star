@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-user.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-user.png" />
-    <link rel="manifest" href="site.webmanifest?v=1614" />
+    <link rel="manifest" href="site.webmanifest?v=1616" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -231,13 +231,21 @@
           </div>
           <button id="reset-app" class="btn ghost" type="button">Reset</button>
         </div>
+        <div class="info-block">
+          <h3 id="backup-title">Backup</h3>
+          <div class="backup-actions">
+            <button id="export-data" class="btn ghost" type="button">Daten exportieren</button>
+            <button id="import-data" class="btn ghost" type="button">Daten importieren</button>
+          </div>
+          <input id="import-file" type="file" accept="application/json" hidden />
+        </div>
       </section>
     </main>
 
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.6.14</span>
+      <span class="soft-note" id="version">Version 1.6.16</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">
@@ -258,6 +266,10 @@
         <span class="nav-label">Einstellungen</span>
       </button>
     </nav>
+    <div id="update-banner" class="update-banner" hidden>
+      <span id="update-banner-text">Neue Version verfügbar</span>
+      <button id="update-banner-btn" type="button" class="btn">Jetzt aktualisieren</button>
+    </div>
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
     <script src="js/app.js"></script>

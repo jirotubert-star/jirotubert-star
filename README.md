@@ -19,9 +19,11 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.6.14`
+- Aktuell: `1.6.16`
 
 ## Aenderungsprotokoll
+- `1.6.16` (2026-02-15): Backup/Restore ergaenzt: Export als JSON-Datei, Import aus JSON inklusive Wiederherstellung von Sprache und App-State; Manifest-Cache-Buster auf `v=1616`.
+- `1.6.15` (2026-02-15): PWA-Update-Flow verbessert: Update-Banner mit Aktion "Jetzt aktualisieren" eingebaut, Service Worker auf `SKIP_WAITING`-Message umgestellt und automatischer Reload nach Aktivierung neuer Version ergänzt; Manifest-Cache-Buster auf `v=1615`.
 - `1.6.14` (2026-02-15): Reset als kompletter Neuanfang umgesetzt: beim Zuruecksetzen wird jetzt auch die gespeicherte Sprache geloescht, die laufende Sprache zurueckgesetzt und der Sprachdialog sofort wieder angezeigt; Manifest-Cache-Buster auf `v=1614`.
 - `1.6.13` (2026-02-15): First-Impression-Polish im UI: Header/Branding visuell aufgewertet, Karten mit staerkerer Tiefe und Hover-Hierarchie, Welcome/Tutorial-Look modernisiert, aktive Bottom-Navigation klarer hervorgehoben; Manifest-Cache-Buster auf `v=1613`.
 - `1.6.12` (2026-02-15): Kalender-Legende farblich feinjustiert: der innere Gruenton des Legenden-Kaestchens entspricht jetzt dem Volltreffer-Ton im Kalender; Manifest-Cache-Buster auf `v=1612`.

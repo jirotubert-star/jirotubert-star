@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.18";
+const APP_VERSION = "1.6.19";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -500,9 +500,6 @@ const STATIC_TEXT = {
     progressWeekRate: "Wochenquote",
     progressMonthRate: "Monatsquote",
     progressBestDay: "Stärkster Wochentag",
-    archiveBtn: "Archivieren",
-    restoreBtn: "Wiederherstellen",
-    archivedTitle: "Archivierte Ziele",
     dragHint: "Ziehen zum Sortieren",
     backupOverwritePrompt: "Backup komplett überschreiben?",
     backupMergePrompt: "Nicht überschreiben. Backup mit aktuellen Daten zusammenführen?",
@@ -577,9 +574,6 @@ const STATIC_TEXT = {
     progressWeekRate: "Week rate",
     progressMonthRate: "Month rate",
     progressBestDay: "Strongest weekday",
-    archiveBtn: "Archive",
-    restoreBtn: "Restore",
-    archivedTitle: "Archived goals",
     dragHint: "Drag to sort",
     backupOverwritePrompt: "Overwrite all current data with backup?",
     backupMergePrompt: "Do not overwrite. Merge backup with current data?",
@@ -654,9 +648,6 @@ const STATIC_TEXT = {
     progressWeekRate: "Процент недели",
     progressMonthRate: "Процент месяца",
     progressBestDay: "Лучший день недели",
-    archiveBtn: "В архив",
-    restoreBtn: "Восстановить",
-    archivedTitle: "Архив целей",
     dragHint: "Перетащите для сортировки",
     backupOverwritePrompt: "Полностью перезаписать данные из резервной копии?",
     backupMergePrompt: "Не перезаписывать. Объединить резервную копию с текущими данными?",
@@ -731,9 +722,6 @@ const STATIC_TEXT = {
     progressWeekRate: "Ratio semanal",
     progressMonthRate: "Ratio mensual",
     progressBestDay: "Mejor día de la semana",
-    archiveBtn: "Archivar",
-    restoreBtn: "Restaurar",
-    archivedTitle: "Metas archivadas",
     dragHint: "Arrastra para ordenar",
     backupOverwritePrompt: "¿Sobrescribir todos los datos actuales con la copia?",
     backupMergePrompt: "No sobrescribir. ¿Combinar copia y datos actuales?",
@@ -808,9 +796,6 @@ const STATIC_TEXT = {
     progressWeekRate: "Taux semaine",
     progressMonthRate: "Taux mois",
     progressBestDay: "Jour le plus fort",
-    archiveBtn: "Archiver",
-    restoreBtn: "Restaurer",
-    archivedTitle: "Objectifs archivés",
     dragHint: "Glisser pour trier",
     backupOverwritePrompt: "Écraser toutes les données actuelles avec la sauvegarde ?",
     backupMergePrompt: "Ne pas écraser. Fusionner la sauvegarde avec les données actuelles ?",
@@ -886,7 +871,6 @@ const loadState = () => {
     normalized.goals = normalized.goals.map((goal) => ({
       ...goal,
       difficulty: goal.difficulty || "noon",
-      archived: !!goal.archived,
     }));
     normalized.todayTasks = normalized.todayTasks.map((task) => ({
       ...task,
@@ -1367,7 +1351,6 @@ const pickTaskFromGoals = (state) => {
   const today = todayISO(state.simulationOffsetDays);
   const weekdayKey = weekdayKeyFromISO(today);
   const candidates = state.goals.filter((g) => {
-    if (g.archived) return false;
     if (usedGoalIds.has(g.id)) return false;
     const plan = getPlanForGoal(state, g.id);
     if (!planHasAnyActive(plan)) return true;
@@ -1391,7 +1374,7 @@ const ensureTodayTasks = (state) => {
 
   // Wenn wir noch keine Tasks für heute haben, setzen wir das Datum neu.
   if (!state.todayTasks.length || state.todayTasks[0].date !== today) {
-    const goalMap = new Map(state.goals.filter((g) => !g.archived).map((g) => [g.id, g]));
+    const goalMap = new Map(state.goals.map((g) => [g.id, g]));
     state.todayTasks = state.todayTasks
       .map((task) => {
         const goal = goalMap.get(task.goalId);
@@ -1417,9 +1400,8 @@ const ensureTodayTasks = (state) => {
   }
 
   // Erster Start: genau eine Aufgabe aus Zielen hinzufügen.
-  const activeGoals = state.goals.filter((goal) => !goal.archived);
-  if (activeGoals.length > 0 && state.todayTasks.length === 0) {
-    const firstGoal = activeGoals[0];
+  if (state.goals.length > 0 && state.todayTasks.length === 0) {
+    const firstGoal = state.goals[0];
     const plan = getPlanForGoal(state, firstGoal.id);
     const entry = plan[weekdayKey];
     const hasActivePlan = planHasAnyActive(plan);
@@ -1468,8 +1450,7 @@ const updateStreak = (state) => {
 // Rendering
 // ---------------------------
 const renderWelcome = (state) => {
-  const activeGoals = state.goals.filter((goal) => !goal.archived);
-  welcomeSection.style.display = activeGoals.length === 0 ? "block" : "none";
+  welcomeSection.style.display = state.goals.length === 0 ? "block" : "none";
 };
 
 const renderToday = (state) => {
@@ -1906,18 +1887,16 @@ const renderToday = (state) => {
 const renderGoals = (state) => {
   goalsList.innerHTML = "";
   const activeGoalIds = new Set(state.todayTasks.map((task) => task.goalId));
-  const activeGoals = state.goals.filter((goal) => !goal.archived);
-  const archivedGoals = state.goals.filter((goal) => goal.archived);
   const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
 
-  if (activeGoals.length === 0 && archivedGoals.length === 0) {
+  if (state.goals.length === 0) {
     const empty = document.createElement("li");
     empty.textContent = t("emptyGoals");
     goalsList.appendChild(empty);
     return;
   }
 
-  activeGoals.forEach((goal) => {
+  state.goals.forEach((goal) => {
     const li = document.createElement("li");
     li.draggable = true;
     li.dataset.goalId = goal.id;
@@ -1976,49 +1955,12 @@ const renderGoals = (state) => {
       editBtn.textContent = s.btnEdit;
       editBtn.addEventListener("click", () => startEditGoal(goal.id));
 
-      const archiveBtn = document.createElement("button");
-      archiveBtn.type = "button";
-      archiveBtn.className = "btn ghost goal-edit";
-      archiveBtn.textContent = s.archiveBtn;
-      archiveBtn.addEventListener("click", () => archiveGoal(goal.id));
-
       li.appendChild(title);
       li.appendChild(badge);
       li.appendChild(editBtn);
-      li.appendChild(archiveBtn);
     }
     goalsList.appendChild(li);
   });
-
-  if (archivedGoals.length > 0) {
-    const archiveHead = document.createElement("li");
-    archiveHead.className = "subhead";
-    archiveHead.textContent = `${s.archivedTitle} (${archivedGoals.length})`;
-    goalsList.appendChild(archiveHead);
-    archivedGoals.forEach((goal) => {
-      const li = document.createElement("li");
-      const title = document.createElement("span");
-      title.textContent = goal.title;
-      title.className = "goal-title";
-
-      const restoreBtn = document.createElement("button");
-      restoreBtn.type = "button";
-      restoreBtn.className = "btn ghost goal-edit";
-      restoreBtn.textContent = s.restoreBtn;
-      restoreBtn.addEventListener("click", () => restoreGoal(goal.id));
-
-      const removeBtn = document.createElement("button");
-      removeBtn.type = "button";
-      removeBtn.className = "btn ghost goal-delete";
-      removeBtn.textContent = s.btnRemove;
-      removeBtn.addEventListener("click", () => deleteGoal(goal.id));
-
-      li.appendChild(title);
-      li.appendChild(restoreBtn);
-      li.appendChild(removeBtn);
-      goalsList.appendChild(li);
-    });
-  }
 };
 
 const renderProgress = (state) => {
@@ -2070,7 +2012,7 @@ const applyTutorial = (state) => {
   const quickList = Object.values(state.quickTasks || {});
   const anyDone = actionable.some((t) => t.done) || quickList.some((t) => t.done);
   const hasLanguage = !!currentLanguage;
-  const hasGoal = state.goals.some((goal) => !goal.archived);
+  const hasGoal = state.goals.length > 0;
   const firstTaskDone = anyDone;
 
   if (!state.tutorialCompleted) {
@@ -2217,7 +2159,7 @@ const renderAll = (state) => {
 const addGoal = (title, difficulty) => {
   const state = loadState();
   const today = todayISO(state.simulationOffsetDays);
-  const hadNoGoals = state.goals.filter((goal) => !goal.archived).length === 0;
+  const hadNoGoals = state.goals.length === 0;
 
   if (!state.onboardingStartDate) {
     state.onboardingStartDate = today;
@@ -2228,7 +2170,6 @@ const addGoal = (title, difficulty) => {
     title,
     difficulty,
     createdAt: today,
-    archived: false,
   });
 
   ensureTodayTasks(state);
@@ -2398,7 +2339,7 @@ const renderSideQuestOptions = (state) => {
   const selected = new Set((state.sideQuests || []).map((q) => q.goalId));
   const activeTodayGoalIds = new Set((state.todayTasks || []).map((task) => task.goalId));
   const options = state.goals.filter(
-    (g) => !g.archived && !selected.has(g.id) && !activeTodayGoalIds.has(g.id)
+    (g) => !selected.has(g.id) && !activeTodayGoalIds.has(g.id)
   );
 
   sideQuestSelect.innerHTML = "";
@@ -2593,33 +2534,6 @@ const reorderGoal = (sourceGoalId, targetGoalId) => {
   renderGoals(state);
   renderWeeklyPlan(state);
   renderUnlock(state);
-};
-
-const archiveGoal = (goalId) => {
-  const state = loadState();
-  const goal = state.goals.find((g) => g.id === goalId);
-  if (!goal) return;
-  goal.archived = true;
-  state.todayTasks = state.todayTasks.filter((task) => task.goalId !== goalId);
-  state.sideQuests = (state.sideQuests || []).filter((q) => q.goalId !== goalId);
-  Object.keys(state.sideQuestChecks || {}).forEach((dateKey) => {
-    if (!state.sideQuestChecks[dateKey]) return;
-    delete state.sideQuestChecks[dateKey][goalId];
-    if (Object.keys(state.sideQuestChecks[dateKey]).length === 0) {
-      delete state.sideQuestChecks[dateKey];
-    }
-  });
-  saveState(state);
-  renderAll(state);
-};
-
-const restoreGoal = (goalId) => {
-  const state = loadState();
-  const goal = state.goals.find((g) => g.id === goalId);
-  if (!goal) return;
-  goal.archived = false;
-  saveState(state);
-  renderAll(state);
 };
 
 const deleteGoal = (goalId) => {
@@ -2817,8 +2731,7 @@ const renderWeeklyPlan = (state) => {
 
   const previousSelection = planGoalSelect.value;
   planGoalSelect.innerHTML = "";
-  const activeGoals = state.goals.filter((goal) => !goal.archived);
-  if (activeGoals.length === 0) {
+  if (state.goals.length === 0) {
     const option = document.createElement("option");
     option.textContent = t("emptyGoals");
     option.value = "";
@@ -2828,14 +2741,14 @@ const renderWeeklyPlan = (state) => {
     return;
   }
 
-  activeGoals.forEach((goal) => {
+  state.goals.forEach((goal) => {
     const option = document.createElement("option");
     option.value = goal.id;
     option.textContent = goal.title;
     planGoalSelect.appendChild(option);
   });
 
-  const selectedGoalId = previousSelection || activeGoals[0].id;
+  const selectedGoalId = previousSelection || state.goals[0].id;
   planGoalSelect.value = selectedGoalId;
 
   const plan = getPlanForGoal(state, selectedGoalId);
@@ -3192,7 +3105,7 @@ function renderUnlock(state) {
 
   const eligible = shouldUnlockNewTask(state);
   const candidates = state.goals.filter(
-    (g) => !g.archived && !state.todayTasks.some((t) => t.goalId === g.id)
+    (g) => !state.todayTasks.some((t) => t.goalId === g.id)
   );
 
   if (!eligible || candidates.length === 0) {

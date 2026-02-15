@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.5";
+const APP_VERSION = "1.6.6";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -2081,4 +2081,14 @@ function difficultyLabel(value) {
   return "☀️ Mittags";
 }
 
+const registerServiceWorker = () => {
+  if (!("serviceWorker" in navigator)) return;
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch((error) => {
+      console.warn("Service Worker Registrierung fehlgeschlagen", error);
+    });
+  });
+};
+
+registerServiceWorker();
 init();

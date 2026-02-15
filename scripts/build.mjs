@@ -7,7 +7,14 @@ const distDir = resolve(root, "dist");
 rmSync(distDir, { recursive: true, force: true });
 mkdirSync(distDir, { recursive: true });
 
-const requiredItems = ["index.html", "site.webmanifest", "css", "js", "assets"];
+const requiredItems = [
+  "index.html",
+  "site.webmanifest",
+  "service-worker.js",
+  "css",
+  "js",
+  "assets",
+];
 const optionalItems = ["icons"];
 
 for (const item of requiredItems) {

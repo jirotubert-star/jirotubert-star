@@ -7,6 +7,7 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `js/app.js`: Zustand, LocalStorage, Render-Logik, Interaktionen
 - `css/style.css`: Styling und Animationen
 - `site.webmanifest`: PWA-Metadaten
+- `service-worker.js`: Offline-Cache fuer Home-Screen/PWA-Nutzung
 - `scripts/build.mjs`: erzeugt ein deploybares `dist/`-Verzeichnis
 - `package.json`: Build-Skript fuer Web/Container-Pipeline
 
@@ -18,9 +19,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.6.5`
+- Aktuell: `1.6.6`
 
 ## Aenderungsprotokoll
+- `1.6.6` (2026-02-15): Vollstaendige Offline-Nutzung als installierte Home-Screen-App aktiviert: `service-worker.js` hinzugefuegt, Registrierung in `js/app.js` integriert und Build-Output um Service-Worker-Datei erweitert; Manifest-Cache-Buster auf `v=1606`.
 - `1.6.5` (2026-02-15): Naechste Native-Schritte umgesetzt: Ressourcenordner `resources/` angelegt, `@capacitor/assets` integriert und Workflow-Skripte fuer Asset-Generierung, Sync sowie Android/iOS-Open/Run hinzugefuegt.
 - `1.6.4` (2026-02-15): Capacitor eingerichtet (`capacitor.config.json`, `@capacitor/core`, `@capacitor/cli`) und native Plattformen hinzugefuegt (`android/`, `ios/`) fuer Play-Store/App-Store-Workflow.
 - `1.6.3` (2026-02-15): Repo-Aufraeumung fuer Release-Pipeline (`.gitignore`, `.DS_Store` aus Git), Build-Setup mit `package.json` + `scripts/build.mjs` und `dist/`-Output; Manifest-Cache-Buster auf `v=1603`.

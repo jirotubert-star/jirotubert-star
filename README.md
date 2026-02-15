@@ -7,11 +7,17 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `js/app.js`: Zustand, LocalStorage, Render-Logik, Interaktionen
 - `css/style.css`: Styling und Animationen
 - `site.webmanifest`: PWA-Metadaten
+- `scripts/build.mjs`: erzeugt ein deploybares `dist/`-Verzeichnis
+- `package.json`: Build-Skript fuer Web/Container-Pipeline
+
+## Build
+- `npm run build`: erstellt `dist/` mit `index.html`, `site.webmanifest`, `css/`, `js/`, `assets/`
 
 ## Version
-- Aktuell: `1.6.2`
+- Aktuell: `1.6.3`
 
 ## Aenderungsprotokoll
+- `1.6.3` (2026-02-15): Repo-Aufraeumung fuer Release-Pipeline (`.gitignore`, `.DS_Store` aus Git), Build-Setup mit `package.json` + `scripts/build.mjs` und `dist/`-Output; Manifest-Cache-Buster auf `v=1603`.
 - `1.6.2` (2026-02-15): Native-App-Feinschliff: sticky Header, floating Bottom-Navigation, Safe-Area-Abstaende, Touch-Feedback (active states), Toast-Bestaetigungen und leichtes Haptic-Feedback; Manifest-Cache-Buster auf `v=1602`.
 - `1.6.1` (2026-02-15): Neues Logo aus `assets/onestep-logo-user.png` eingebunden (Branding, Favicon, Apple-Touch-Icon, Manifest), App-Version auf `1.6.1` angehoben.
 - `1.6.0` (2026-02-15): Versionsupdate auf `1.6.0`; Manifest-Cache-Buster in `index.html` auf `v=1600` gesetzt; Dokumentation initialisiert.

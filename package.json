@@ -1,0 +1,9 @@
+{
+  "name": "onestep",
+  "version": "1.6.3",
+  "private": true,
+  "description": "OneStep static app build setup",
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  }
+}

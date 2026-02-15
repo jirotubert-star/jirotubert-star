@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.9";
+const APP_VERSION = "1.5.10";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -356,11 +356,12 @@ const renderToday = (state) => {
   );
   const mainTasksDone =
     actionableMainTasks.length > 0 && actionableMainTasks.every((t) => t.done);
+  const showSideQuestUI = sideQuestFeatureEnabled && mainTasksDone;
   if (sideQuestForm) {
-    sideQuestForm.style.display =
-      sideQuestFeatureEnabled && mainTasksDone ? "flex" : "none";
+    sideQuestForm.classList.toggle("is-collapsed", !showSideQuestUI);
+    sideQuestForm.setAttribute("aria-hidden", showSideQuestUI ? "false" : "true");
   }
-  if (sideQuestFeatureEnabled && mainTasksDone) {
+  if (showSideQuestUI) {
     renderSideQuestOptions(state);
   }
   if (
@@ -549,14 +550,14 @@ const renderToday = (state) => {
       todayList.appendChild(li);
     });
 
-    if (sideQuestFeatureEnabled && mainTasksDone && sideQuestEntries.length > 0) {
+    if (showSideQuestUI && sideQuestEntries.length > 0) {
       const head = document.createElement("li");
       head.className = "subhead";
       head.textContent = "Side Quest";
       todayList.appendChild(head);
     }
 
-    if (sideQuestFeatureEnabled && mainTasksDone) {
+    if (showSideQuestUI) {
       sideQuestEntries.forEach((quest) => {
         const goal = state.goals.find((g) => g.id === quest.goalId);
         if (!goal) return;
@@ -571,6 +572,7 @@ const renderToday = (state) => {
           : !!state.sideQuestChecks?.[today]?.[goal.id];
 
         const li = document.createElement("li");
+        li.classList.add("side-quest-animated");
         const labelEl = document.createElement("label");
         labelEl.className = "neon-checkbox";
 

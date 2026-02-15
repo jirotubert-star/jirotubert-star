@@ -4,23 +4,36 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>OneStep – Jeden Tag ein kleiner Schritt</title>
-    <meta name="description" content="OneStep ist eine minimalistische Web‑App für nachhaltigen Fortschritt durch kleine tägliche Aufgaben." />
+    <meta id="meta-description" name="description" content="OneStep ist eine minimalistische Web‑App für nachhaltigen Fortschritt durch kleine tägliche Aufgaben." />
     <meta name="theme-color" content="#dce8e3" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-user.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-user.png" />
-    <link rel="manifest" href="site.webmanifest?v=1606" />
+    <link rel="manifest" href="site.webmanifest?v=1607" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+    <div id="language-modal" class="language-modal" hidden>
+      <div class="language-card">
+        <h2 id="language-modal-title">Sprache wählen</h2>
+        <p id="language-modal-text">Bitte wähle eine Sprache.</p>
+        <div class="language-grid">
+          <button class="btn" type="button" data-lang="de">Deutsch</button>
+          <button class="btn" type="button" data-lang="en">English</button>
+          <button class="btn" type="button" data-lang="ru">Русский</button>
+          <button class="btn" type="button" data-lang="es">Español</button>
+          <button class="btn" type="button" data-lang="fr">Français</button>
+        </div>
+      </div>
+    </div>
     <header class="top">
       <div class="brand">
         <div class="logo">
           <img class="logo-mark" src="assets/onestep-logo-user.png" alt="OneStep Logo" />
           <span>OneStep</span>
         </div>
-        <div class="tagline">Ein kleiner Schritt pro Tag ist besser als ein perfekter Plan.</div>
+        <div class="tagline" id="tagline">Ein kleiner Schritt pro Tag ist besser als ein perfekter Plan.</div>
       </div>
     </header>
 
@@ -214,7 +227,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.6.6</span>
+      <span class="soft-note" id="version">Version 1.6.7</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">

@@ -20,7 +20,415 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.6";
+const APP_VERSION = "1.6.7";
+const LANGUAGE_KEY = "onestep_language_v1";
+const SUPPORTED_LANGS = ["de", "en", "ru", "es", "fr"];
+let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "";
+
+const I18N = {
+  de: {
+    appTitle: "OneStep – Jeden Tag ein kleiner Schritt",
+    appDescription: "OneStep ist eine minimalistische Web-App für tägliche kleine Aufgaben.",
+    chooseLanguage: "Sprache wählen",
+    chooseLanguageText: "Bitte wähle eine Sprache.",
+    languageSaved: "Sprache gespeichert",
+    tagline: "Ein kleiner Schritt pro Tag ist besser als ein perfekter Plan.",
+    todayCountWord: "Aufgaben",
+    quickTaskPlaceholder: "Einmalige Aufgabe",
+    btnAdd: "Hinzufügen",
+    btnTomorrow: "Für morgen",
+    btnSideQuestAdd: "Side Quest hinzufügen",
+    btnRandom: "Zufällig auswählen",
+    emptyToday: "Noch keine Tagesaufgaben – füge ein Ziel hinzu.",
+    emptyGoals: "Noch keine Ziele – beginne mit einem kleinen Schritt.",
+    sideQuestHead: "Side Quest",
+    tomorrowHead: "Morgen",
+    badgeOneTime: "Einmalig",
+    badgeTomorrow: "Morgen",
+    maxSideQuest: "Maximal 3 Side Quests erreicht",
+    noGoalsAvailable: "Keine weiteren Ziele verfügbar",
+    unlockIntro: "3 Tage sind vorbei – du kannst eine weitere Aufgabe hinzufügen oder zufällig auswählen.",
+    resetConfirm: "Möchtest du wirklich alles zurücksetzen?",
+    toastGoalAdded: "Ziel hinzugefügt",
+    toastTaskAdded: "Neue Tagesaufgabe hinzugefügt",
+    toastTodayAdded: "Aufgabe für heute hinzugefügt",
+    toastTomorrowAdded: "Aufgabe für morgen geplant",
+    toastSideAdded: "Side Quest hinzugefügt",
+    toastSideRemoved: "Side Quest entfernt",
+    toastReset: "App wurde zurückgesetzt",
+    toastOffset: "Tag-Offset gesetzt",
+    toastProOn: "Pro-Modus aktiv",
+    toastProOff: "Pro-Modus deaktiviert",
+    planNeed: "Bitte mindestens 4 Tage eintragen",
+    planWeek: "Woche geplant",
+    tutorialStart: "Start",
+    tutorialStep: "Schritt",
+    dayWord: "Tag",
+    tutorialS1: "Lege dein erstes Ziel an.",
+    tutorialS2: "Hake heute eine Aufgabe ab.",
+    tutorialDone: "Super! Alles ist freigeschaltet.",
+    unlockWeekTitle: "Neu: Wochenplan",
+    unlockWeekText: "Wochenplan ist jetzt aktiv.",
+    unlockQuickTitle: "Neu: Einmalige Aufgaben",
+    unlockQuickText: "Einmalige Aufgaben sind jetzt aktiv.",
+    unlockSideTitle: "Neu: Side Quest",
+    unlockSideText: "Side Quest ist jetzt aktiv.",
+    onboardingTitle: "Onboarding aktiv",
+    onboardingText: "Bleib bei kleinen, täglichen Schritten.",
+    record: "Rekord",
+    difficultyMorning: "🌅 Morgens",
+    difficultyNoon: "☀️ Mittags",
+    difficultyEvening: "🌙 Abends",
+    motivation: [
+      "Klein, ruhig, konstant.",
+      "Ein Schritt zählt.",
+      "Heute reicht ein kleines Ziel.",
+      "Langsam ist okay.",
+      "Du bleibst dran.",
+    ],
+  },
+  en: {
+    appTitle: "OneStep – One small step each day",
+    appDescription: "OneStep is a minimalist web app for small daily tasks.",
+    chooseLanguage: "Choose language",
+    chooseLanguageText: "Please choose a language.",
+    languageSaved: "Language saved",
+    tagline: "One small step each day beats a perfect plan.",
+    todayCountWord: "tasks",
+    quickTaskPlaceholder: "One-time task",
+    btnAdd: "Add",
+    btnTomorrow: "For tomorrow",
+    btnSideQuestAdd: "Add side quest",
+    btnRandom: "Random",
+    emptyToday: "No tasks yet – add one goal.",
+    emptyGoals: "No goals yet – start small.",
+    sideQuestHead: "Side Quest",
+    tomorrowHead: "Tomorrow",
+    badgeOneTime: "One-time",
+    badgeTomorrow: "Tomorrow",
+    maxSideQuest: "Max 3 side quests reached",
+    noGoalsAvailable: "No more goals available",
+    unlockIntro: "3 days passed – add one more task or pick random.",
+    resetConfirm: "Reset all app data?",
+    toastGoalAdded: "Goal added",
+    toastTaskAdded: "Daily task added",
+    toastTodayAdded: "Task added for today",
+    toastTomorrowAdded: "Task planned for tomorrow",
+    toastSideAdded: "Side quest added",
+    toastSideRemoved: "Side quest removed",
+    toastReset: "App reset",
+    toastOffset: "Day offset set",
+    toastProOn: "Pro mode on",
+    toastProOff: "Pro mode off",
+    planNeed: "Please set at least 4 days",
+    planWeek: "Week planned",
+    tutorialStart: "Start",
+    tutorialStep: "Step",
+    dayWord: "Day",
+    tutorialS1: "Create your first goal.",
+    tutorialS2: "Complete one task today.",
+    tutorialDone: "Great! All sections unlocked.",
+    unlockWeekTitle: "New: Weekly plan",
+    unlockWeekText: "Weekly plan is now unlocked.",
+    unlockQuickTitle: "New: One-time tasks",
+    unlockQuickText: "One-time tasks are now unlocked.",
+    unlockSideTitle: "New: Side Quest",
+    unlockSideText: "Side Quest is now unlocked.",
+    onboardingTitle: "Onboarding active",
+    onboardingText: "Keep it small and daily.",
+    record: "Record",
+    difficultyMorning: "🌅 Morning",
+    difficultyNoon: "☀️ Noon",
+    difficultyEvening: "🌙 Evening",
+    motivation: ["Small steps win.", "One task matters.", "Keep it simple.", "Slow is fine.", "Stay consistent."],
+  },
+  ru: {
+    appTitle: "OneStep — маленький шаг каждый день",
+    appDescription: "OneStep — минималистичное приложение для маленьких ежедневных задач.",
+    chooseLanguage: "Выберите язык",
+    chooseLanguageText: "Пожалуйста, выберите язык.",
+    languageSaved: "Язык сохранён",
+    tagline: "Маленький шаг каждый день лучше идеального плана.",
+    todayCountWord: "задач",
+    quickTaskPlaceholder: "Разовая задача",
+    btnAdd: "Добавить",
+    btnTomorrow: "На завтра",
+    btnSideQuestAdd: "Добавить side quest",
+    btnRandom: "Случайно",
+    emptyToday: "Пока нет задач — добавьте цель.",
+    emptyGoals: "Пока нет целей — начните с малого.",
+    sideQuestHead: "Side Quest",
+    tomorrowHead: "Завтра",
+    badgeOneTime: "Разово",
+    badgeTomorrow: "Завтра",
+    maxSideQuest: "Достигнут лимит 3 side quests",
+    noGoalsAvailable: "Больше целей нет",
+    unlockIntro: "Прошло 3 дня — добавьте задачу или выберите случайно.",
+    resetConfirm: "Сбросить все данные?",
+    toastGoalAdded: "Цель добавлена",
+    toastTaskAdded: "Задача дня добавлена",
+    toastTodayAdded: "Задача на сегодня добавлена",
+    toastTomorrowAdded: "Задача на завтра запланирована",
+    toastSideAdded: "Side quest добавлен",
+    toastSideRemoved: "Side quest удалён",
+    toastReset: "Приложение сброшено",
+    toastOffset: "Смещение дня установлено",
+    toastProOn: "Pro режим включён",
+    toastProOff: "Pro режим выключен",
+    planNeed: "Укажите минимум 4 дня",
+    planWeek: "Неделя запланирована",
+    tutorialStart: "Старт",
+    tutorialStep: "Шаг",
+    dayWord: "День",
+    tutorialS1: "Создайте первую цель.",
+    tutorialS2: "Отметьте одну задачу сегодня.",
+    tutorialDone: "Отлично! Всё разблокировано.",
+    unlockWeekTitle: "Новое: план недели",
+    unlockWeekText: "План недели теперь доступен.",
+    unlockQuickTitle: "Новое: разовые задачи",
+    unlockQuickText: "Разовые задачи теперь доступны.",
+    unlockSideTitle: "Новое: Side Quest",
+    unlockSideText: "Side Quest теперь доступен.",
+    onboardingTitle: "Онбординг активен",
+    onboardingText: "Маленькие шаги каждый день.",
+    record: "Рекорд",
+    difficultyMorning: "🌅 Утром",
+    difficultyNoon: "☀️ Днём",
+    difficultyEvening: "🌙 Вечером",
+    motivation: ["Маленькие шаги работают.", "Одна задача важна.", "Просто и стабильно.", "Медленно — нормально.", "Держи ритм."],
+  },
+  es: {
+    appTitle: "OneStep – un pequeño paso cada día",
+    appDescription: "OneStep es una app minimalista para pequeñas tareas diarias.",
+    chooseLanguage: "Elige idioma",
+    chooseLanguageText: "Por favor, elige un idioma.",
+    languageSaved: "Idioma guardado",
+    tagline: "Un pequeño paso al día vale más que un plan perfecto.",
+    todayCountWord: "tareas",
+    quickTaskPlaceholder: "Tarea puntual",
+    btnAdd: "Añadir",
+    btnTomorrow: "Para mañana",
+    btnSideQuestAdd: "Añadir side quest",
+    btnRandom: "Aleatorio",
+    emptyToday: "Aún no hay tareas: añade una meta.",
+    emptyGoals: "Aún no hay metas: empieza pequeño.",
+    sideQuestHead: "Side Quest",
+    tomorrowHead: "Mañana",
+    badgeOneTime: "Puntual",
+    badgeTomorrow: "Mañana",
+    maxSideQuest: "Máximo 3 side quests alcanzado",
+    noGoalsAvailable: "No hay más metas",
+    unlockIntro: "Pasaron 3 días: añade una tarea o elige al azar.",
+    resetConfirm: "¿Restablecer todos los datos?",
+    toastGoalAdded: "Meta añadida",
+    toastTaskAdded: "Tarea diaria añadida",
+    toastTodayAdded: "Tarea añadida para hoy",
+    toastTomorrowAdded: "Tarea planificada para mañana",
+    toastSideAdded: "Side quest añadido",
+    toastSideRemoved: "Side quest eliminado",
+    toastReset: "App reiniciada",
+    toastOffset: "Desfase de día aplicado",
+    toastProOn: "Modo Pro activado",
+    toastProOff: "Modo Pro desactivado",
+    planNeed: "Añade al menos 4 días",
+    planWeek: "Semana planificada",
+    tutorialStart: "Inicio",
+    tutorialStep: "Paso",
+    dayWord: "Día",
+    tutorialS1: "Crea tu primera meta.",
+    tutorialS2: "Marca una tarea hoy.",
+    tutorialDone: "¡Perfecto! Todo desbloqueado.",
+    unlockWeekTitle: "Nuevo: plan semanal",
+    unlockWeekText: "El plan semanal ya está activo.",
+    unlockQuickTitle: "Nuevo: tareas puntuales",
+    unlockQuickText: "Las tareas puntuales ya están activas.",
+    unlockSideTitle: "Nuevo: Side Quest",
+    unlockSideText: "Side Quest ya está activo.",
+    onboardingTitle: "Onboarding activo",
+    onboardingText: "Pequeños pasos cada día.",
+    record: "Récord",
+    difficultyMorning: "🌅 Mañana",
+    difficultyNoon: "☀️ Mediodía",
+    difficultyEvening: "🌙 Noche",
+    motivation: ["Pequeños pasos ganan.", "Una tarea cuenta.", "Sigue simple.", "Lento está bien.", "Sé constante."],
+  },
+  fr: {
+    appTitle: "OneStep – un petit pas chaque jour",
+    appDescription: "OneStep est une app minimaliste pour de petites tâches quotidiennes.",
+    chooseLanguage: "Choisir la langue",
+    chooseLanguageText: "Merci de choisir une langue.",
+    languageSaved: "Langue enregistrée",
+    tagline: "Un petit pas par jour vaut mieux qu'un plan parfait.",
+    todayCountWord: "tâches",
+    quickTaskPlaceholder: "Tâche ponctuelle",
+    btnAdd: "Ajouter",
+    btnTomorrow: "Pour demain",
+    btnSideQuestAdd: "Ajouter side quest",
+    btnRandom: "Aléatoire",
+    emptyToday: "Pas encore de tâches : ajoute un objectif.",
+    emptyGoals: "Pas encore d'objectifs : commence petit.",
+    sideQuestHead: "Side Quest",
+    tomorrowHead: "Demain",
+    badgeOneTime: "Ponctuel",
+    badgeTomorrow: "Demain",
+    maxSideQuest: "Maximum 3 side quests atteint",
+    noGoalsAvailable: "Plus d'objectifs disponibles",
+    unlockIntro: "3 jours passés : ajoute une tâche ou choisis au hasard.",
+    resetConfirm: "Réinitialiser toutes les données ?",
+    toastGoalAdded: "Objectif ajouté",
+    toastTaskAdded: "Tâche du jour ajoutée",
+    toastTodayAdded: "Tâche ajoutée pour aujourd'hui",
+    toastTomorrowAdded: "Tâche planifiée pour demain",
+    toastSideAdded: "Side quest ajouté",
+    toastSideRemoved: "Side quest retiré",
+    toastReset: "App réinitialisée",
+    toastOffset: "Décalage de jour défini",
+    toastProOn: "Mode Pro activé",
+    toastProOff: "Mode Pro désactivé",
+    planNeed: "Ajoute au moins 4 jours",
+    planWeek: "Semaine planifiée",
+    tutorialStart: "Début",
+    tutorialStep: "Étape",
+    dayWord: "Jour",
+    tutorialS1: "Crée ton premier objectif.",
+    tutorialS2: "Coche une tâche aujourd'hui.",
+    tutorialDone: "Super ! Tout est débloqué.",
+    unlockWeekTitle: "Nouveau : plan hebdo",
+    unlockWeekText: "Le plan hebdo est maintenant actif.",
+    unlockQuickTitle: "Nouveau : tâches ponctuelles",
+    unlockQuickText: "Les tâches ponctuelles sont actives.",
+    unlockSideTitle: "Nouveau : Side Quest",
+    unlockSideText: "Side Quest est maintenant actif.",
+    onboardingTitle: "Onboarding actif",
+    onboardingText: "Petits pas chaque jour.",
+    record: "Record",
+    difficultyMorning: "🌅 Matin",
+    difficultyNoon: "☀️ Midi",
+    difficultyEvening: "🌙 Soir",
+    motivation: ["Les petits pas gagnent.", "Une tâche compte.", "Reste simple.", "Lent, c'est bien.", "Sois régulier."],
+  },
+};
+
+const langPack = () => I18N[currentLanguage] || I18N.de;
+const t = (key) => langPack()[key] || I18N.de[key] || key;
+
+const STATIC_TEXT = {
+  de: {
+    welcomeTitle: "Willkommen bei OneStep",
+    welcomeP1: "Kleine Schritte, jeden Tag.",
+    welcomeP2: "Starte mit einem Ziel.",
+    todayTitle: "Today",
+    goalsTitle: "Life Goals",
+    progressTitle: "Progress",
+    infoTitle: "Einstellungen",
+    calLegend: "Tag komplett erledigt",
+    statStreak: "Aktive Tage in Folge",
+    statTotal: "Erledigte Aufgaben gesamt",
+    statActive: "Aktive Tage (Woche)",
+    statPerfect: "Perfekte Tage (Woche)",
+    modeToggle: "Pro-Version aktivieren",
+    modeHint: "Testphase: Beide Modi sichtbar.",
+    testTitle: "Tagesanzahl simulieren",
+    applyBtn: "Anwenden",
+    resetBtn: "Reset",
+    simPrefix: "Heute",
+    footer1: "OneStep · Minimalistische Fortschritts-App",
+    footer2: "Lokal gespeichert in deinem Browser",
+    navSettings: "Einstellungen",
+  },
+  en: {
+    welcomeTitle: "Welcome to OneStep",
+    welcomeP1: "Small steps, every day.",
+    welcomeP2: "Start with one goal.",
+    todayTitle: "Today",
+    goalsTitle: "Life Goals",
+    progressTitle: "Progress",
+    infoTitle: "Settings",
+    calLegend: "Day fully done",
+    statStreak: "Active days in a row",
+    statTotal: "Total completed tasks",
+    statActive: "Active days (week)",
+    statPerfect: "Perfect days (week)",
+    modeToggle: "Enable Pro version",
+    modeHint: "Test phase: both modes visible.",
+    testTitle: "Simulate day count",
+    applyBtn: "Apply",
+    resetBtn: "Reset",
+    simPrefix: "Today",
+    footer1: "OneStep · Minimal progress app",
+    footer2: "Stored locally in your browser",
+    navSettings: "Settings",
+  },
+  ru: {
+    welcomeTitle: "Добро пожаловать в OneStep",
+    welcomeP1: "Маленькие шаги каждый день.",
+    welcomeP2: "Начни с одной цели.",
+    todayTitle: "Today",
+    goalsTitle: "Life Goals",
+    progressTitle: "Progress",
+    infoTitle: "Настройки",
+    calLegend: "День выполнен полностью",
+    statStreak: "Дни подряд",
+    statTotal: "Всего выполнено задач",
+    statActive: "Активные дни (неделя)",
+    statPerfect: "Идеальные дни (неделя)",
+    modeToggle: "Включить Pro",
+    modeHint: "Тест: оба режима доступны.",
+    testTitle: "Симуляция дней",
+    applyBtn: "Применить",
+    resetBtn: "Сброс",
+    simPrefix: "Сегодня",
+    footer1: "OneStep · Минималистичный прогресс",
+    footer2: "Данные хранятся локально",
+    navSettings: "Настройки",
+  },
+  es: {
+    welcomeTitle: "Bienvenido a OneStep",
+    welcomeP1: "Pequeños pasos cada día.",
+    welcomeP2: "Empieza con una meta.",
+    todayTitle: "Today",
+    goalsTitle: "Life Goals",
+    progressTitle: "Progress",
+    infoTitle: "Ajustes",
+    calLegend: "Día completado",
+    statStreak: "Días activos seguidos",
+    statTotal: "Tareas completadas",
+    statActive: "Días activos (semana)",
+    statPerfect: "Días perfectos (semana)",
+    modeToggle: "Activar versión Pro",
+    modeHint: "Fase de prueba: ambos modos visibles.",
+    testTitle: "Simular días",
+    applyBtn: "Aplicar",
+    resetBtn: "Reiniciar",
+    simPrefix: "Hoy",
+    footer1: "OneStep · Progreso minimalista",
+    footer2: "Guardado local en tu navegador",
+    navSettings: "Ajustes",
+  },
+  fr: {
+    welcomeTitle: "Bienvenue sur OneStep",
+    welcomeP1: "Petits pas chaque jour.",
+    welcomeP2: "Commence avec un objectif.",
+    todayTitle: "Today",
+    goalsTitle: "Life Goals",
+    progressTitle: "Progress",
+    infoTitle: "Réglages",
+    calLegend: "Journée complète",
+    statStreak: "Jours actifs d'affilée",
+    statTotal: "Tâches terminées",
+    statActive: "Jours actifs (semaine)",
+    statPerfect: "Jours parfaits (semaine)",
+    modeToggle: "Activer la version Pro",
+    modeHint: "Phase test : deux modes visibles.",
+    testTitle: "Simuler des jours",
+    applyBtn: "Appliquer",
+    resetBtn: "Réinitialiser",
+    simPrefix: "Aujourd'hui",
+    footer1: "OneStep · Progrès minimaliste",
+    footer2: "Stocké localement dans le navigateur",
+    navSettings: "Réglages",
+  },
+};
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -172,6 +580,8 @@ const tutorialTitle = document.getElementById("tutorial-title");
 const tutorialStepLabel = document.getElementById("tutorial-step");
 const tutorialText = document.getElementById("tutorial-text");
 const toastEl = document.getElementById("toast");
+const languageModal = document.getElementById("language-modal");
+const languageButtons = document.querySelectorAll("[data-lang]");
 let currentTab = "today";
 const tabOrder = ["today", "goals", "progress", "info"];
 let touchStartX = null;
@@ -187,13 +597,7 @@ const SIDE_QUEST_REVEAL_SCROLL_MS = 520;
 // ---------------------------
 // Motivationstexte
 // ---------------------------
-const MOTIVATION = [
-  "Klein, ruhig, konstant – dein Weg entsteht Schritt für Schritt.",
-  "Ein erfüllter Tag beginnt mit einer machbaren Aufgabe.",
-  "Du musst heute nicht perfekt sein – nur präsent.",
-  "Langsamer Fortschritt ist echter Fortschritt.",
-  "Deine Energie zählt. Ein kleiner Schritt reicht.",
-];
+let MOTIVATION = [...t("motivation")];
 
 const triggerHaptic = (ms = 12) => {
   if (typeof navigator === "undefined") return;
@@ -209,6 +613,101 @@ const showToast = (message) => {
   toastTimer = setTimeout(() => {
     toastEl.classList.remove("show");
   }, 1700);
+};
+
+const setLanguage = (lang) => {
+  if (!SUPPORTED_LANGS.includes(lang)) return;
+  currentLanguage = lang;
+  localStorage.setItem(LANGUAGE_KEY, lang);
+  MOTIVATION = [...t("motivation")];
+  applyStaticTranslations();
+  renderAll(loadState());
+  if (languageModal) languageModal.hidden = true;
+  showToast(t("languageSaved"));
+};
+
+const showLanguageModalIfNeeded = () => {
+  if (!languageModal) return;
+  languageModal.hidden = !!currentLanguage;
+};
+
+const applyStaticTranslations = () => {
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+  document.documentElement.lang = currentLanguage || "de";
+  document.title = t("appTitle");
+  const metaDescription = document.getElementById("meta-description");
+  if (metaDescription) metaDescription.setAttribute("content", t("appDescription"));
+
+  const byId = (id) => document.getElementById(id);
+  const setText = (id, value) => {
+    const el = byId(id);
+    if (el) el.textContent = value;
+  };
+
+  setText("language-modal-title", t("chooseLanguage"));
+  setText("language-modal-text", t("chooseLanguageText"));
+  setText("tagline", t("tagline"));
+  const welcomeTitle = welcomeSection?.querySelector("h1");
+  const welcomeParagraphs = welcomeSection?.querySelectorAll("p");
+  if (welcomeTitle) welcomeTitle.textContent = s.welcomeTitle;
+  if (welcomeParagraphs?.length >= 2) {
+    welcomeParagraphs[0].textContent = s.welcomeP1;
+    welcomeParagraphs[1].textContent = s.welcomeP2;
+  }
+  setText("today-title", s.todayTitle);
+  setText("goals-title", s.goalsTitle);
+  setText("progress-title", s.progressTitle);
+  setText("info-title", s.infoTitle);
+
+  if (quickTaskInput) quickTaskInput.placeholder = t("quickTaskPlaceholder");
+  if (goalInput) goalInput.placeholder = "Goal / Ziel";
+  if (quickTaskTomorrowBtn) quickTaskTomorrowBtn.textContent = t("btnTomorrow");
+  const quickTaskTodayBtn = document.getElementById("quick-task-today");
+  if (quickTaskTodayBtn) quickTaskTodayBtn.textContent = t("btnAdd");
+  if (sideQuestForm) {
+    const btn = sideQuestForm.querySelector("button[type='submit']");
+    if (btn) btn.textContent = t("btnSideQuestAdd");
+  }
+  const goalSubmit = goalForm?.querySelector("button[type='submit']");
+  if (goalSubmit) goalSubmit.textContent = t("btnAdd");
+  if (applyOffsetBtn) applyOffsetBtn.textContent = s.applyBtn;
+  if (resetBtn) resetBtn.textContent = s.resetBtn;
+  if (simulatedDateEl) simulatedDateEl.textContent = `${s.simPrefix}: --`;
+
+  const legend = document.querySelector(".calendar-legend .soft-note");
+  if (legend) legend.textContent = s.calLegend;
+  const statLabels = document.querySelectorAll(".stat-label");
+  if (statLabels.length >= 4) {
+    statLabels[0].textContent = s.statStreak;
+    statLabels[1].textContent = s.statTotal;
+    statLabels[2].textContent = s.statActive;
+    statLabels[3].textContent = s.statPerfect;
+  }
+  const modeToggleLabel = modeSwitch?.closest("label")?.querySelector("span");
+  if (modeToggleLabel) modeToggleLabel.textContent = s.modeToggle;
+  if (modeHint) modeHint.textContent = s.modeHint;
+  const testTitleEl = document.querySelector(".test-title");
+  if (testTitleEl) testTitleEl.textContent = s.testTitle;
+  const footerSpans = document.querySelectorAll(".footer span");
+  if (footerSpans.length >= 2) {
+    footerSpans[0].textContent = s.footer1;
+    footerSpans[1].textContent = s.footer2;
+  }
+
+  const diffOptions = goalDifficulty?.querySelectorAll("option");
+  if (diffOptions?.length >= 3) {
+    diffOptions[0].textContent = t("difficultyMorning").replace("🌅 ", "");
+    diffOptions[1].textContent = t("difficultyNoon").replace("☀️ ", "");
+    diffOptions[2].textContent = t("difficultyEvening").replace("🌙 ", "");
+  }
+
+  const navLabels = document.querySelectorAll(".nav-label");
+  if (navLabels.length === 4) {
+    navLabels[0].textContent = "Today";
+    navLabels[1].textContent = "Goals";
+    navLabels[2].textContent = "Progress";
+    navLabels[3].textContent = s.navSettings;
+  }
 };
 
 const getOnboardingDay = (state) => {
@@ -412,7 +911,7 @@ const renderToday = (state) => {
     sideQuestEntries.length === 0
   ) {
     const empty = document.createElement("li");
-    empty.textContent = "Noch keine Tagesaufgaben – füge ein Ziel hinzu.";
+    empty.textContent = t("emptyToday");
     todayList.appendChild(empty);
   } else {
     const order = { morning: 0, noon: 1, evening: 2 };
@@ -579,7 +1078,7 @@ const renderToday = (state) => {
 
       const badge = document.createElement("span");
       badge.className = "difficulty noon";
-      badge.textContent = "Einmalig";
+      badge.textContent = t("badgeOneTime");
 
       label.appendChild(checkbox);
       label.appendChild(frame);
@@ -594,7 +1093,7 @@ const renderToday = (state) => {
     if (showSideQuestUI && sideQuestEntries.length > 0) {
       const head = document.createElement("li");
       head.className = "subhead";
-      head.textContent = "Side Quest";
+      head.textContent = t("sideQuestHead");
       todayList.appendChild(head);
     }
 
@@ -706,7 +1205,7 @@ const renderToday = (state) => {
     if (quickTomorrowEntries.length > 0) {
       const head = document.createElement("li");
       head.className = "subhead";
-      head.textContent = "Morgen";
+      head.textContent = t("tomorrowHead");
       todayList.appendChild(head);
     }
 
@@ -780,7 +1279,7 @@ const renderToday = (state) => {
 
       const badge = document.createElement("span");
       badge.className = "difficulty noon";
-      badge.textContent = "Morgen";
+      badge.textContent = t("badgeTomorrow");
 
       label.appendChild(checkbox);
       label.appendChild(frame);
@@ -793,7 +1292,7 @@ const renderToday = (state) => {
     });
   }
 
-  todayCount.textContent = `${state.todayTasks.length + quickTaskEntries.length} Aufgaben`;
+  todayCount.textContent = `${state.todayTasks.length + quickTaskEntries.length} ${t("todayCountWord")}`;
 };
 
 const renderGoals = (state) => {
@@ -802,7 +1301,7 @@ const renderGoals = (state) => {
 
   if (state.goals.length === 0) {
     const empty = document.createElement("li");
-    empty.textContent = "Noch keine Ziele – beginne mit einem kleinen Schritt.";
+    empty.textContent = t("emptyGoals");
     goalsList.appendChild(empty);
     return;
   }
@@ -869,7 +1368,7 @@ const renderProgress = (state) => {
     perfectWeekEl.textContent = String(weeklyStats.perfectDays);
   }
   if (perfectRecordEl) {
-    perfectRecordEl.textContent = `Rekord: ${records.perfectRecord}`;
+    perfectRecordEl.textContent = `${t("record")}: ${records.perfectRecord}`;
   }
 
   const message = MOTIVATION[Math.floor(Math.random() * MOTIVATION.length)];
@@ -909,16 +1408,16 @@ const applyTutorial = (state) => {
   const access = getFeatureAccess(state);
   const unlockMessages = {
     4: {
-      title: "Neu freigeschaltet: Wochenplan",
-      text: "Heute ist der Wochenplan aktiv. Du findest ihn bei Goals ganz unten. Plane mindestens 4 Tage, damit deine Routine stabil und realistisch bleibt.",
+      title: t("unlockWeekTitle"),
+      text: t("unlockWeekText"),
     },
     7: {
-      title: "Neu freigeschaltet: Einmalige Aufgaben",
-      text: "Heute sind einmalige Aufgaben aktiv. Nutze sie für spontane To-dos, ohne deine Hauptziele zu verwässern.",
+      title: t("unlockQuickTitle"),
+      text: t("unlockQuickText"),
     },
     10: {
-      title: "Neu freigeschaltet: Side Quest",
-      text: "Heute ist Side Quest aktiv. Wähle bis zu 5 Ziele, die später Teil deiner Routine werden sollen.",
+      title: t("unlockSideTitle"),
+      text: t("unlockSideText"),
     },
   };
 
@@ -926,37 +1425,29 @@ const applyTutorial = (state) => {
     if (!state.tutorialCompleted) {
       tutorialSection.style.display = "block";
       tutorialSection.classList.remove("unlock-highlight");
-      if (tutorialTitle) tutorialTitle.textContent = "Start";
-      if (tutorialStepLabel) tutorialStepLabel.textContent = `Schritt ${state.tutorialStep}/3`;
+      if (tutorialTitle) tutorialTitle.textContent = t("tutorialStart");
+      if (tutorialStepLabel) tutorialStepLabel.textContent = `${t("tutorialStep")} ${state.tutorialStep}/3`;
       if (tutorialText) {
         if (state.tutorialStep === 1) {
-          tutorialText.textContent = "Lege dein erstes Ziel an. Danach erscheint deine erste Tagesaufgabe.";
+          tutorialText.textContent = t("tutorialS1");
         } else if (state.tutorialStep === 2) {
-          tutorialText.textContent = "Hake heute eine Aufgabe ab. Danach werden alle Bereiche freigeschaltet.";
+          tutorialText.textContent = t("tutorialS2");
         } else {
-          tutorialText.textContent = "Super! Alle Bereiche sind jetzt freigeschaltet.";
+          tutorialText.textContent = t("tutorialDone");
         }
       }
     } else if (access.onboardingActive) {
       tutorialSection.style.display = "block";
       const unlock = unlockMessages[access.day];
       tutorialSection.classList.toggle("unlock-highlight", !!unlock);
-      if (tutorialStepLabel) tutorialStepLabel.textContent = `Tag ${access.day}/12`;
+      if (tutorialStepLabel) tutorialStepLabel.textContent = `${t("dayWord")} ${access.day}/12`;
       if (unlock) {
         if (tutorialTitle) tutorialTitle.textContent = unlock.title;
         if (tutorialText) tutorialText.textContent = unlock.text;
       } else {
-        if (tutorialTitle) tutorialTitle.textContent = "Onboarding aktiv";
+        if (tutorialTitle) tutorialTitle.textContent = t("onboardingTitle");
         if (tutorialText) {
-          if (access.day <= 3) {
-            tutorialText.textContent = "Fokus auf die Hauptfunktionen: Ziele anlegen und Today-Liste abhaken. Weitere Funktionen werden schrittweise freigeschaltet.";
-          } else if (access.day <= 6) {
-            tutorialText.textContent = "Nutze jetzt den Wochenplan, um deine Tage zu strukturieren. Die nächsten Funktionen folgen in den kommenden Tagen.";
-          } else if (access.day <= 9) {
-            tutorialText.textContent = "Einmalige Aufgaben sind aktiv. Hauptaufgaben bleiben Priorität, einmalige Aufgaben sind nur Ergänzung.";
-          } else {
-            tutorialText.textContent = "Side Quests sind aktiv. Nutze sie für zukünftige Routinen, während deine Kernziele stabil bleiben.";
-          }
+          tutorialText.textContent = t("onboardingText");
         }
       }
     } else {
@@ -989,6 +1480,7 @@ const applyMode = (state) => {
 };
 
 const renderAll = (state) => {
+  applyStaticTranslations();
   renderWelcome(state);
   renderUnlock(state);
   renderToday(state);
@@ -1029,7 +1521,7 @@ const addGoal = (title, difficulty) => {
   saveState(state);
   renderAll(state);
   triggerHaptic(14);
-  showToast("Ziel hinzugefügt");
+  showToast(t("toastGoalAdded"));
   if (hadNoGoals) {
     setActiveTab("today");
   }
@@ -1135,7 +1627,7 @@ const addTaskFromGoal = (goalId) => {
   saveState(state);
   renderAll(state);
   triggerHaptic(14);
-  showToast("Neue Tagesaufgabe hinzugefügt");
+  showToast(t("toastTaskAdded"));
 };
 
 const addRandomTask = () => {
@@ -1159,7 +1651,7 @@ const addQuickTask = (label) => {
   saveState(state);
   renderAll(state);
   triggerHaptic(12);
-  showToast("Aufgabe für heute hinzugefügt");
+  showToast(t("toastTodayAdded"));
 };
 
 const addQuickTaskTomorrow = (label) => {
@@ -1176,7 +1668,7 @@ const addQuickTaskTomorrow = (label) => {
   saveState(state);
   renderAll(state);
   triggerHaptic(12);
-  showToast("Aufgabe für morgen geplant");
+  showToast(t("toastTomorrowAdded"));
 };
 
 const renderSideQuestOptions = (state) => {
@@ -1191,7 +1683,7 @@ const renderSideQuestOptions = (state) => {
   if (state.sideQuests.length >= 3) {
     const option = document.createElement("option");
     option.value = "";
-    option.textContent = "Maximal 3 Side Quests erreicht";
+    option.textContent = t("maxSideQuest");
     sideQuestSelect.appendChild(option);
     sideQuestSelect.disabled = true;
     return;
@@ -1200,7 +1692,7 @@ const renderSideQuestOptions = (state) => {
   if (options.length === 0) {
     const option = document.createElement("option");
     option.value = "";
-    option.textContent = "Keine weiteren Ziele verfügbar";
+    option.textContent = t("noGoalsAvailable");
     sideQuestSelect.appendChild(option);
     sideQuestSelect.disabled = true;
     return;
@@ -1228,7 +1720,7 @@ const addSideQuest = (goalId) => {
   saveState(state);
   renderAll(state);
   triggerHaptic(12);
-  showToast("Side Quest hinzugefügt");
+  showToast(t("toastSideAdded"));
 };
 
 const removeSideQuest = (goalId) => {
@@ -1244,7 +1736,7 @@ const removeSideQuest = (goalId) => {
   saveState(state);
   renderAll(state);
   triggerHaptic(8);
-  showToast("Side Quest entfernt");
+  showToast(t("toastSideRemoved"));
 };
 
 const toggleSideQuest = (goalId, textEl, labelEl) => {
@@ -1327,7 +1819,7 @@ const setSimulationOffset = (value) => {
   state.simulationOffsetDays = value;
   saveState(state);
   init();
-  showToast(`Tag-Offset gesetzt: ${value}`);
+  showToast(`${t("toastOffset")}: ${value}`);
 };
 
 let editingGoalId = null;
@@ -1642,7 +2134,7 @@ const renderWeeklyPlan = (state) => {
   planGoalSelect.innerHTML = "";
   if (state.goals.length === 0) {
     const option = document.createElement("option");
-    option.textContent = "Zuerst ein Ziel anlegen";
+    option.textContent = t("emptyGoals");
     option.value = "";
     planGoalSelect.appendChild(option);
     planGrid.innerHTML = "";
@@ -1678,7 +2170,7 @@ const renderWeeklyPlan = (state) => {
 
     const input = document.createElement("input");
     input.type = "text";
-    input.placeholder = "z. B. 5 km Lauf / Schwimmen / Rest Day";
+    input.placeholder = "e.g. 5 km run / swim";
     input.value = plan[day.key]?.text || "";
     input.disabled = !checkbox.checked;
 
@@ -1712,9 +2204,9 @@ const renderWeeklyPlan = (state) => {
   });
 
   if (activeCount < 4) {
-    planHint.textContent = `Bitte mindestens 4 Tage eintragen (aktuell ${activeCount}).`;
+    planHint.textContent = `${t("planNeed")} (${activeCount}).`;
   } else {
-    planHint.textContent = `Woche geplant: ${activeCount} Tage.`;
+    planHint.textContent = `${t("planWeek")}: ${activeCount}`;
   }
 };
 
@@ -1795,6 +2287,8 @@ const goToAdjacentTab = (direction) => {
 
 const init = () => {
   const state = loadState();
+  applyStaticTranslations();
+  showLanguageModalIfNeeded();
   ensureTodayTasks(state);
   updateStreak(state);
   saveState(state);
@@ -1822,9 +2316,7 @@ const init = () => {
     });
 
     resetBtn.addEventListener("click", () => {
-      const confirmed = window.confirm(
-        "Möchtest du wirklich alles zurücksetzen? (Ziele, Fortschritt, Aufgaben)"
-      );
+      const confirmed = window.confirm(t("resetConfirm"));
       if (!confirmed) return;
       // Vollständiger Reset: State löschen, Defaults speichern, UI neu rendern.
       localStorage.removeItem(STORAGE_KEY);
@@ -1835,7 +2327,7 @@ const init = () => {
       renderAll(fresh);
       setActiveTab("goals");
       triggerHaptic(18);
-      showToast("App wurde zurückgesetzt");
+      showToast(t("toastReset"));
     });
 
     if (calPrev && calNext) {
@@ -1893,7 +2385,7 @@ const init = () => {
         saveState(stateNow);
         applyMode(stateNow);
         triggerHaptic(10);
-        showToast(stateNow.proEnabled ? "Pro-Modus aktiv" : "Pro-Modus deaktiviert");
+        showToast(stateNow.proEnabled ? t("toastProOn") : t("toastProOff"));
       });
     }
     if (templatesSection) {
@@ -1961,6 +2453,10 @@ const init = () => {
       endTracking(touch.clientX, touch.clientY, null);
     }, { passive: true });
 
+    languageButtons.forEach((btn) => {
+      btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+    });
+
     listenersBound = true;
   }
 };
@@ -1984,8 +2480,7 @@ function renderUnlock(state) {
   unlockControls.classList.add("active");
 
   const intro = document.createElement("div");
-  intro.textContent =
-    "3 Tage sind vorbei – du kannst eine weitere Aufgabe hinzufügen oder zufällig auswählen.";
+  intro.textContent = t("unlockIntro");
 
   const row = document.createElement("div");
   row.className = "unlock-row";
@@ -2001,13 +2496,13 @@ function renderUnlock(state) {
   const addBtn = document.createElement("button");
   addBtn.type = "button";
   addBtn.className = "btn";
-  addBtn.textContent = "Hinzufügen";
+  addBtn.textContent = t("btnAdd");
   addBtn.addEventListener("click", () => addTaskFromGoal(select.value));
 
   const randomBtn = document.createElement("button");
   randomBtn.type = "button";
   randomBtn.className = "btn ghost";
-  randomBtn.textContent = "Zufällig auswählen";
+  randomBtn.textContent = t("btnRandom");
   randomBtn.addEventListener("click", addRandomTask);
 
   row.appendChild(select);
@@ -2020,7 +2515,8 @@ function renderUnlock(state) {
 
 function renderSimulatedDate(state) {
   dayOffsetInput.value = state.simulationOffsetDays;
-  simulatedDateEl.textContent = `Heute: ${todayISO(state.simulationOffsetDays)}`;
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+  simulatedDateEl.textContent = `${s.simPrefix}: ${todayISO(state.simulationOffsetDays)}`;
 }
 
 function renderCalendar(state) {
@@ -2076,9 +2572,9 @@ function renderCalendar(state) {
 }
 
 function difficultyLabel(value) {
-  if (value === "morning") return "🌅 Morgens";
-  if (value === "evening") return "🌙 Abends";
-  return "☀️ Mittags";
+  if (value === "morning") return t("difficultyMorning");
+  if (value === "evening") return t("difficultyEvening");
+  return t("difficultyNoon");
 }
 
 const registerServiceWorker = () => {

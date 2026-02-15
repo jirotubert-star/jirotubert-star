@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.1";
+const APP_VERSION = "1.6.2";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -171,6 +171,7 @@ const tutorialSection = document.getElementById("tutorial");
 const tutorialTitle = document.getElementById("tutorial-title");
 const tutorialStepLabel = document.getElementById("tutorial-step");
 const tutorialText = document.getElementById("tutorial-text");
+const toastEl = document.getElementById("toast");
 let currentTab = "today";
 const tabOrder = ["today", "goals", "progress", "info"];
 let touchStartX = null;
@@ -180,6 +181,7 @@ let trackingPointerId = null;
 let tutorialStepCache = 1;
 let tutorialCompletedCache = false;
 let sideQuestVisibleCache = false;
+let toastTimer = null;
 const SIDE_QUEST_REVEAL_SCROLL_MS = 520;
 
 // ---------------------------
@@ -192,6 +194,22 @@ const MOTIVATION = [
   "Langsamer Fortschritt ist echter Fortschritt.",
   "Deine Energie zählt. Ein kleiner Schritt reicht.",
 ];
+
+const triggerHaptic = (ms = 12) => {
+  if (typeof navigator === "undefined") return;
+  if (typeof navigator.vibrate !== "function") return;
+  navigator.vibrate(ms);
+};
+
+const showToast = (message) => {
+  if (!toastEl || !message) return;
+  toastEl.textContent = message;
+  toastEl.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toastEl.classList.remove("show");
+  }, 1700);
+};
 
 const getOnboardingDay = (state) => {
   if (!state.onboardingStartDate) return 1;
@@ -1010,6 +1028,8 @@ const addGoal = (title, difficulty) => {
   updateStreak(state);
   saveState(state);
   renderAll(state);
+  triggerHaptic(14);
+  showToast("Ziel hinzugefügt");
   if (hadNoGoals) {
     setActiveTab("today");
   }
@@ -1043,6 +1063,7 @@ const toggleTask = (taskId, textEl, labelEl) => {
   if (!task) return;
 
   task.done = !task.done;
+  triggerHaptic(task.done ? 16 : 8);
 
   if (task.done) {
     const today = todayISO(state.simulationOffsetDays);
@@ -1113,6 +1134,8 @@ const addTaskFromGoal = (goalId) => {
   state.lastTaskUnlockDate = today;
   saveState(state);
   renderAll(state);
+  triggerHaptic(14);
+  showToast("Neue Tagesaufgabe hinzugefügt");
 };
 
 const addRandomTask = () => {
@@ -1135,6 +1158,8 @@ const addQuickTask = (label) => {
   };
   saveState(state);
   renderAll(state);
+  triggerHaptic(12);
+  showToast("Aufgabe für heute hinzugefügt");
 };
 
 const addQuickTaskTomorrow = (label) => {
@@ -1150,6 +1175,8 @@ const addQuickTaskTomorrow = (label) => {
   };
   saveState(state);
   renderAll(state);
+  triggerHaptic(12);
+  showToast("Aufgabe für morgen geplant");
 };
 
 const renderSideQuestOptions = (state) => {
@@ -1200,6 +1227,8 @@ const addSideQuest = (goalId) => {
   state.sideQuests.push({ goalId: goal.id });
   saveState(state);
   renderAll(state);
+  triggerHaptic(12);
+  showToast("Side Quest hinzugefügt");
 };
 
 const removeSideQuest = (goalId) => {
@@ -1214,6 +1243,8 @@ const removeSideQuest = (goalId) => {
   });
   saveState(state);
   renderAll(state);
+  triggerHaptic(8);
+  showToast("Side Quest entfernt");
 };
 
 const toggleSideQuest = (goalId, textEl, labelEl) => {
@@ -1224,6 +1255,7 @@ const toggleSideQuest = (goalId, textEl, labelEl) => {
   const nowDone = !state.sideQuestChecks[today][goalId];
   state.sideQuestChecks[today][goalId] = nowDone;
   saveState(state);
+  triggerHaptic(nowDone ? 14 : 8);
 
   if (textEl) {
     textEl.classList.toggle("done", nowDone);
@@ -1243,6 +1275,7 @@ const toggleQuickTask = (taskId, textEl, labelEl) => {
   const task = state.quickTasks[taskId];
   if (!task) return;
   task.done = !task.done;
+  triggerHaptic(task.done ? 14 : 8);
   if (task.done) {
     const today = todayISO(state.simulationOffsetDays);
     if (task.doneAt !== today) {
@@ -1294,6 +1327,7 @@ const setSimulationOffset = (value) => {
   state.simulationOffsetDays = value;
   saveState(state);
   init();
+  showToast(`Tag-Offset gesetzt: ${value}`);
 };
 
 let editingGoalId = null;
@@ -1800,6 +1834,8 @@ const init = () => {
       dayOffsetInput.value = 0;
       renderAll(fresh);
       setActiveTab("goals");
+      triggerHaptic(18);
+      showToast("App wurde zurückgesetzt");
     });
 
     if (calPrev && calNext) {
@@ -1856,6 +1892,8 @@ const init = () => {
         }
         saveState(stateNow);
         applyMode(stateNow);
+        triggerHaptic(10);
+        showToast(stateNow.proEnabled ? "Pro-Modus aktiv" : "Pro-Modus deaktiviert");
       });
     }
     if (templatesSection) {

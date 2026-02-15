@@ -200,6 +200,16 @@ body {
   border: 1px solid #d9d2c6;
 }
 
+.switch-row select {
+  min-width: 140px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d9d2c6;
+  background: #fff;
+  color: var(--text);
+  font: inherit;
+}
+
 .switch-row input[type="checkbox"]::after {
   content: "";
   position: absolute;

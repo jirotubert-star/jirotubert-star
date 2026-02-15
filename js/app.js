@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.7";
+const APP_VERSION = "1.6.8";
 const LANGUAGE_KEY = "onestep_language_v1";
 const SUPPORTED_LANGS = ["de", "en", "ru", "es", "fr"];
 let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "";
@@ -327,6 +327,7 @@ const STATIC_TEXT = {
     statActive: "Aktive Tage (Woche)",
     statPerfect: "Perfekte Tage (Woche)",
     modeToggle: "Pro-Version aktivieren",
+    settingsLanguage: "Sprache",
     modeHint: "Testphase: Beide Modi sichtbar.",
     testTitle: "Tagesanzahl simulieren",
     applyBtn: "Anwenden",
@@ -350,6 +351,7 @@ const STATIC_TEXT = {
     statActive: "Active days (week)",
     statPerfect: "Perfect days (week)",
     modeToggle: "Enable Pro version",
+    settingsLanguage: "Language",
     modeHint: "Test phase: both modes visible.",
     testTitle: "Simulate day count",
     applyBtn: "Apply",
@@ -373,6 +375,7 @@ const STATIC_TEXT = {
     statActive: "Активные дни (неделя)",
     statPerfect: "Идеальные дни (неделя)",
     modeToggle: "Включить Pro",
+    settingsLanguage: "Язык",
     modeHint: "Тест: оба режима доступны.",
     testTitle: "Симуляция дней",
     applyBtn: "Применить",
@@ -396,6 +399,7 @@ const STATIC_TEXT = {
     statActive: "Días activos (semana)",
     statPerfect: "Días perfectos (semana)",
     modeToggle: "Activar versión Pro",
+    settingsLanguage: "Idioma",
     modeHint: "Fase de prueba: ambos modos visibles.",
     testTitle: "Simular días",
     applyBtn: "Aplicar",
@@ -419,6 +423,7 @@ const STATIC_TEXT = {
     statActive: "Jours actifs (semaine)",
     statPerfect: "Jours parfaits (semaine)",
     modeToggle: "Activer la version Pro",
+    settingsLanguage: "Langue",
     modeHint: "Phase test : deux modes visibles.",
     testTitle: "Simuler des jours",
     applyBtn: "Appliquer",
@@ -570,6 +575,7 @@ const planGrid = document.getElementById("plan-grid");
 const planHint = document.getElementById("plan-hint");
 const weeklyPlanSection = document.querySelector(".weekly-plan");
 const modeSwitch = document.getElementById("mode-switch");
+const languageSelect = document.getElementById("language-select");
 const modeHint = document.getElementById("mode-hint");
 const templateCategories = document.getElementById("template-categories");
 const templatesSection = document.getElementById("templates-section");
@@ -685,6 +691,9 @@ const applyStaticTranslations = () => {
   }
   const modeToggleLabel = modeSwitch?.closest("label")?.querySelector("span");
   if (modeToggleLabel) modeToggleLabel.textContent = s.modeToggle;
+  const settingsLanguageLabel = document.getElementById("settings-language-label");
+  if (settingsLanguageLabel) settingsLanguageLabel.textContent = s.settingsLanguage;
+  if (languageSelect) languageSelect.value = currentLanguage || "de";
   if (modeHint) modeHint.textContent = s.modeHint;
   const testTitleEl = document.querySelector(".test-title");
   if (testTitleEl) testTitleEl.textContent = s.testTitle;
@@ -2386,6 +2395,11 @@ const init = () => {
         applyMode(stateNow);
         triggerHaptic(10);
         showToast(stateNow.proEnabled ? t("toastProOn") : t("toastProOff"));
+      });
+    }
+    if (languageSelect) {
+      languageSelect.addEventListener("change", () => {
+        setLanguage(languageSelect.value);
       });
     }
     if (templatesSection) {

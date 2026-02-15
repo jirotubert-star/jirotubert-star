@@ -543,11 +543,21 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   border: none;
 }
 
-.calendar-cell.done {
-  background: #dce8e3;
-  border-color: #bcd3c9;
+.calendar-cell.progress {
+  --progress: 0;
+  background: hsl(
+    145,
+    calc(22% + (var(--progress) * 0.4%)),
+    calc(96% - (var(--progress) * 0.28%))
+  );
+  border-color: hsl(145, calc(24% + (var(--progress) * 0.45%)), calc(82% - (var(--progress) * 0.22%)));
   color: #1f2a2e;
   font-weight: 600;
+}
+
+.calendar-cell.done-full {
+  border-color: #6ca482;
+  box-shadow: 0 0 0 2px rgba(108, 164, 130, 0.2);
 }
 
 .calendar-legend {

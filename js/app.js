@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.4";
+const APP_VERSION = "1.5.5";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -892,6 +892,28 @@ const addGoal = (title, difficulty) => {
   }
 };
 
+const updateMainDaySummary = (state) => {
+  const today = todayISO(state.simulationOffsetDays);
+  const actionableMainTasks = state.todayTasks.filter(
+    (t) => t.date === today && !isRestDayForTask(state, t, today) && !t.isRestDay
+  );
+  const total = actionableMainTasks.length;
+  const done = actionableMainTasks.filter((t) => t.done).length;
+
+  if (total === 0) {
+    delete state.daySummary[today];
+    delete state.completedDays[today];
+    return;
+  }
+
+  state.daySummary[today] = { done, total };
+  if (done >= total) {
+    state.completedDays[today] = true;
+  } else {
+    delete state.completedDays[today];
+  }
+};
+
 const toggleTask = (taskId, textEl, labelEl) => {
   const state = loadState();
   const task = state.todayTasks.find((t) => t.id === taskId);
@@ -909,19 +931,7 @@ const toggleTask = (taskId, textEl, labelEl) => {
     }
   }
 
-  const today = todayISO(state.simulationOffsetDays);
-  const actionable = state.todayTasks.filter(
-    (t) => !isRestDayForTask(state, t, today) && !t.isRestDay
-  );
-  const quickList = Object.values(state.quickTasks || {});
-  const combined = actionable.concat(quickList);
-  const allDone = combined.length > 0 && combined.every((t) => t.done);
-  state.daySummary[today] = { done: combined.filter((t) => t.done).length, total: combined.length };
-  if (allDone) {
-    state.completedDays[today] = true;
-  } else {
-    delete state.completedDays[today];
-  }
+  updateMainDaySummary(state);
 
   saveState(state);
   applyTutorial(state);
@@ -1074,19 +1084,7 @@ const toggleQuickTask = (taskId, textEl, labelEl) => {
       updateStreak(state);
     }
   }
-  const today = todayISO(state.simulationOffsetDays);
-  const actionable = state.todayTasks.filter(
-    (t) => !isRestDayForTask(state, t, today) && !t.isRestDay
-  );
-  const quickList = Object.values(state.quickTasks || {});
-  const combined = actionable.concat(quickList);
-  const allDone = combined.length > 0 && combined.every((t) => t.done);
-  state.daySummary[today] = { done: combined.filter((t) => t.done).length, total: combined.length };
-  if (allDone) {
-    state.completedDays[today] = true;
-  } else {
-    delete state.completedDays[today];
-  }
+  updateMainDaySummary(state);
   saveState(state);
   applyTutorial(state);
   saveState(state);
@@ -1815,11 +1813,18 @@ function renderCalendar(state) {
     const cell = document.createElement("div");
     cell.className = "calendar-cell";
     const iso = new Date(year, month, day).toISOString().slice(0, 10);
-  const summary = state.daySummary?.[iso];
-  if (summary) {
-    cell.title = `${summary.done}/${summary.total} erledigt`;
-  }
-  if (state.completedDays?.[iso]) cell.classList.add("done");
+    const summary = state.daySummary?.[iso];
+    if (summary && summary.total > 0) {
+      const percent = Math.max(0, Math.min(100, Math.round((summary.done / summary.total) * 100)));
+      // Progress color gets stronger with higher completion.
+      // 100% gets a dedicated strong style with outlined border.
+      cell.classList.add("progress");
+      cell.style.setProperty("--progress", String(percent));
+      cell.title = `${summary.done}/${summary.total} erledigt (${percent}%)`;
+      if (percent >= 100) {
+        cell.classList.add("done-full");
+      }
+    }
     cell.textContent = String(day);
     calGrid.appendChild(cell);
   }

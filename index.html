@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-user.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-user.png" />
-    <link rel="manifest" href="site.webmanifest?v=1609" />
+    <link rel="manifest" href="site.webmanifest?v=1610" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -99,16 +99,16 @@
         </form>
         <ul id="goals-list" class="goals"></ul>
         <details class="info-block templates" id="templates-section" open>
-          <summary>Vorlagen (10 Kategorien)</summary>
+          <summary id="templates-summary">Vorlagen (10 Kategorien)</summary>
           <div id="template-categories" class="template-grid"></div>
         </details>
         <div class="weekly-plan">
           <div class="panel-head">
-            <h3>Wochenplan</h3>
-            <span class="soft-note">Mindestens 4 Tage eintragen</span>
+            <h3 id="weekly-plan-title">Wochenplan</h3>
+            <span class="soft-note" id="weekly-plan-note">Mindestens 4 Tage eintragen</span>
           </div>
           <div class="plan-controls">
-            <label for="plan-goal">Ziel</label>
+            <label id="plan-goal-label" for="plan-goal">Ziel</label>
             <select id="plan-goal"></select>
           </div>
           <div id="plan-grid" class="plan-grid" aria-live="polite"></div>
@@ -237,7 +237,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.6.9</span>
+      <span class="soft-note" id="version">Version 1.6.10</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">

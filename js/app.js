@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.9";
+const APP_VERSION = "1.6.10";
 const LANGUAGE_KEY = "onestep_language_v1";
 const SUPPORTED_LANGS = ["de", "en", "ru", "es", "fr"];
 let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "";
@@ -35,6 +35,8 @@ const I18N = {
     tagline: "Ein kleiner Schritt pro Tag ist besser als ein perfekter Plan.",
     todayCountWord: "Aufgaben",
     quickTaskPlaceholder: "Einmalige Aufgabe",
+    goalPlaceholder: "z. B. 15 Minuten lesen",
+    planTaskPlaceholder: "z. B. 5 km Lauf / Schwimmen",
     btnAdd: "Hinzufügen",
     btnTomorrow: "Für morgen",
     btnSideQuestAdd: "Side Quest hinzufügen",
@@ -96,6 +98,8 @@ const I18N = {
     tagline: "One small step each day beats a perfect plan.",
     todayCountWord: "tasks",
     quickTaskPlaceholder: "One-time task",
+    goalPlaceholder: "e.g. read 15 minutes",
+    planTaskPlaceholder: "e.g. 5 km run / swim",
     btnAdd: "Add",
     btnTomorrow: "For tomorrow",
     btnSideQuestAdd: "Add side quest",
@@ -151,6 +155,8 @@ const I18N = {
     tagline: "Маленький шаг каждый день лучше идеального плана.",
     todayCountWord: "задач",
     quickTaskPlaceholder: "Разовая задача",
+    goalPlaceholder: "например: чтение 15 минут",
+    planTaskPlaceholder: "например: бег 5 км / плавание",
     btnAdd: "Добавить",
     btnTomorrow: "На завтра",
     btnSideQuestAdd: "Добавить side quest",
@@ -206,6 +212,8 @@ const I18N = {
     tagline: "Un pequeño paso al día vale más que un plan perfecto.",
     todayCountWord: "tareas",
     quickTaskPlaceholder: "Tarea puntual",
+    goalPlaceholder: "ej.: leer 15 minutos",
+    planTaskPlaceholder: "ej.: correr 5 km / nadar",
     btnAdd: "Añadir",
     btnTomorrow: "Para mañana",
     btnSideQuestAdd: "Añadir side quest",
@@ -261,6 +269,8 @@ const I18N = {
     tagline: "Un petit pas par jour vaut mieux qu'un plan parfait.",
     todayCountWord: "tâches",
     quickTaskPlaceholder: "Tâche ponctuelle",
+    goalPlaceholder: "ex. : lire 15 minutes",
+    planTaskPlaceholder: "ex. : course 5 km / natation",
     btnAdd: "Ajouter",
     btnTomorrow: "Pour demain",
     btnSideQuestAdd: "Ajouter side quest",
@@ -308,6 +318,113 @@ const I18N = {
     motivation: ["Les petits pas gagnent.", "Une tâche compte.", "Reste simple.", "Lent, c'est bien.", "Sois régulier."],
   },
 };
+
+I18N.de.weekdays = {
+  mon: "Montag",
+  tue: "Dienstag",
+  wed: "Mittwoch",
+  thu: "Donnerstag",
+  fri: "Freitag",
+  sat: "Samstag",
+  sun: "Sonntag",
+};
+I18N.en.weekdays = {
+  mon: "Monday",
+  tue: "Tuesday",
+  wed: "Wednesday",
+  thu: "Thursday",
+  fri: "Friday",
+  sat: "Saturday",
+  sun: "Sunday",
+};
+I18N.ru.weekdays = {
+  mon: "Понедельник",
+  tue: "Вторник",
+  wed: "Среда",
+  thu: "Четверг",
+  fri: "Пятница",
+  sat: "Суббота",
+  sun: "Воскресенье",
+};
+I18N.es.weekdays = {
+  mon: "Lunes",
+  tue: "Martes",
+  wed: "Miércoles",
+  thu: "Jueves",
+  fri: "Viernes",
+  sat: "Sábado",
+  sun: "Domingo",
+};
+I18N.fr.weekdays = {
+  mon: "Lundi",
+  tue: "Mardi",
+  wed: "Mercredi",
+  thu: "Jeudi",
+  fri: "Vendredi",
+  sat: "Samedi",
+  sun: "Dimanche",
+};
+
+I18N.de.templates = [
+  { title: "Fitness & Bewegung", items: ["10.000 Schritte", "5 km Lauf", "Krafttraining 20 Min", "Mobility 10 Min", "2 L Wasser täglich", "Treppen statt Aufzug", "Dehnen 8 Min", "Radfahren 30 Min", "Schwimmen 30 Min", "Spaziergang 20 Min"] },
+  { title: "Ausdauer & Cardio", items: ["Intervalltraining 15 Min", "Zügiger Walk 30 Min", "Rudern 20 Min", "Treppenläufe 10 Min", "Seilspringen 5 Min", "2 L Wasser täglich", "Ergometer 20 Min", "Joggen 20 Min", "Atemtraining 5 Min", "Cooldown 5 Min"] },
+  { title: "Ernährung", items: ["Proteinreiche Mahlzeit", "Gemüse zu jeder Mahlzeit", "Zuckerfrei heute", "2 L Wasser täglich", "Intervallfasten 14/10", "Kein Softdrink", "Gesundes Frühstück", "Küchen-Reset 10 Min", "Supplements morgens", "Spätessen vermeiden"] },
+  { title: "Schlaf & Erholung", items: ["22:30 ins Bett", "Abendroutine 15 Min", "Bildschirmfrei 30 Min", "Nickerchen 20 Min", "Tagebuch 5 Min", "Stretching 10 Min", "Koffein nur bis 14 Uhr", "Schlafraum lüften", "Wasser neben Bett", "Atemübung 5 Min"] },
+  { title: "Lernen", items: ["20 Min Lesen", "1 Kapitel Kurs", "Vokabeln 15 Min", "Notizen ordnen", "1 Übungsaufgabe", "Wiederholung 10 Min", "Lernziel definieren", "Karteikarten 10 Min", "Podcast 15 Min", "Zusammenfassung schreiben"] },
+  { title: "Fokus & Produktivität", items: ["1 Deep-Work-Block", "Inbox auf Null", "Top-3 Aufgaben", "Meeting-Notizen", "Ablenkungen aus", "5-Minuten Planung", "1 schwierige Aufgabe", "Dateien sortieren", "Arbeitsplatz reset", "Pomodoro x2"] },
+  { title: "Mindset", items: ["Dankbarkeit 3 Punkte", "Kurze Meditation", "Affirmation schreiben", "1 Erkenntnis notieren", "Negatives reframen", "Zielvisualisierung", "Mini-Reflexion", "Atemübung 4-7-8", "Heute stolz sein", "Abendlicher Rückblick"] },
+  { title: "Haushalt", items: ["10 Min Aufräumen", "Wäsche starten", "Bad kurz reinigen", "Geschirr sofort", "Müll rausbringen", "Küche wischen", "Bett machen", "Oberflächen abwischen", "Schreibtisch clean", "Einkaufsliste"] },
+  { title: "Soziales", items: ["Nachricht an Freund", "Anruf Familie", "Danke sagen", "Treffen planen", "Kurzes Check-in", "Kompliment geben", "Hilfsangebot", "Antworten auf Mails", "Geburtstag merken", "Zeit bewusst teilen"] },
+  { title: "Selbstentwicklung", items: ["Neue Gewohnheit testen", "Skill 20 Min üben", "1 kleiner Mut-Schritt", "Feedback einholen", "Lernziel definieren", "Plan für morgen", "Eigenes Projekt 30 Min", "Ziel reviewen", "Fortschritt tracken", "Mini-Challenge"] },
+];
+I18N.en.templates = [
+  { title: "Fitness & Movement", items: ["10,000 steps", "5 km run", "Strength training 20 min", "Mobility 10 min", "2 L water daily", "Take stairs", "Stretch 8 min", "Cycling 30 min", "Swim 30 min", "Walk 20 min"] },
+  { title: "Endurance & Cardio", items: ["Intervals 15 min", "Brisk walk 30 min", "Rowing 20 min", "Stair runs 10 min", "Jump rope 5 min", "2 L water daily", "Bike trainer 20 min", "Jog 20 min", "Breathing 5 min", "Cooldown 5 min"] },
+  { title: "Nutrition", items: ["Protein-rich meal", "Veggies every meal", "No sugar today", "2 L water daily", "Intermittent fasting 14/10", "No soda", "Healthy breakfast", "Kitchen reset 10 min", "Morning supplements", "No late eating"] },
+  { title: "Sleep & Recovery", items: ["Bed at 10:30 PM", "Evening routine 15 min", "No screens 30 min", "Nap 20 min", "Journal 5 min", "Stretch 10 min", "Caffeine only until 2 PM", "Air out bedroom", "Water by bed", "Breathing 5 min"] },
+  { title: "Learning", items: ["Read 20 min", "1 course chapter", "Vocabulary 15 min", "Organize notes", "1 practice task", "Review 10 min", "Define learning goal", "Flashcards 10 min", "Podcast 15 min", "Write summary"] },
+  { title: "Focus & Productivity", items: ["1 deep work block", "Inbox zero", "Top 3 tasks", "Meeting notes", "Turn off distractions", "5-minute planning", "1 hard task", "Sort files", "Desk reset", "Pomodoro x2"] },
+  { title: "Mindset", items: ["3 gratitude points", "Short meditation", "Write affirmation", "Note 1 insight", "Reframe negative thought", "Visualize goal", "Mini reflection", "Breathing 4-7-8", "Be proud today", "Evening review"] },
+  { title: "Home", items: ["Tidy 10 min", "Start laundry", "Quick bathroom clean", "Do dishes now", "Take out trash", "Wipe kitchen", "Make bed", "Wipe surfaces", "Clean desk", "Shopping list"] },
+  { title: "Social", items: ["Message a friend", "Call family", "Say thank you", "Plan meetup", "Quick check-in", "Give a compliment", "Offer help", "Reply to emails", "Remember birthdays", "Share time mindfully"] },
+  { title: "Self Development", items: ["Test new habit", "Practice skill 20 min", "1 brave small step", "Ask for feedback", "Define learning goal", "Plan for tomorrow", "Own project 30 min", "Review goals", "Track progress", "Mini challenge"] },
+];
+I18N.ru.templates = [
+  { title: "Фитнес и движение", items: ["10 000 шагов", "Бег 5 км", "Силовая 20 мин", "Мобилити 10 мин", "2 л воды в день", "Лестница вместо лифта", "Растяжка 8 мин", "Велосипед 30 мин", "Плавание 30 мин", "Прогулка 20 мин"] },
+  { title: "Выносливость и кардио", items: ["Интервалы 15 мин", "Быстрая ходьба 30 мин", "Гребля 20 мин", "Лестничные забеги 10 мин", "Скакалка 5 мин", "2 л воды в день", "Велотренажер 20 мин", "Джоггинг 20 мин", "Дыхание 5 мин", "Заминка 5 мин"] },
+  { title: "Питание", items: ["Белковый прием пищи", "Овощи в каждый прием", "Без сахара сегодня", "2 л воды в день", "Интервальное голодание 14/10", "Без газировки", "Полезный завтрак", "Кухня: ресет 10 мин", "Утренние добавки", "Без позднего ужина"] },
+  { title: "Сон и восстановление", items: ["Лечь в 22:30", "Вечерний ритуал 15 мин", "Без экрана 30 мин", "Сон 20 мин", "Дневник 5 мин", "Растяжка 10 мин", "Кофеин до 14:00", "Проветрить спальню", "Вода у кровати", "Дыхание 5 мин"] },
+  { title: "Обучение", items: ["Чтение 20 мин", "1 глава курса", "Слова 15 мин", "Разобрать заметки", "1 практическая задача", "Повторение 10 мин", "Определить учебную цель", "Карточки 10 мин", "Подкаст 15 мин", "Написать кратко"] },
+  { title: "Фокус и продуктивность", items: ["1 блок глубокой работы", "Inbox zero", "Топ-3 задачи", "Заметки по встречам", "Отключить отвлечения", "План 5 минут", "1 сложная задача", "Разобрать файлы", "Ресет рабочего места", "Pomodoro x2"] },
+  { title: "Майндсет", items: ["3 пункта благодарности", "Короткая медитация", "Записать аффирмацию", "1 инсайт дня", "Переосмыслить негатив", "Визуализация цели", "Мини-рефлексия", "Дыхание 4-7-8", "Похвалить себя", "Вечерний итог"] },
+  { title: "Дом", items: ["Уборка 10 мин", "Запустить стирку", "Быстро убрать ванную", "Помыть посуду сразу", "Вынести мусор", "Протереть кухню", "Заправить кровать", "Протереть поверхности", "Чистый стол", "Список покупок"] },
+  { title: "Социальное", items: ["Написать другу", "Позвонить семье", "Сказать спасибо", "Запланировать встречу", "Короткий check-in", "Сделать комплимент", "Предложить помощь", "Ответить на письма", "Помнить дни рождения", "Провести время осознанно"] },
+  { title: "Саморазвитие", items: ["Тест новой привычки", "Практика навыка 20 мин", "1 маленький смелый шаг", "Попросить обратную связь", "Определить цель обучения", "План на завтра", "Свой проект 30 мин", "Пересмотреть цели", "Отслеживать прогресс", "Мини-челлендж"] },
+];
+I18N.es.templates = [
+  { title: "Fitness y movimiento", items: ["10.000 pasos", "Correr 5 km", "Fuerza 20 min", "Movilidad 10 min", "2 L de agua al día", "Escaleras en vez de ascensor", "Estirar 8 min", "Bici 30 min", "Nadar 30 min", "Caminar 20 min"] },
+  { title: "Resistencia y cardio", items: ["Intervalos 15 min", "Caminata rápida 30 min", "Remo 20 min", "Escaleras 10 min", "Comba 5 min", "2 L de agua al día", "Bici estática 20 min", "Trote 20 min", "Respiración 5 min", "Vuelta a la calma 5 min"] },
+  { title: "Nutrición", items: ["Comida rica en proteína", "Verdura en cada comida", "Sin azúcar hoy", "2 L de agua al día", "Ayuno 14/10", "Sin refrescos", "Desayuno saludable", "Reset de cocina 10 min", "Suplementos por la mañana", "Evitar cena tarde"] },
+  { title: "Sueño y recuperación", items: ["Dormir 22:30", "Rutina nocturna 15 min", "Sin pantallas 30 min", "Siesta 20 min", "Diario 5 min", "Estirar 10 min", "Cafeína solo hasta 14:00", "Ventilar habitación", "Agua junto a la cama", "Respiración 5 min"] },
+  { title: "Aprendizaje", items: ["Leer 20 min", "1 capítulo del curso", "Vocabulario 15 min", "Ordenar apuntes", "1 ejercicio", "Repaso 10 min", "Definir objetivo de estudio", "Tarjetas 10 min", "Podcast 15 min", "Escribir resumen"] },
+  { title: "Foco y productividad", items: ["1 bloque de trabajo profundo", "Inbox cero", "Top 3 tareas", "Notas de reuniones", "Quitar distracciones", "Plan de 5 minutos", "1 tarea difícil", "Ordenar archivos", "Reset del escritorio", "Pomodoro x2"] },
+  { title: "Mentalidad", items: ["3 agradecimientos", "Meditación corta", "Escribir afirmación", "Anotar 1 aprendizaje", "Reencuadrar lo negativo", "Visualizar objetivo", "Mini reflexión", "Respiración 4-7-8", "Sentirte orgulloso hoy", "Revisión nocturna"] },
+  { title: "Hogar", items: ["Ordenar 10 min", "Poner lavadora", "Limpieza rápida del baño", "Fregar platos al momento", "Sacar basura", "Limpiar cocina", "Hacer la cama", "Limpiar superficies", "Escritorio limpio", "Lista de compra"] },
+  { title: "Social", items: ["Mensaje a un amigo", "Llamar a la familia", "Dar las gracias", "Planear encuentro", "Check-in rápido", "Dar un cumplido", "Ofrecer ayuda", "Responder correos", "Recordar cumpleaños", "Compartir tiempo consciente"] },
+  { title: "Desarrollo personal", items: ["Probar nuevo hábito", "Practicar habilidad 20 min", "1 pequeño paso valiente", "Pedir feedback", "Definir objetivo de aprendizaje", "Plan para mañana", "Proyecto propio 30 min", "Revisar metas", "Registrar progreso", "Mini reto"] },
+];
+I18N.fr.templates = [
+  { title: "Fitness et mouvement", items: ["10 000 pas", "Course 5 km", "Renforcement 20 min", "Mobilité 10 min", "2 L d'eau par jour", "Escaliers au lieu de l'ascenseur", "Étirements 8 min", "Vélo 30 min", "Natation 30 min", "Marche 20 min"] },
+  { title: "Endurance et cardio", items: ["Intervalles 15 min", "Marche rapide 30 min", "Rameur 20 min", "Escaliers 10 min", "Corde à sauter 5 min", "2 L d'eau par jour", "Vélo d'appartement 20 min", "Jogging 20 min", "Respiration 5 min", "Retour au calme 5 min"] },
+  { title: "Nutrition", items: ["Repas riche en protéines", "Légumes à chaque repas", "Sans sucre aujourd'hui", "2 L d'eau par jour", "Jeûne 14/10", "Pas de soda", "Petit-déjeuner sain", "Reset cuisine 10 min", "Suppléments le matin", "Éviter le dîner tardif"] },
+  { title: "Sommeil et récupération", items: ["Au lit à 22h30", "Routine du soir 15 min", "Sans écran 30 min", "Sieste 20 min", "Journal 5 min", "Étirements 10 min", "Caféine jusqu'à 14h", "Aérer la chambre", "Eau près du lit", "Respiration 5 min"] },
+  { title: "Apprentissage", items: ["Lire 20 min", "1 chapitre de cours", "Vocabulaire 15 min", "Ranger les notes", "1 exercice", "Révision 10 min", "Définir l'objectif d'étude", "Flashcards 10 min", "Podcast 15 min", "Écrire un résumé"] },
+  { title: "Focus et productivité", items: ["1 bloc de deep work", "Inbox zéro", "Top 3 tâches", "Notes de réunion", "Couper les distractions", "Plan 5 minutes", "1 tâche difficile", "Trier les fichiers", "Reset du bureau", "Pomodoro x2"] },
+  { title: "Mindset", items: ["3 points de gratitude", "Méditation courte", "Écrire une affirmation", "Noter 1 idée clé", "Reformuler le négatif", "Visualiser l'objectif", "Mini réflexion", "Respiration 4-7-8", "Être fier aujourd'hui", "Bilan du soir"] },
+  { title: "Maison", items: ["Ranger 10 min", "Lancer une lessive", "Nettoyage rapide salle de bain", "Faire la vaisselle tout de suite", "Sortir les poubelles", "Nettoyer la cuisine", "Faire le lit", "Essuyer les surfaces", "Bureau propre", "Liste de courses"] },
+  { title: "Social", items: ["Message à un ami", "Appeler la famille", "Dire merci", "Planifier une rencontre", "Petit check-in", "Faire un compliment", "Proposer de l'aide", "Répondre aux mails", "Se souvenir des anniversaires", "Partager du temps consciemment"] },
+  { title: "Développement personnel", items: ["Tester une nouvelle habitude", "Pratiquer un skill 20 min", "1 petit pas courageux", "Demander un feedback", "Définir l'objectif d'apprentissage", "Plan pour demain", "Projet perso 30 min", "Revoir les objectifs", "Suivre les progrès", "Mini challenge"] },
+];
 
 const langPack = () => I18N[currentLanguage] || I18N.de;
 const t = (key) => langPack()[key] || I18N.de[key] || key;
@@ -358,6 +475,10 @@ const STATIC_TEXT = {
     settingsVersionTitle: "Version",
     settingsSystemTitle: "System",
     dayOffsetLabel: "Tag-Offset",
+    weeklyPlanTitle: "Wochenplan",
+    weeklyPlanHintMinDays: "Mindestens 4 Tage eintragen",
+    planGoalLabel: "Ziel",
+    templateSummary: "Vorlagen (10 Kategorien)",
   },
   en: {
     welcomeTitle: "Welcome to OneStep",
@@ -404,6 +525,10 @@ const STATIC_TEXT = {
     settingsVersionTitle: "Version",
     settingsSystemTitle: "System",
     dayOffsetLabel: "Day offset",
+    weeklyPlanTitle: "Weekly plan",
+    weeklyPlanHintMinDays: "Set at least 4 days",
+    planGoalLabel: "Goal",
+    templateSummary: "Templates (10 categories)",
   },
   ru: {
     welcomeTitle: "Добро пожаловать в OneStep",
@@ -450,6 +575,10 @@ const STATIC_TEXT = {
     settingsVersionTitle: "Версия",
     settingsSystemTitle: "Система",
     dayOffsetLabel: "Смещение дня",
+    weeklyPlanTitle: "План недели",
+    weeklyPlanHintMinDays: "Заполни минимум 4 дня",
+    planGoalLabel: "Цель",
+    templateSummary: "Шаблоны (10 категорий)",
   },
   es: {
     welcomeTitle: "Bienvenido a OneStep",
@@ -496,6 +625,10 @@ const STATIC_TEXT = {
     settingsVersionTitle: "Versión",
     settingsSystemTitle: "Sistema",
     dayOffsetLabel: "Desfase de día",
+    weeklyPlanTitle: "Plan semanal",
+    weeklyPlanHintMinDays: "Añade al menos 4 días",
+    planGoalLabel: "Meta",
+    templateSummary: "Plantillas (10 categorías)",
   },
   fr: {
     welcomeTitle: "Bienvenue sur OneStep",
@@ -542,6 +675,10 @@ const STATIC_TEXT = {
     settingsVersionTitle: "Version",
     settingsSystemTitle: "Système",
     dayOffsetLabel: "Décalage de jour",
+    weeklyPlanTitle: "Plan hebdo",
+    weeklyPlanHintMinDays: "Ajoute au moins 4 jours",
+    planGoalLabel: "Objectif",
+    templateSummary: "Modèles (10 catégories)",
   },
 };
 
@@ -792,9 +929,13 @@ const applyStaticTranslations = () => {
   setText("settings-version-title", s.settingsVersionTitle);
   setText("settings-system-title", s.settingsSystemTitle);
   setText("day-offset-label", s.dayOffsetLabel);
+  setText("templates-summary", s.templateSummary);
+  setText("weekly-plan-title", s.weeklyPlanTitle);
+  setText("weekly-plan-note", s.weeklyPlanHintMinDays);
+  setText("plan-goal-label", s.planGoalLabel);
 
   if (quickTaskInput) quickTaskInput.placeholder = t("quickTaskPlaceholder");
-  if (goalInput) goalInput.placeholder = "Goal / Ziel";
+  if (goalInput) goalInput.placeholder = t("goalPlaceholder");
   if (quickTaskTomorrowBtn) quickTaskTomorrowBtn.textContent = t("btnTomorrow");
   const quickTaskTodayBtn = document.getElementById("quick-task-today");
   if (quickTaskTodayBtn) quickTaskTodayBtn.textContent = t("btnAdd");
@@ -2014,166 +2155,13 @@ const deleteGoal = (goalId) => {
 };
 
 const WEEKDAYS = [
-  { key: "mon", label: "Montag" },
-  { key: "tue", label: "Dienstag" },
-  { key: "wed", label: "Mittwoch" },
-  { key: "thu", label: "Donnerstag" },
-  { key: "fri", label: "Freitag" },
-  { key: "sat", label: "Samstag" },
-  { key: "sun", label: "Sonntag" },
-];
-
-const TEMPLATE_CATEGORIES = [
-  {
-    title: "Fitness & Bewegung",
-    items: [
-      "10.000 Schritte",
-      "5 km Lauf",
-      "Krafttraining 20 Min",
-      "Mobility 10 Min",
-      "2 L Wasser täglich",
-      "Treppen statt Aufzug",
-      "Dehnen 8 Min",
-      "Radfahren 30 Min",
-      "Schwimmen 30 Min",
-      "Spaziergang 20 Min",
-    ],
-  },
-  {
-    title: "Ausdauer & Cardio",
-    items: [
-      "Intervalltraining 15 Min",
-      "Zügiger Walk 30 Min",
-      "Rudern 20 Min",
-      "Treppenläufe 10 Min",
-      "Seilspringen 5 Min",
-      "2 L Wasser täglich",
-      "Ergometer 20 Min",
-      "Joggen 20 Min",
-      "Atemtraining 5 Min",
-      "Cooldown 5 Min",
-    ],
-  },
-  {
-    title: "Ernährung",
-    items: [
-      "Proteinreiche Mahlzeit",
-      "Gemüse zu jeder Mahlzeit",
-      "Zuckerfrei heute",
-      "2 L Wasser täglich",
-      "Intervallfasten 14/10",
-      "Kein Softdrink",
-      "Gesundes Frühstück",
-      "Küchen‑Reset 10 Min",
-      "Supplements morgens",
-      "Spätessen vermeiden",
-    ],
-  },
-  {
-    title: "Schlaf & Erholung",
-    items: [
-      "22:30 ins Bett",
-      "Abendroutine 15 Min",
-      "Bildschirmfrei 30 Min",
-      "Nickerchen 20 Min",
-      "Tagebuch 5 Min",
-      "Stretching 10 Min",
-      "Koffein nur bis 14 Uhr",
-      "Schlafraum lüften",
-      "Wasser neben Bett",
-      "Atemübung 5 Min",
-    ],
-  },
-  {
-    title: "Lernen",
-    items: [
-      "20 Min Lesen",
-      "1 Kapitel Kurs",
-      "Vokabeln 15 Min",
-      "Notizen ordnen",
-      "1 Übungsaufgabe",
-      "Wiederholung 10 Min",
-      "Lernziel definieren",
-      "Karteikarten 10 Min",
-      "Podcast 15 Min",
-      "Zusammenfassung schreiben",
-    ],
-  },
-  {
-    title: "Fokus & Produktivität",
-    items: [
-      "1 Deep‑Work‑Block",
-      "Inbox auf Null",
-      "Top‑3 Aufgaben",
-      "Meeting‑Notizen",
-      "Ablenkungen aus",
-      "5‑Minuten Planung",
-      "1 schwierige Aufgabe",
-      "Dateien sortieren",
-      "Arbeitsplatz reset",
-      "Pomodoro x2",
-    ],
-  },
-  {
-    title: "Mindset",
-    items: [
-      "Dankbarkeit 3 Punkte",
-      "Kurze Meditation",
-      "Affirmation schreiben",
-      "1 Erkenntnis notieren",
-      "Negatives reframen",
-      "Zielvisualisierung",
-      "Mini‑Reflexion",
-      "Atemübung 4‑7‑8",
-      "Heute stolz sein",
-      "Abendlicher Rückblick",
-    ],
-  },
-  {
-    title: "Haushalt",
-    items: [
-      "10 Min Aufräumen",
-      "Wäsche starten",
-      "Bad kurz reinigen",
-      "Geschirr sofort",
-      "Müll rausbringen",
-      "Küche wischen",
-      "Bett machen",
-      "Oberflächen abwischen",
-      "Schreibtisch clean",
-      "Einkaufsliste",
-    ],
-  },
-  {
-    title: "Soziales",
-    items: [
-      "Nachricht an Freund",
-      "Anruf Familie",
-      "Danke sagen",
-      "Treffen planen",
-      "Kurzes Check‑in",
-      "Kompliment geben",
-      "Hilfsangebot",
-      "Antworten auf Mails",
-      "Geburtstag merken",
-      "Zeit bewusst teilen",
-    ],
-  },
-  {
-    title: "Selbstentwicklung",
-    items: [
-      "Neue Gewohnheit testen",
-      "Skill 20 Min üben",
-      "1 kleiner Mut‑Schritt",
-      "Feedback einholen",
-      "Lernziel definieren",
-      "Plan für morgen",
-      "Eigenes Projekt 30 Min",
-      "Ziel reviewen",
-      "Fortschritt tracken",
-      "Mini‑Challenge",
-    ],
-  },
+  { key: "mon" },
+  { key: "tue" },
+  { key: "wed" },
+  { key: "thu" },
+  { key: "fri" },
+  { key: "sat" },
+  { key: "sun" },
 ];
 
 const getPlanForGoal = (state, goalId) => {
@@ -2185,6 +2173,14 @@ const getPlanForGoal = (state, goalId) => {
   });
   return defaults;
 };
+
+const getWeekdayLabel = (key) => {
+  const labels = I18N[currentLanguage]?.weekdays || I18N.de.weekdays;
+  return labels[key] || key;
+};
+
+const getTemplateCategories = () =>
+  I18N[currentLanguage]?.templates || I18N.de.templates;
 
 const planHasAnyActive = (plan) =>
   WEEKDAYS.some((day) => plan[day.key]?.active);
@@ -2298,7 +2294,7 @@ const renderWeeklyPlan = (state) => {
     row.className = "plan-row";
 
     const label = document.createElement("div");
-    label.textContent = day.label;
+    label.textContent = getWeekdayLabel(day.key);
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -2307,7 +2303,7 @@ const renderWeeklyPlan = (state) => {
 
     const input = document.createElement("input");
     input.type = "text";
-    input.placeholder = "e.g. 5 km run / swim";
+    input.placeholder = t("planTaskPlaceholder");
     input.value = plan[day.key]?.text || "";
     input.disabled = !checkbox.checked;
 
@@ -2351,7 +2347,7 @@ const renderTemplates = () => {
   if (!templateCategories) return;
   templateCategories.innerHTML = "";
 
-  TEMPLATE_CATEGORIES.forEach((category) => {
+  getTemplateCategories().forEach((category) => {
     const wrapper = document.createElement("div");
     wrapper.className = "template-category";
 

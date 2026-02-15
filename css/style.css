@@ -483,6 +483,23 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   font-size: 0.8rem;
 }
 
+.checklist li.side-quest-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.checklist li.side-quest-item label {
+  min-width: 0;
+}
+
+.checklist li.side-quest-item .task-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .side-quest-animated {
   animation: sideQuestPopIn 220ms ease both;
 }

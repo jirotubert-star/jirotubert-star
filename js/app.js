@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.14";
+const APP_VERSION = "1.5.15";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -593,6 +593,7 @@ const renderToday = (state) => {
           : !!state.sideQuestChecks?.[today]?.[goal.id];
 
         const li = document.createElement("li");
+        li.classList.add("side-quest-item");
         li.classList.add("side-quest-animated");
         const labelEl = document.createElement("label");
         labelEl.className = "neon-checkbox";
@@ -662,10 +663,6 @@ const renderToday = (state) => {
         if (done && !restDay) text.classList.add("done");
         if (restDay) text.classList.add("rest-day");
 
-        const badge = document.createElement("span");
-        badge.className = "difficulty noon";
-        badge.textContent = "Side Quest";
-
         const removeBtn = document.createElement("button");
         removeBtn.type = "button";
         removeBtn.className = "btn ghost side-quest-remove";
@@ -676,7 +673,6 @@ const renderToday = (state) => {
         labelEl.appendChild(frame);
         labelEl.appendChild(text);
         li.appendChild(labelEl);
-        li.appendChild(badge);
         li.appendChild(removeBtn);
         if (!restDay) {
           checkbox.addEventListener("change", () =>

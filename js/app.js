@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.13";
+const APP_VERSION = "1.6.14";
 const LANGUAGE_KEY = "onestep_language_v1";
 const SUPPORTED_LANGS = ["de", "en", "ru", "es", "fr"];
 let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "";
@@ -2451,14 +2451,18 @@ const init = () => {
     resetBtn.addEventListener("click", () => {
       const confirmed = window.confirm(t("resetConfirm"));
       if (!confirmed) return;
-      // Vollständiger Reset: State löschen, Defaults speichern, UI neu rendern.
+      // Vollständiger Reset: State + Sprache löschen, Defaults speichern, UI neu rendern.
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(LANGUAGE_KEY);
+      currentLanguage = "";
       const fresh = defaultState();
       saveState(fresh);
       goalInput.value = "";
       dayOffsetInput.value = 0;
+      applyStaticTranslations();
       renderAll(fresh);
       setActiveTab("goals");
+      showLanguageModalIfNeeded();
       triggerHaptic(18);
       showToast(t("toastReset"));
     });

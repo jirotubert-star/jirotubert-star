@@ -72,7 +72,7 @@ const I18N = {
     tutorialS2: "Hake heute eine Aufgabe ab.",
     tutorialDone: "Super! Alles ist freigeschaltet.",
     unlockWeekTitle: "Neu: Wochenplan",
-    unlockWeekText: "Schau dir jetzt den Wochenplan an.",
+    unlockWeekText: "Schau dir jetzt den Wochenplan an. Er befindet sich bei Goals ganz unten.",
     unlockQuickTitle: "Neu: Einmalige Aufgaben",
     unlockQuickText: "Einmalige Aufgaben sind jetzt aktiv.",
     unlockSideTitle: "Neu: Side Quest",
@@ -80,6 +80,7 @@ const I18N = {
     onboardingTitle: "Onboarding aktiv",
     onboardingText: "Bleib bei kleinen, täglichen Schritten.",
     onboardingTextEarly: "Tag 1-3: Starte ruhig mit nur einem klaren Schritt.",
+    onboardingTextWeekPlan: "Schau dir jetzt den Wochenplan an. Er befindet sich bei Goals ganz unten.",
     onboardingTextMid: "Tag 4-8: Stabilisiere deinen Rhythmus und bleib konstant.",
     onboardingTextLate: "Tag 9-12: Halte die Serie und festige deine Gewohnheit.",
     record: "Rekord",
@@ -138,7 +139,7 @@ const I18N = {
     tutorialS2: "Complete one task today.",
     tutorialDone: "Great! All sections unlocked.",
     unlockWeekTitle: "New: Weekly plan",
-    unlockWeekText: "Weekly plan is now unlocked.",
+    unlockWeekText: "Check the weekly plan now. You can find it at the bottom of Goals.",
     unlockQuickTitle: "New: One-time tasks",
     unlockQuickText: "One-time tasks are now unlocked.",
     unlockSideTitle: "New: Side Quest",
@@ -146,6 +147,7 @@ const I18N = {
     onboardingTitle: "Onboarding active",
     onboardingText: "Keep it small and daily.",
     onboardingTextEarly: "Day 1-3: Start calm with one clear step.",
+    onboardingTextWeekPlan: "Check the weekly plan now. You can find it at the bottom of Goals.",
     onboardingTextMid: "Day 4-8: Stabilize your rhythm and stay consistent.",
     onboardingTextLate: "Day 9-12: Keep the streak and lock in the habit.",
     record: "Record",
@@ -198,7 +200,7 @@ const I18N = {
     tutorialS2: "Отметьте одну задачу сегодня.",
     tutorialDone: "Отлично! Всё разблокировано.",
     unlockWeekTitle: "Новое: план недели",
-    unlockWeekText: "План недели теперь доступен.",
+    unlockWeekText: "Проверь план недели. Он находится внизу раздела Goals.",
     unlockQuickTitle: "Новое: разовые задачи",
     unlockQuickText: "Разовые задачи теперь доступны.",
     unlockSideTitle: "Новое: Side Quest",
@@ -206,6 +208,7 @@ const I18N = {
     onboardingTitle: "Онбординг активен",
     onboardingText: "Маленькие шаги каждый день.",
     onboardingTextEarly: "День 1-3: начни спокойно с одного шага.",
+    onboardingTextWeekPlan: "Проверь план недели. Он находится внизу раздела Goals.",
     onboardingTextMid: "День 4-8: закрепи ритм и держи стабильность.",
     onboardingTextLate: "День 9-12: удерживай серию и закрепляй привычку.",
     record: "Рекорд",
@@ -258,7 +261,7 @@ const I18N = {
     tutorialS2: "Marca una tarea hoy.",
     tutorialDone: "¡Perfecto! Todo desbloqueado.",
     unlockWeekTitle: "Nuevo: plan semanal",
-    unlockWeekText: "El plan semanal ya está activo.",
+    unlockWeekText: "Revisa ahora el plan semanal. Está al final de Goals.",
     unlockQuickTitle: "Nuevo: tareas puntuales",
     unlockQuickText: "Las tareas puntuales ya están activas.",
     unlockSideTitle: "Nuevo: Side Quest",
@@ -266,6 +269,7 @@ const I18N = {
     onboardingTitle: "Onboarding activo",
     onboardingText: "Pequeños pasos cada día.",
     onboardingTextEarly: "Día 1-3: empieza con calma con un paso claro.",
+    onboardingTextWeekPlan: "Revisa ahora el plan semanal. Está al final de Goals.",
     onboardingTextMid: "Día 4-8: estabiliza tu ritmo y sé constante.",
     onboardingTextLate: "Día 9-12: mantén la racha y consolida el hábito.",
     record: "Récord",
@@ -318,7 +322,7 @@ const I18N = {
     tutorialS2: "Coche une tâche aujourd'hui.",
     tutorialDone: "Super ! Tout est débloqué.",
     unlockWeekTitle: "Nouveau : plan hebdo",
-    unlockWeekText: "Le plan hebdo est maintenant actif.",
+    unlockWeekText: "Regarde maintenant le plan hebdo. Il se trouve tout en bas de Goals.",
     unlockQuickTitle: "Nouveau : tâches ponctuelles",
     unlockQuickText: "Les tâches ponctuelles sont actives.",
     unlockSideTitle: "Nouveau : Side Quest",
@@ -326,6 +330,7 @@ const I18N = {
     onboardingTitle: "Onboarding actif",
     onboardingText: "Petits pas chaque jour.",
     onboardingTextEarly: "Jour 1-3 : commence calmement avec un seul pas clair.",
+    onboardingTextWeekPlan: "Regarde maintenant le plan hebdo. Il se trouve tout en bas de Goals.",
     onboardingTextMid: "Jour 4-8 : stabilise ton rythme et reste régulier.",
     onboardingTextLate: "Jour 9-12 : garde la série et ancre l'habitude.",
     record: "Record",
@@ -2122,6 +2127,7 @@ const applyTutorial = (state) => {
         if (tutorialText) {
           let onboardingPhaseText = t("onboardingText");
           if (access.day <= 3) onboardingPhaseText = t("onboardingTextEarly");
+          else if (access.day >= 4 && access.day <= 6) onboardingPhaseText = t("onboardingTextWeekPlan");
           else if (access.day <= 8) onboardingPhaseText = t("onboardingTextMid");
           else onboardingPhaseText = t("onboardingTextLate");
           tutorialText.textContent = onboardingPhaseText;

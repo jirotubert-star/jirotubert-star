@@ -20,6 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
+const APP_VERSION = "1.5.0";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -751,17 +752,13 @@ const applyMode = (state) => {
     modeSwitch.checked = !!state.proEnabled;
   }
   if (modeHint) {
-    modeHint.style.display = state.proEnabled ? "block" : "none";
-  }
-  if (templatesSection) {
-    templatesSection.style.display = state.proEnabled ? "block" : "none";
-    if (state.proEnabled && !state.templatesOpenedOnce) {
-      templatesSection.open = false;
-    }
+    modeHint.style.display = "block";
   }
   const versionEl = document.getElementById("version");
   if (versionEl) {
-    versionEl.textContent = state.proEnabled ? "Version 1.4.8 Pro" : "Version 1.3.7 Normal";
+    versionEl.textContent = state.proEnabled
+      ? `Version ${APP_VERSION} Pro`
+      : `Version ${APP_VERSION}`;
   }
 };
 

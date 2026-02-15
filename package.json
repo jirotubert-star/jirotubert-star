@@ -1,9 +1,15 @@
 {
   "name": "onestep",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "private": true,
   "description": "OneStep static app build setup",
   "scripts": {
     "build": "node scripts/build.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.1.0",
+    "@capacitor/cli": "^8.1.0",
+    "@capacitor/core": "^8.1.0",
+    "@capacitor/ios": "^8.1.0"
   }
 }

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">OneStep</string>
+    <string name="title_activity_main">OneStep</string>
+    <string name="package_name">com.jirotubert.onestep</string>
+    <string name="custom_url_scheme">com.jirotubert.onestep</string>
+</resources>

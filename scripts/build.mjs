@@ -7,13 +7,21 @@ const distDir = resolve(root, "dist");
 rmSync(distDir, { recursive: true, force: true });
 mkdirSync(distDir, { recursive: true });
 
-const itemsToCopy = ["index.html", "site.webmanifest", "css", "js", "assets"];
+const requiredItems = ["index.html", "site.webmanifest", "css", "js", "assets"];
+const optionalItems = ["icons"];
 
-for (const item of itemsToCopy) {
+for (const item of requiredItems) {
   const source = resolve(root, item);
   if (!existsSync(source)) {
     throw new Error(`Missing build source: ${item}`);
   }
+  const target = resolve(distDir, item);
+  cpSync(source, target, { recursive: true });
+}
+
+for (const item of optionalItems) {
+  const source = resolve(root, item);
+  if (!existsSync(source)) continue;
   const target = resolve(distDir, item);
   cpSync(source, target, { recursive: true });
 }

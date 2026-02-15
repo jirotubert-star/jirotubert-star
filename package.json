@@ -1,15 +1,24 @@
 {
   "name": "onestep",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "private": true,
   "description": "OneStep static app build setup",
   "scripts": {
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "assets:generate": "npx @capacitor/assets generate --assetPath assets --pwaManifestPath site.webmanifest --iconBackgroundColor '#f3efe7' --iconBackgroundColorDark '#1f2a2e' --splashBackgroundColor '#f3efe7' --splashBackgroundColorDark '#1f2a2e'",
+    "sync": "npm run build && npx cap sync",
+    "android:open": "npx cap open android",
+    "ios:open": "npx cap open ios",
+    "android:run": "npm run sync && npx cap run android",
+    "ios:run": "npm run sync && npx cap run ios"
   },
   "dependencies": {
     "@capacitor/android": "^8.1.0",
     "@capacitor/cli": "^8.1.0",
     "@capacitor/core": "^8.1.0",
     "@capacitor/ios": "^8.1.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
   }
 }

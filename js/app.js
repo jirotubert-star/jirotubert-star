@@ -1462,6 +1462,10 @@ const init = () => {
   updateStreak(state);
   saveState(state);
   renderAll(state);
+  // Keep templates collapsed on every page load/start.
+  if (templatesSection) {
+    templatesSection.open = false;
+  }
   const startTab = state.tutorialCompleted || state.tutorialStep >= 2 ? "today" : "goals";
   setActiveTab(startTab);
 

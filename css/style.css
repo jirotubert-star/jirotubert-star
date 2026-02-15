@@ -420,7 +420,7 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   margin-top: 12px;
   margin-bottom: 12px;
   position: relative;
-  max-height: 64px;
+  max-height: 140px;
   opacity: 1;
   transform: translateY(0) scale(1);
   transform-origin: top center;

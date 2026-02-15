@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.11";
+const APP_VERSION = "1.5.12";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -178,6 +178,7 @@ let trackingPointerId = null;
 let tutorialStepCache = 1;
 let tutorialCompletedCache = false;
 let sideQuestVisibleCache = false;
+const SIDE_QUEST_REVEAL_SCROLL_MS = 520;
 
 // ---------------------------
 // Motivationstexte
@@ -363,14 +364,17 @@ const renderToday = (state) => {
     sideQuestForm.setAttribute("aria-hidden", showSideQuestUI ? "false" : "true");
     if (showSideQuestUI && !sideQuestVisibleCache) {
       sideQuestForm.classList.remove("unlock-celebrate");
-      void sideQuestForm.offsetHeight;
-      sideQuestForm.classList.add("unlock-celebrate");
-      setTimeout(() => sideQuestForm.classList.remove("unlock-celebrate"), 1300);
       requestAnimationFrame(() => {
         window.scrollTo({
           top: document.documentElement.scrollHeight,
           behavior: "smooth",
         });
+        setTimeout(() => {
+          sideQuestForm.classList.remove("unlock-celebrate");
+          void sideQuestForm.offsetHeight;
+          sideQuestForm.classList.add("unlock-celebrate");
+          setTimeout(() => sideQuestForm.classList.remove("unlock-celebrate"), 1300);
+        }, SIDE_QUEST_REVEAL_SCROLL_MS);
       });
     }
     if (!showSideQuestUI) {

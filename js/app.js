@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.21";
+const APP_VERSION = "1.6.23";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -82,7 +82,7 @@ const I18N = {
     onboardingTextEarly: "Tag 1-3: Starte ruhig mit nur einem klaren Schritt.",
     onboardingTextWeekPlan: "Schau dir jetzt den Wochenplan an. Er befindet sich bei Goals ganz unten.",
     onboardingTextMid: "Tag 4-8: Stabilisiere deinen Rhythmus und bleib konstant.",
-    onboardingTextLate: "Tag 9-12: Halte die Serie und festige deine Gewohnheit.",
+    onboardingTextLate: "Tag 9-12: Wenn du alle Aufgaben erledigst, kannst du Extra-Aufgaben machen.",
     record: "Rekord",
     difficultyMorning: "🌅 Morgens",
     difficultyNoon: "☀️ Mittags",
@@ -149,7 +149,7 @@ const I18N = {
     onboardingTextEarly: "Day 1-3: Start calm with one clear step.",
     onboardingTextWeekPlan: "Check the weekly plan now. You can find it at the bottom of Goals.",
     onboardingTextMid: "Day 4-8: Stabilize your rhythm and stay consistent.",
-    onboardingTextLate: "Day 9-12: Keep the streak and lock in the habit.",
+    onboardingTextLate: "Day 9-12: If you finish all tasks, you can do extra tasks.",
     record: "Record",
     difficultyMorning: "🌅 Morning",
     difficultyNoon: "☀️ Noon",
@@ -210,7 +210,7 @@ const I18N = {
     onboardingTextEarly: "День 1-3: начни спокойно с одного шага.",
     onboardingTextWeekPlan: "Проверь план недели. Он находится внизу раздела Goals.",
     onboardingTextMid: "День 4-8: закрепи ритм и держи стабильность.",
-    onboardingTextLate: "День 9-12: удерживай серию и закрепляй привычку.",
+    onboardingTextLate: "День 9-12: если выполнишь все задачи, сможешь делать дополнительные задачи.",
     record: "Рекорд",
     difficultyMorning: "🌅 Утром",
     difficultyNoon: "☀️ Днём",
@@ -271,7 +271,7 @@ const I18N = {
     onboardingTextEarly: "Día 1-3: empieza con calma con un paso claro.",
     onboardingTextWeekPlan: "Revisa ahora el plan semanal. Está al final de Goals.",
     onboardingTextMid: "Día 4-8: estabiliza tu ritmo y sé constante.",
-    onboardingTextLate: "Día 9-12: mantén la racha y consolida el hábito.",
+    onboardingTextLate: "Día 9-12: si completas todas las tareas, podrás hacer tareas extra.",
     record: "Récord",
     difficultyMorning: "🌅 Mañana",
     difficultyNoon: "☀️ Mediodía",
@@ -332,7 +332,7 @@ const I18N = {
     onboardingTextEarly: "Jour 1-3 : commence calmement avec un seul pas clair.",
     onboardingTextWeekPlan: "Regarde maintenant le plan hebdo. Il se trouve tout en bas de Goals.",
     onboardingTextMid: "Jour 4-8 : stabilise ton rythme et reste régulier.",
-    onboardingTextLate: "Jour 9-12 : garde la série et ancre l'habitude.",
+    onboardingTextLate: "Jour 9-12 : si tu termines toutes les tâches, tu peux faire des tâches extra.",
     record: "Record",
     difficultyMorning: "🌅 Matin",
     difficultyNoon: "☀️ Midi",

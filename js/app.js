@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.8";
+const APP_VERSION = "1.5.9";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -1044,6 +1044,7 @@ const toggleTask = (taskId, textEl, labelEl) => {
       setTimeout(() => labelEl.classList.remove("burst"), 700);
     }
   }
+  renderToday(state);
   renderProgress(state);
   renderCalendar(state);
 };

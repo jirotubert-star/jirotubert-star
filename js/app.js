@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.13";
+const APP_VERSION = "1.5.14";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -1678,6 +1678,7 @@ let calendarOffset = 0;
 
 const setActiveTab = (target) => {
   const desired = target || "today";
+  const previousTab = currentTab;
   currentTab = isTabAllowed(desired) ? desired : "goals";
   navItems.forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.target === currentTab);
@@ -1692,7 +1693,9 @@ const setActiveTab = (target) => {
       section.classList.add("section-enter");
     }
   });
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (currentTab !== previousTab) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 };
 
 const goToAdjacentTab = (direction) => {

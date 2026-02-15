@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.5.7";
+const APP_VERSION = "1.5.8";
 
 // ---------------------------
 // Grundlegende Zeit-Utilities
@@ -60,6 +60,7 @@ const defaultState = () => ({
   quickTasks: {},
   quickTasksTomorrow: {},
   sideQuests: [],
+  sideQuestChecks: {},
   lastTaskUnlockDate: null,
   lastActiveDate: null,
   streak: 0,
@@ -98,6 +99,7 @@ const loadState = () => {
     normalized.quickTasks = normalized.quickTasks || {};
     normalized.quickTasksTomorrow = normalized.quickTasksTomorrow || {};
     normalized.sideQuests = normalized.sideQuests || [];
+    normalized.sideQuestChecks = normalized.sideQuestChecks || {};
     normalized.completedDays = normalized.completedDays || {};
     normalized.daySummary = normalized.daySummary || {};
     normalized.weeklyPlans = normalized.weeklyPlans || {};
@@ -215,9 +217,6 @@ const applyFeatureGating = (state) => {
   }
   if (quickTaskForm) {
     quickTaskForm.style.display = access.quickTasks ? "grid" : "none";
-  }
-  if (sideQuestForm) {
-    sideQuestForm.style.display = access.sideQuest ? "grid" : "none";
   }
 };
 
@@ -346,11 +345,24 @@ const renderWelcome = (state) => {
 
 const renderToday = (state) => {
   todayList.innerHTML = "";
-  renderSideQuestOptions(state);
 
   const quickTaskEntries = Object.values(state.quickTasks || {});
   const quickTomorrowEntries = Object.values(state.quickTasksTomorrow || {});
   const sideQuestEntries = state.sideQuests || [];
+  const sideQuestFeatureEnabled = getFeatureAccess(state).sideQuest;
+  const today = todayISO(state.simulationOffsetDays);
+  const actionableMainTasks = state.todayTasks.filter(
+    (t) => t.date === today && !isRestDayForTask(state, t, today) && !t.isRestDay
+  );
+  const mainTasksDone =
+    actionableMainTasks.length > 0 && actionableMainTasks.every((t) => t.done);
+  if (sideQuestForm) {
+    sideQuestForm.style.display =
+      sideQuestFeatureEnabled && mainTasksDone ? "flex" : "none";
+  }
+  if (sideQuestFeatureEnabled && mainTasksDone) {
+    renderSideQuestOptions(state);
+  }
   if (
     state.todayTasks.length === 0 &&
     quickTaskEntries.length === 0 &&
@@ -361,7 +373,6 @@ const renderToday = (state) => {
     empty.textContent = "Noch keine Tagesaufgaben – füge ein Ziel hinzu.";
     todayList.appendChild(empty);
   } else {
-    const today = todayISO(state.simulationOffsetDays);
     const order = { morning: 0, noon: 1, evening: 2 };
     const sortedTasks = [...state.todayTasks].sort((a, b) => {
       const aOrder = order[a.difficulty] ?? 3;
@@ -538,38 +549,120 @@ const renderToday = (state) => {
       todayList.appendChild(li);
     });
 
-    if (sideQuestEntries.length > 0) {
+    if (sideQuestFeatureEnabled && mainTasksDone && sideQuestEntries.length > 0) {
       const head = document.createElement("li");
       head.className = "subhead";
       head.textContent = "Side Quest";
       todayList.appendChild(head);
     }
 
-    sideQuestEntries.forEach((quest) => {
-      const li = document.createElement("li");
-      const row = document.createElement("div");
-      row.className = "side-quest-row";
+    if (sideQuestFeatureEnabled && mainTasksDone) {
+      sideQuestEntries.forEach((quest) => {
+        const goal = state.goals.find((g) => g.id === quest.goalId);
+        if (!goal) return;
+        const weekdayKey = weekdayKeyFromISO(today);
+        const plan = getPlanForGoal(state, goal.id);
+        const entry = plan[weekdayKey];
+        const hasActivePlan = planHasAnyActive(plan);
+        const label = getLabelForToday(goal, entry, hasActivePlan);
+        const restDay = hasActivePlan && entry && !entry.active;
+        const done = restDay
+          ? true
+          : !!state.sideQuestChecks?.[today]?.[goal.id];
 
-      const text = document.createElement("span");
-      text.className = "task-text";
-      text.textContent = quest.label;
+        const li = document.createElement("li");
+        const labelEl = document.createElement("label");
+        labelEl.className = "neon-checkbox";
 
-      const badge = document.createElement("span");
-      badge.className = "difficulty noon";
-      badge.textContent = "Zukunft";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = done;
+        checkbox.disabled = !!restDay;
 
-      const removeBtn = document.createElement("button");
-      removeBtn.type = "button";
-      removeBtn.className = "btn ghost side-quest-remove";
-      removeBtn.textContent = "Entfernen";
-      removeBtn.addEventListener("click", () => removeSideQuest(quest.goalId));
+        const frame = document.createElement("div");
+        frame.className = "neon-checkbox__frame";
 
-      row.appendChild(text);
-      row.appendChild(badge);
-      row.appendChild(removeBtn);
-      li.appendChild(row);
-      todayList.appendChild(li);
-    });
+        const box = document.createElement("div");
+        box.className = "neon-checkbox__box";
+
+        const checkContainer = document.createElement("div");
+        checkContainer.className = "neon-checkbox__check-container";
+
+        const check = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        check.setAttribute("class", "neon-checkbox__check");
+        check.setAttribute("viewBox", "0 0 24 24");
+        const checkPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        checkPath.setAttribute("d", "M5 12l5 5L19 7");
+        check.appendChild(checkPath);
+
+        const glow = document.createElement("div");
+        glow.className = "neon-checkbox__glow";
+
+        const borders = document.createElement("div");
+        borders.className = "neon-checkbox__borders";
+        for (let i = 0; i < 4; i += 1) {
+          borders.appendChild(document.createElement("span"));
+        }
+
+        const particles = document.createElement("div");
+        particles.className = "neon-checkbox__particles";
+        for (let i = 0; i < 12; i += 1) {
+          particles.appendChild(document.createElement("span"));
+        }
+
+        const rings = document.createElement("div");
+        rings.className = "neon-checkbox__rings";
+        for (let i = 0; i < 3; i += 1) {
+          const ring = document.createElement("div");
+          ring.className = "ring";
+          rings.appendChild(ring);
+        }
+
+        const sparks = document.createElement("div");
+        sparks.className = "neon-checkbox__sparks";
+        for (let i = 0; i < 4; i += 1) {
+          sparks.appendChild(document.createElement("span"));
+        }
+
+        checkContainer.appendChild(check);
+        frame.appendChild(box);
+        frame.appendChild(checkContainer);
+        frame.appendChild(glow);
+        frame.appendChild(borders);
+        frame.appendChild(particles);
+        frame.appendChild(rings);
+        frame.appendChild(sparks);
+
+        const text = document.createElement("span");
+        text.className = "task-text";
+        text.textContent = label;
+        if (done && !restDay) text.classList.add("done");
+        if (restDay) text.classList.add("rest-day");
+
+        const badge = document.createElement("span");
+        badge.className = "difficulty noon";
+        badge.textContent = "Side Quest";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "btn ghost side-quest-remove";
+        removeBtn.textContent = "Entfernen";
+        removeBtn.addEventListener("click", () => removeSideQuest(goal.id));
+
+        labelEl.appendChild(checkbox);
+        labelEl.appendChild(frame);
+        labelEl.appendChild(text);
+        li.appendChild(labelEl);
+        li.appendChild(badge);
+        li.appendChild(removeBtn);
+        if (!restDay) {
+          checkbox.addEventListener("change", () =>
+            toggleSideQuest(goal.id, text, labelEl)
+          );
+        }
+        todayList.appendChild(li);
+      });
+    }
 
     if (quickTomorrowEntries.length > 0) {
       const head = document.createElement("li");
@@ -1027,10 +1120,10 @@ const renderSideQuestOptions = (state) => {
   );
 
   sideQuestSelect.innerHTML = "";
-  if (state.sideQuests.length >= 5) {
+  if (state.sideQuests.length >= 3) {
     const option = document.createElement("option");
     option.value = "";
-    option.textContent = "Maximal 5 Side Quests erreicht";
+    option.textContent = "Maximal 3 Side Quests erreicht";
     sideQuestSelect.appendChild(option);
     sideQuestSelect.disabled = true;
     return;
@@ -1057,13 +1150,13 @@ const renderSideQuestOptions = (state) => {
 const addSideQuest = (goalId) => {
   const state = loadState();
   if (!getFeatureAccess(state).sideQuest) return;
-  if ((state.sideQuests || []).length >= 5) return;
+  if ((state.sideQuests || []).length >= 3) return;
   if (state.sideQuests.some((q) => q.goalId === goalId)) return;
   if (state.todayTasks.some((task) => task.goalId === goalId)) return;
   const goal = state.goals.find((g) => g.id === goalId);
   if (!goal) return;
 
-  state.sideQuests.push({ goalId: goal.id, label: goal.title });
+  state.sideQuests.push({ goalId: goal.id });
   saveState(state);
   renderAll(state);
 };
@@ -1071,8 +1164,37 @@ const addSideQuest = (goalId) => {
 const removeSideQuest = (goalId) => {
   const state = loadState();
   state.sideQuests = (state.sideQuests || []).filter((q) => q.goalId !== goalId);
+  Object.keys(state.sideQuestChecks || {}).forEach((dateKey) => {
+    if (!state.sideQuestChecks[dateKey]) return;
+    delete state.sideQuestChecks[dateKey][goalId];
+    if (Object.keys(state.sideQuestChecks[dateKey]).length === 0) {
+      delete state.sideQuestChecks[dateKey];
+    }
+  });
   saveState(state);
   renderAll(state);
+};
+
+const toggleSideQuest = (goalId, textEl, labelEl) => {
+  const state = loadState();
+  const today = todayISO(state.simulationOffsetDays);
+  state.sideQuestChecks = state.sideQuestChecks || {};
+  state.sideQuestChecks[today] = state.sideQuestChecks[today] || {};
+  const nowDone = !state.sideQuestChecks[today][goalId];
+  state.sideQuestChecks[today][goalId] = nowDone;
+  saveState(state);
+
+  if (textEl) {
+    textEl.classList.toggle("done", nowDone);
+  }
+  if (labelEl && nowDone) {
+    todayList.querySelectorAll(".neon-checkbox.burst").forEach((node) => {
+      node.classList.remove("burst");
+    });
+    void labelEl.offsetHeight;
+    labelEl.classList.add("burst");
+    setTimeout(() => labelEl.classList.remove("burst"), 700);
+  }
 };
 
 const toggleQuickTask = (taskId, textEl, labelEl) => {
@@ -1175,6 +1297,13 @@ const deleteGoal = (goalId) => {
   delete state.weeklyPlans[goalId];
   state.todayTasks = state.todayTasks.filter((t) => t.goalId !== goalId);
   state.sideQuests = (state.sideQuests || []).filter((q) => q.goalId !== goalId);
+  Object.keys(state.sideQuestChecks || {}).forEach((dateKey) => {
+    if (!state.sideQuestChecks[dateKey]) return;
+    delete state.sideQuestChecks[dateKey][goalId];
+    if (Object.keys(state.sideQuestChecks[dateKey]).length === 0) {
+      delete state.sideQuestChecks[dateKey];
+    }
+  });
 
   saveState(state);
   renderAll(state);

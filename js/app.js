@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.25";
+const APP_VERSION = "1.6.26";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -517,6 +517,17 @@ const STATIC_TEXT = {
     tutorialCta1: "Zu Einstellungen",
     tutorialCta2: "Ziel erstellen",
     tutorialCta3: "Zu Today",
+    introStepLabel: "Schritt",
+    introTitle1: "Willkommen bei OneStep",
+    introText1: "Schon allein beim Oeffnen der App bist du OneStep naeher an deinem Ziel.",
+    introTitle2: "Kein gewoehnlicher Habit-Tracker",
+    introText2: "OneStep ist ein Tool fuer Disziplin und klare Struktur statt nur taeglicher Motivation.",
+    introTitle3: "Langfristig gedacht",
+    introText3: "Diese App hilft dir, schwere und nervige Aufgaben wie Essen, Laufen oder Schlafen langfristig zu normalisieren. Fangen wir an.",
+    introNextBtn: "Weiter ->",
+    introStartBtn: "Los geht's ->",
+    introNextAria: "Naechste Seite",
+    introStartAria: "Los geht's",
     progressWeekRate: "Wochenquote",
     progressMonthRate: "Monatsquote",
     progressBestDay: "Stärkster Wochentag",
@@ -591,6 +602,17 @@ const STATIC_TEXT = {
     tutorialCta1: "Open settings",
     tutorialCta2: "Create goal",
     tutorialCta3: "Go to Today",
+    introStepLabel: "Step",
+    introTitle1: "Welcome to OneStep",
+    introText1: "Just by opening the app, you are already one step closer to your goal.",
+    introTitle2: "Not a typical habit tracker",
+    introText2: "OneStep is a tool for discipline and structure, not just daily motivation.",
+    introTitle3: "Built for the long run",
+    introText3: "This app helps you normalize hard and annoying tasks like eating, running, or sleeping over time. Let's start.",
+    introNextBtn: "Next ->",
+    introStartBtn: "Let's go ->",
+    introNextAria: "Next page",
+    introStartAria: "Let's go",
     progressWeekRate: "Week rate",
     progressMonthRate: "Month rate",
     progressBestDay: "Strongest weekday",
@@ -665,6 +687,17 @@ const STATIC_TEXT = {
     tutorialCta1: "Открыть настройки",
     tutorialCta2: "Создать цель",
     tutorialCta3: "Открыть Today",
+    introStepLabel: "Шаг",
+    introTitle1: "Добро пожаловать в OneStep",
+    introText1: "Даже просто открыв приложение, ты уже на один шаг ближе к своей цели.",
+    introTitle2: "Не обычный трекер привычек",
+    introText2: "OneStep - это инструмент для дисциплины и структуры, а не только для ежедневной мотивации.",
+    introTitle3: "Для долгого пути",
+    introText3: "Приложение помогает сделать сложные и неприятные задачи вроде питания, бега или сна нормальной частью жизни. Начнем.",
+    introNextBtn: "Дальше ->",
+    introStartBtn: "Поехали ->",
+    introNextAria: "Следующая страница",
+    introStartAria: "Начать",
     progressWeekRate: "Процент недели",
     progressMonthRate: "Процент месяца",
     progressBestDay: "Лучший день недели",
@@ -739,6 +772,17 @@ const STATIC_TEXT = {
     tutorialCta1: "Abrir ajustes",
     tutorialCta2: "Crear meta",
     tutorialCta3: "Ir a Today",
+    introStepLabel: "Paso",
+    introTitle1: "Bienvenido a OneStep",
+    introText1: "Con solo abrir la app, ya estas un paso mas cerca de tu objetivo.",
+    introTitle2: "No es un tracker comun",
+    introText2: "OneStep es una herramienta para disciplina y estructura, no solo motivacion diaria.",
+    introTitle3: "Pensada para largo plazo",
+    introText3: "La app esta hecha para normalizar tareas pesadas y molestas como comer, correr o dormir. Empecemos.",
+    introNextBtn: "Siguiente ->",
+    introStartBtn: "Empezar ->",
+    introNextAria: "Pagina siguiente",
+    introStartAria: "Empezar",
     progressWeekRate: "Ratio semanal",
     progressMonthRate: "Ratio mensual",
     progressBestDay: "Mejor día de la semana",
@@ -813,6 +857,17 @@ const STATIC_TEXT = {
     tutorialCta1: "Ouvrir réglages",
     tutorialCta2: "Créer objectif",
     tutorialCta3: "Aller à Today",
+    introStepLabel: "Etape",
+    introTitle1: "Bienvenue sur OneStep",
+    introText1: "Rien qu'en ouvrant l'app, tu es deja un pas plus proche de ton objectif.",
+    introTitle2: "Pas un tracker habituel",
+    introText2: "OneStep est un outil pour la discipline et la structure, pas seulement la motivation quotidienne.",
+    introTitle3: "Pense pour le long terme",
+    introText3: "L'app est faite pour normaliser des taches difficiles et penibles comme manger, courir ou dormir. On commence.",
+    introNextBtn: "Suivant ->",
+    introStartBtn: "C'est parti ->",
+    introNextAria: "Page suivante",
+    introStartAria: "Commencer",
     progressWeekRate: "Taux semaine",
     progressMonthRate: "Taux mois",
     progressBestDay: "Jour le plus fort",
@@ -873,6 +928,7 @@ const defaultState = () => ({
   weeklyPlans: {},
   tutorialStep: 1,
   tutorialCompleted: false,
+  introCompleted: false,
   onboardingStartDate: null,
   proEnabled: false,
   templatesOpenedOnce: false,
@@ -907,6 +963,7 @@ const loadState = () => {
     normalized.weeklyPlans = normalized.weeklyPlans || {};
     normalized.tutorialStep = normalized.tutorialStep || 1;
     normalized.tutorialCompleted = normalized.tutorialCompleted || false;
+    normalized.introCompleted = normalized.introCompleted || false;
     normalized.onboardingStartDate = normalized.onboardingStartDate || null;
     if (!normalized.onboardingStartDate && normalized.goals.length > 0) {
       const datedGoals = normalized.goals
@@ -979,6 +1036,11 @@ const tutorialCtaBtn = document.getElementById("tutorial-cta");
 const toastEl = document.getElementById("toast");
 const languageModal = document.getElementById("language-modal");
 const languageButtons = document.querySelectorAll("[data-lang]");
+const introModal = document.getElementById("intro-modal");
+const introStepEl = document.getElementById("intro-step");
+const introTitleEl = document.getElementById("intro-title");
+const introTextEl = document.getElementById("intro-text");
+const introNextBtn = document.getElementById("intro-next");
 const updateBanner = document.getElementById("update-banner");
 const updateBannerText = document.getElementById("update-banner-text");
 const updateBannerNote = document.getElementById("update-banner-note");
@@ -1005,6 +1067,7 @@ let waitingServiceWorker = null;
 let isRefreshingFromServiceWorker = false;
 let swRegistrationRef = null;
 let draggingGoalId = null;
+let introStepIndex = 0;
 const SIDE_QUEST_REVEAL_SCROLL_MS = 520;
 
 // ---------------------------
@@ -1052,12 +1115,78 @@ const setLanguage = (lang) => {
   applyStaticTranslations();
   renderAll(loadState());
   if (languageModal) languageModal.hidden = true;
+  openIntroIfNeeded(loadState());
   showToast(t("languageSaved"));
 };
 
 const showLanguageModalIfNeeded = () => {
   if (!languageModal) return;
-  languageModal.hidden = !!currentLanguage;
+  const needsLanguage = !currentLanguage;
+  languageModal.hidden = !needsLanguage;
+  if (needsLanguage && introModal) introModal.hidden = true;
+};
+
+const getIntroSlides = () => {
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+  return [
+    {
+      title: s.introTitle1,
+      text: s.introText1,
+      action: s.introNextBtn,
+      aria: s.introNextAria,
+    },
+    {
+      title: s.introTitle2,
+      text: s.introText2,
+      action: s.introNextBtn,
+      aria: s.introNextAria,
+    },
+    {
+      title: s.introTitle3,
+      text: s.introText3,
+      action: s.introStartBtn,
+      aria: s.introStartAria,
+    },
+  ];
+};
+
+const renderIntro = () => {
+  if (!introModal || !introStepEl || !introTitleEl || !introTextEl || !introNextBtn) return;
+  const slides = getIntroSlides();
+  introStepIndex = Math.max(0, Math.min(introStepIndex, slides.length - 1));
+  const slide = slides[introStepIndex];
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+  introStepEl.textContent = `${s.introStepLabel} ${introStepIndex + 1}/${slides.length}`;
+  introTitleEl.textContent = slide.title;
+  introTextEl.textContent = slide.text;
+  introNextBtn.textContent = slide.action;
+  introNextBtn.setAttribute("aria-label", slide.aria);
+};
+
+const openIntroIfNeeded = (state) => {
+  if (!introModal) return;
+  if (!currentLanguage || state?.introCompleted) {
+    introModal.hidden = true;
+    return;
+  }
+  introStepIndex = 0;
+  renderIntro();
+  introModal.hidden = false;
+};
+
+const handleIntroNext = () => {
+  const state = loadState();
+  const slides = getIntroSlides();
+  if (introStepIndex < slides.length - 1) {
+    introStepIndex += 1;
+    renderIntro();
+    return;
+  }
+
+  state.introCompleted = true;
+  saveState(state);
+  if (introModal) introModal.hidden = true;
+  renderAll(state);
 };
 
 const showUpdateBanner = (worker) => {
@@ -1214,6 +1343,7 @@ const applyStaticTranslations = () => {
 
   setText("language-modal-title", t("chooseLanguage"));
   setText("language-modal-text", t("chooseLanguageText"));
+  renderIntro();
   setText("tagline", t("tagline"));
   const welcomeTitle = welcomeSection?.querySelector("h1");
   const welcomeParagraphs = welcomeSection?.querySelectorAll("p");
@@ -2925,6 +3055,7 @@ const init = () => {
   if (templatesSection) {
     templatesSection.open = false;
   }
+  openIntroIfNeeded(state);
   const startTab = state.tutorialCompleted || state.tutorialStep >= 2 ? "today" : "goals";
   setActiveTab(startTab);
 
@@ -2959,6 +3090,7 @@ const init = () => {
       renderAll(fresh);
       setActiveTab("goals");
       showLanguageModalIfNeeded();
+      if (introModal) introModal.hidden = true;
       triggerHaptic(18);
       showToast(t("toastReset"));
     });
@@ -3094,6 +3226,9 @@ const init = () => {
     languageButtons.forEach((btn) => {
       btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
     });
+    if (introNextBtn) {
+      introNextBtn.addEventListener("click", handleIntroNext);
+    }
     if (updateBannerBtn) {
       updateBannerBtn.addEventListener("click", requestServiceWorkerUpdate);
     }

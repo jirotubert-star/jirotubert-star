@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.33";
+const APP_VERSION = "1.6.34";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -1288,7 +1288,7 @@ const getIntroSlides = () => {
       text: s.introText3,
       action: s.introStartBtn,
       aria: s.introStartAria,
-      examples: [s.introExample1, s.introExample2, s.introExample3],
+      examples: [],
     },
   ];
 };

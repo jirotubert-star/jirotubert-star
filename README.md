@@ -19,9 +19,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.6.33`
+- Aktuell: `1.6.34`
 
 ## Aenderungsprotokoll
+- `1.6.34` (2026-02-17): Intro Schritt `3/3` aufgeraeumt: die drei Beispiel-Chips (z. B. Schlafen/Laufen/Essen) werden nicht mehr angezeigt.
 - `1.6.33` (2026-02-17): Jahresvorsatz entwickelt: optionales Eingabefeld in der Intro-Einleitung (letzter Schritt), Speicherung im State und neue Anzeige im Progress-Bereich inkl. "Seit"-Datum sowie Jahreszahlen (erledigte Aufgaben/aktive Tage).
 - `1.6.32` (2026-02-17): In den Einstellungen einen neuen System-Button „Auf Updates pruefen“ hinzugefuegt; manuelle Service-Worker-Update-Pruefung mit lokalisierten Status-Toastmeldungen integriert.
 - `1.6.31` (2026-02-17): Update-Banner korrigiert: zeigt nun die Version des wartenden (neuen) Service Workers statt der aktuell laufenden Version; technische SW-Message `GET_SW_VERSION` ergänzt.

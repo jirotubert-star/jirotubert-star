@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-user.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-user.png" />
-    <link rel="manifest" href="site.webmanifest?v=1632" />
+    <link rel="manifest" href="site.webmanifest?v=1633" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -35,6 +35,11 @@
         </div>
         <h2 id="intro-title">Willkommen bei OneStep</h2>
         <p id="intro-text"></p>
+        <div id="intro-goal-field" class="intro-goal-field" hidden>
+          <label id="intro-goal-label" for="intro-goal-input">Jahresvorsatz</label>
+          <input id="intro-goal-input" type="text" maxlength="120" placeholder="z. B. fitter und energiegeladener werden" />
+          <div id="intro-goal-hint" class="soft-note">Optional: Dein Hauptziel fuer dieses Jahr.</div>
+        </div>
         <ul id="intro-examples" class="intro-examples" hidden></ul>
         <button id="intro-next" class="intro-next" type="button" aria-label="Nächste Seite">→</button>
       </div>
@@ -168,6 +173,12 @@
           </div>
         </div>
         <div class="progress-insights">
+          <div class="annual-goal-card">
+            <div class="soft-note" id="annual-goal-title">Jahresvorsatz</div>
+            <div class="annual-goal-value" id="annual-goal-value">Noch nicht gesetzt</div>
+            <div class="soft-note" id="annual-goal-meta"></div>
+            <div class="soft-note" id="annual-goal-stats"></div>
+          </div>
           <div class="soft-note" id="progress-week-rate">Wochenquote: 0%</div>
           <div class="soft-note" id="progress-month-rate">Monatsquote: 0%</div>
           <div class="soft-note" id="progress-best-day">Stärkster Wochentag: -</div>
@@ -267,7 +278,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.6.32</span>
+      <span class="soft-note" id="version">Version 1.6.33</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">

@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.32";
+const APP_VERSION = "1.6.33";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -531,10 +531,18 @@ const STATIC_TEXT = {
     introExample1: "Schlafen 23:00",
     introExample2: "10 Minuten laufen",
     introExample3: "Proteinreich essen",
+    introGoalLabel: "Jahresvorsatz",
+    introGoalPlaceholder: "z. B. fitter und energiegeladener werden",
+    introGoalHint: "Optional: Dein Hauptziel fuer dieses Jahr.",
     introNextBtn: "Weiter ->",
     introStartBtn: "Los geht's: erstes Ziel erstellen ->",
     introNextAria: "Nächste Seite",
     introStartAria: "Erstes Ziel erstellen",
+    annualGoalTitle: "Jahresvorsatz",
+    annualGoalEmpty: "Noch nicht gesetzt",
+    annualGoalSince: "Seit",
+    annualGoalYearDone: "Erledigt dieses Jahr",
+    annualGoalYearActiveDays: "Aktive Tage dieses Jahr",
     progressWeekRate: "Wochenquote",
     progressMonthRate: "Monatsquote",
     progressBestDay: "Stärkster Wochentag",
@@ -623,10 +631,18 @@ const STATIC_TEXT = {
     introExample1: "Sleep at 23:00",
     introExample2: "10-minute run",
     introExample3: "Protein-rich meal",
+    introGoalLabel: "Year goal",
+    introGoalPlaceholder: "e.g. become fitter and more energetic",
+    introGoalHint: "Optional: Your main goal for this year.",
     introNextBtn: "Next ->",
     introStartBtn: "Let's go: create first goal ->",
     introNextAria: "Next page",
     introStartAria: "Create first goal",
+    annualGoalTitle: "Year goal",
+    annualGoalEmpty: "Not set yet",
+    annualGoalSince: "Since",
+    annualGoalYearDone: "Done this year",
+    annualGoalYearActiveDays: "Active days this year",
     progressWeekRate: "Week rate",
     progressMonthRate: "Month rate",
     progressBestDay: "Strongest weekday",
@@ -715,10 +731,18 @@ const STATIC_TEXT = {
     introExample1: "Сон в 23:00",
     introExample2: "Бег 10 минут",
     introExample3: "Белковый прием пищи",
+    introGoalLabel: "Годовая цель",
+    introGoalPlaceholder: "например: стать выносливее и энергичнее",
+    introGoalHint: "Опционально: твоя главная цель на этот год.",
     introNextBtn: "Дальше ->",
     introStartBtn: "Поехали: создать первую цель ->",
     introNextAria: "Следующая страница",
     introStartAria: "Создать первую цель",
+    annualGoalTitle: "Годовая цель",
+    annualGoalEmpty: "Пока не задана",
+    annualGoalSince: "С",
+    annualGoalYearDone: "Сделано в этом году",
+    annualGoalYearActiveDays: "Активные дни в этом году",
     progressWeekRate: "Процент недели",
     progressMonthRate: "Процент месяца",
     progressBestDay: "Лучший день недели",
@@ -807,10 +831,18 @@ const STATIC_TEXT = {
     introExample1: "Dormir a las 23:00",
     introExample2: "Correr 10 minutos",
     introExample3: "Comida rica en proteina",
+    introGoalLabel: "Objetivo anual",
+    introGoalPlaceholder: "p. ej. estar mas en forma y con mas energia",
+    introGoalHint: "Opcional: tu objetivo principal para este ano.",
     introNextBtn: "Siguiente ->",
     introStartBtn: "Empezar: crear primera meta ->",
     introNextAria: "Pagina siguiente",
     introStartAria: "Crear primera meta",
+    annualGoalTitle: "Objetivo anual",
+    annualGoalEmpty: "Aun no definido",
+    annualGoalSince: "Desde",
+    annualGoalYearDone: "Hechas este ano",
+    annualGoalYearActiveDays: "Dias activos este ano",
     progressWeekRate: "Ratio semanal",
     progressMonthRate: "Ratio mensual",
     progressBestDay: "Mejor día de la semana",
@@ -899,10 +931,18 @@ const STATIC_TEXT = {
     introExample1: "Dormir a 23:00",
     introExample2: "Courir 10 minutes",
     introExample3: "Repas riche en proteines",
+    introGoalLabel: "Objectif annuel",
+    introGoalPlaceholder: "ex. etre plus en forme et plus energique",
+    introGoalHint: "Optionnel : ton objectif principal pour cette annee.",
     introNextBtn: "Suivant ->",
     introStartBtn: "C'est parti : creer le premier objectif ->",
     introNextAria: "Page suivante",
     introStartAria: "Creer le premier objectif",
+    annualGoalTitle: "Objectif annuel",
+    annualGoalEmpty: "Pas encore defini",
+    annualGoalSince: "Depuis",
+    annualGoalYearDone: "Faites cette annee",
+    annualGoalYearActiveDays: "Jours actifs cette annee",
     progressWeekRate: "Taux semaine",
     progressMonthRate: "Taux mois",
     progressBestDay: "Jour le plus fort",
@@ -941,6 +981,21 @@ const daysBetween = (startISO, endISO) => {
   return Math.floor((end - start) / msPerDay);
 };
 
+const localeForLanguage = () => {
+  if (currentLanguage === "en") return "en-US";
+  if (currentLanguage === "ru") return "ru-RU";
+  if (currentLanguage === "es") return "es-ES";
+  if (currentLanguage === "fr") return "fr-FR";
+  return "de-DE";
+};
+
+const formatISODate = (iso) => {
+  if (!iso) return "";
+  const date = new Date(`${iso}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return iso;
+  return date.toLocaleDateString(localeForLanguage());
+};
+
 // ---------------------------
 // State-Form
 // ---------------------------
@@ -964,6 +1019,8 @@ const defaultState = () => ({
   tutorialStep: 1,
   tutorialCompleted: false,
   introCompleted: false,
+  annualGoal: "",
+  annualGoalUpdatedAt: null,
   onboardingStartDate: null,
   proEnabled: false,
   templatesOpenedOnce: false,
@@ -999,6 +1056,10 @@ const loadState = () => {
     normalized.tutorialStep = normalized.tutorialStep || 1;
     normalized.tutorialCompleted = normalized.tutorialCompleted || false;
     normalized.introCompleted = normalized.introCompleted || false;
+    normalized.annualGoal = typeof normalized.annualGoal === "string"
+      ? normalized.annualGoal
+      : "";
+    normalized.annualGoalUpdatedAt = normalized.annualGoalUpdatedAt || null;
     normalized.onboardingStartDate = normalized.onboardingStartDate || null;
     if (!normalized.onboardingStartDate && normalized.goals.length > 0) {
       const datedGoals = normalized.goals
@@ -1078,6 +1139,10 @@ const introStepEl = document.getElementById("intro-step");
 const introProgressFillEl = document.getElementById("intro-progress-fill");
 const introTitleEl = document.getElementById("intro-title");
 const introTextEl = document.getElementById("intro-text");
+const introGoalFieldEl = document.getElementById("intro-goal-field");
+const introGoalLabelEl = document.getElementById("intro-goal-label");
+const introGoalInputEl = document.getElementById("intro-goal-input");
+const introGoalHintEl = document.getElementById("intro-goal-hint");
 const introExamplesEl = document.getElementById("intro-examples");
 const introNextBtn = document.getElementById("intro-next");
 const updateBanner = document.getElementById("update-banner");
@@ -1091,6 +1156,10 @@ const importFileInput = document.getElementById("import-file");
 const progressWeekRateEl = document.getElementById("progress-week-rate");
 const progressMonthRateEl = document.getElementById("progress-month-rate");
 const progressBestDayEl = document.getElementById("progress-best-day");
+const annualGoalTitleEl = document.getElementById("annual-goal-title");
+const annualGoalValueEl = document.getElementById("annual-goal-value");
+const annualGoalMetaEl = document.getElementById("annual-goal-meta");
+const annualGoalStatsEl = document.getElementById("annual-goal-stats");
 let currentTab = "today";
 const tabOrder = ["today", "goals", "progress", "info"];
 let touchStartX = null;
@@ -1107,6 +1176,7 @@ let isRefreshingFromServiceWorker = false;
 let swRegistrationRef = null;
 let draggingGoalId = null;
 let introStepIndex = 0;
+let introGoalDraft = "";
 const SIDE_QUEST_REVEAL_SCROLL_MS = 520;
 
 // ---------------------------
@@ -1234,6 +1304,16 @@ const renderIntro = () => {
   introTextEl.textContent = slide.text;
   introNextBtn.textContent = slide.action;
   introNextBtn.setAttribute("aria-label", slide.aria);
+  if (introGoalLabelEl) introGoalLabelEl.textContent = s.introGoalLabel;
+  if (introGoalInputEl) introGoalInputEl.placeholder = s.introGoalPlaceholder;
+  if (introGoalHintEl) introGoalHintEl.textContent = s.introGoalHint;
+  if (introGoalFieldEl) {
+    const showGoalInput = introStepIndex === slides.length - 1;
+    introGoalFieldEl.hidden = !showGoalInput;
+    if (showGoalInput && introGoalInputEl) {
+      introGoalInputEl.value = introGoalDraft;
+    }
+  }
   if (introProgressFillEl) {
     const ratio = ((introStepIndex + 1) / slides.length) * 100;
     introProgressFillEl.style.width = `${ratio}%`;
@@ -1264,6 +1344,7 @@ const openIntroIfNeeded = (state) => {
     introModal.hidden = true;
     return;
   }
+  introGoalDraft = (state?.annualGoal || "").trim();
   introStepIndex = 0;
   renderIntro();
   introModal.hidden = false;
@@ -1279,6 +1360,11 @@ const handleIntroNext = () => {
   }
 
   state.introCompleted = true;
+  const annualGoal = (introGoalInputEl?.value || "").trim();
+  state.annualGoal = annualGoal;
+  state.annualGoalUpdatedAt = annualGoal
+    ? todayISO(state.simulationOffsetDays)
+    : null;
   saveState(state);
   if (introModal) introModal.hidden = true;
   renderAll(state);
@@ -1482,6 +1568,7 @@ const applyStaticTranslations = () => {
   setText("settings-version-title", s.settingsVersionTitle);
   setText("settings-system-title", s.settingsSystemTitle);
   setText("backup-title", s.backupTitle);
+  setText("annual-goal-title", s.annualGoalTitle);
   setText("day-offset-label", s.dayOffsetLabel);
   setText("templates-summary", s.templateSummary);
   setText("weekly-plan-title", s.weeklyPlanTitle);
@@ -1512,6 +1599,11 @@ const applyStaticTranslations = () => {
   if (progressWeekRateEl) progressWeekRateEl.textContent = `${s.progressWeekRate}: 0%`;
   if (progressMonthRateEl) progressMonthRateEl.textContent = `${s.progressMonthRate}: 0%`;
   if (progressBestDayEl) progressBestDayEl.textContent = `${s.progressBestDay}: -`;
+  if (annualGoalValueEl) annualGoalValueEl.textContent = s.annualGoalEmpty;
+  if (annualGoalMetaEl) annualGoalMetaEl.textContent = "";
+  if (annualGoalStatsEl) {
+    annualGoalStatsEl.textContent = `${s.annualGoalYearDone}: 0 · ${s.annualGoalYearActiveDays}: 0`;
+  }
 
   const legalLinks = document.querySelectorAll("#info-summary-privacy ~ p a");
   if (legalLinks.length >= 2) {
@@ -2249,6 +2341,30 @@ const renderProgress = (state) => {
   }
   if (progressBestDayEl) {
     progressBestDayEl.textContent = `${s.progressBestDay}: ${bestWeekday}`;
+  }
+
+  const currentYear = new Date(`${currentISO}T00:00:00`).getFullYear();
+  let yearDone = 0;
+  let yearActiveDays = 0;
+  Object.entries(state.daySummary || {}).forEach(([iso, summary]) => {
+    if (!iso.startsWith(`${currentYear}-`)) return;
+    const done = Number(summary?.done || 0);
+    yearDone += done;
+    if (done > 0) yearActiveDays += 1;
+  });
+  if (annualGoalTitleEl) {
+    annualGoalTitleEl.textContent = s.annualGoalTitle;
+  }
+  if (annualGoalValueEl) {
+    annualGoalValueEl.textContent = state.annualGoal?.trim() || s.annualGoalEmpty;
+  }
+  if (annualGoalMetaEl) {
+    annualGoalMetaEl.textContent = state.annualGoalUpdatedAt
+      ? `${s.annualGoalSince}: ${formatISODate(state.annualGoalUpdatedAt)}`
+      : "";
+  }
+  if (annualGoalStatsEl) {
+    annualGoalStatsEl.textContent = `${s.annualGoalYearDone}: ${yearDone} · ${s.annualGoalYearActiveDays}: ${yearActiveDays}`;
   }
 
   const message = MOTIVATION[Math.floor(Math.random() * MOTIVATION.length)];
@@ -3342,6 +3458,11 @@ const init = () => {
     });
     if (introNextBtn) {
       introNextBtn.addEventListener("click", handleIntroNext);
+    }
+    if (introGoalInputEl) {
+      introGoalInputEl.addEventListener("input", () => {
+        introGoalDraft = introGoalInputEl.value;
+      });
     }
     if (updateBannerBtn) {
       updateBannerBtn.addEventListener("click", requestServiceWorkerUpdate);

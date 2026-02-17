@@ -813,6 +813,20 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   margin-bottom: 10px;
 }
 
+.annual-goal-card {
+  border: 1px solid #d7e5dd;
+  border-radius: 12px;
+  padding: 12px;
+  background: rgba(248, 252, 249, 0.9);
+  margin-bottom: 8px;
+}
+
+.annual-goal-value {
+  font-weight: 700;
+  color: #26463d;
+  margin: 4px 0;
+}
+
 .unlock {
   background: #f3f7f3;
   border: 1px dashed #cbd7d1;
@@ -1485,6 +1499,27 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   padding: 8px 14px;
   font-size: 0.94rem;
   font-weight: 600;
+}
+
+.intro-goal-field {
+  display: grid;
+  gap: 8px;
+  max-width: 680px;
+}
+
+.intro-goal-field label {
+  font-weight: 700;
+  color: #26463d;
+}
+
+.intro-goal-field input {
+  width: 100%;
+  padding: 11px 13px;
+  border-radius: 12px;
+  border: 1px solid #c9ddd2;
+  background: #fff;
+  color: #1f2a2e;
+  font-size: 1rem;
 }
 
 .intro-next {

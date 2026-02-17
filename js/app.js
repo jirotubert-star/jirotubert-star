@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.28";
+const APP_VERSION = "1.6.29";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -519,14 +519,14 @@ const STATIC_TEXT = {
     tutorialCta3: "Zu Today",
     introStepLabel: "Schritt",
     introTitle1: "Willkommen bei OneStep",
-    introText1: "Schon allein beim Oeffnen der App bist du OneStep naeher an deinem Ziel.",
-    introTitle2: "Kein gewoehnlicher Habit-Tracker",
-    introText2: "OneStep ist ein Tool fuer Disziplin und klare Struktur statt nur taeglicher Motivation.",
+    introText1: "Schon allein beim Öffnen der App bist du OneStep näher an deinem Ziel.",
+    introTitle2: "Kein gewöhnlicher Habit-Tracker",
+    introText2: "OneStep ist ein Tool für Disziplin und klare Struktur statt nur täglicher Motivation.",
     introTitle3: "Langfristig gedacht",
-    introText3: "Diese App hilft dir, schwere und nervige Aufgaben wie Essen, Laufen oder Schlafen langfristig zu normalisieren. Fangen wir an.",
+    introText3: "Diese App hilft dir, schwere Aufgaben in den Alltag zu normalisieren, bis sie ein normaler Tagesablauf werden, wie Schlafen, Essen und Laufen.",
     introNextBtn: "Weiter ->",
     introStartBtn: "Los geht's ->",
-    introNextAria: "Naechste Seite",
+    introNextAria: "Nächste Seite",
     introStartAria: "Los geht's",
     progressWeekRate: "Wochenquote",
     progressMonthRate: "Monatsquote",

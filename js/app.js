@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.30";
+const APP_VERSION = "1.6.31";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -1125,6 +1125,37 @@ const showToast = (message) => {
   }, 1700);
 };
 
+const readWorkerVersion = (worker) =>
+  new Promise((resolve) => {
+    if (!worker || typeof MessageChannel === "undefined") {
+      resolve(null);
+      return;
+    }
+
+    const channel = new MessageChannel();
+    let settled = false;
+    let timeoutId = null;
+
+    const finish = (value) => {
+      if (settled) return;
+      settled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+      resolve(typeof value === "string" && value ? value : null);
+    };
+
+    channel.port1.onmessage = (event) => {
+      finish(event?.data?.version);
+    };
+
+    timeoutId = setTimeout(() => finish(null), 800);
+
+    try {
+      worker.postMessage({ type: "GET_SW_VERSION" }, [channel.port2]);
+    } catch (_err) {
+      finish(null);
+    }
+  });
+
 const setLanguage = (lang) => {
   if (!SUPPORTED_LANGS.includes(lang)) return;
   currentLanguage = lang;
@@ -1233,12 +1264,16 @@ const handleIntroNext = () => {
   setActiveTab("goals");
 };
 
-const showUpdateBanner = (worker) => {
+const showUpdateBanner = async (worker) => {
   if (!updateBanner || !worker) return;
   waitingServiceWorker = worker;
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
   if (updateBannerNote) {
-    const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
-    updateBannerNote.textContent = `${s.updateNote} v${APP_VERSION}`;
+    updateBannerNote.textContent = s.updateNote;
+  }
+  const nextVersion = await readWorkerVersion(worker);
+  if (updateBannerNote && nextVersion) {
+    updateBannerNote.textContent = `${s.updateNote} v${nextVersion}`;
   }
   updateBanner.hidden = false;
   updateBanner.classList.add("show");

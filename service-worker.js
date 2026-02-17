@@ -1,4 +1,5 @@
-const CACHE_NAME = "onestep-cache-v1630";
+const CACHE_NAME = "onestep-cache-v1631";
+const SW_APP_VERSION = "1.6.31";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -7,7 +8,7 @@ const APP_SHELL = [
   "./css/style.css",
   "./js/app.js",
   "./site.webmanifest",
-  "./site.webmanifest?v=1630",
+  "./site.webmanifest?v=1631",
   "./assets/onestep-logo-user.png",
   "./icons/icon-192.webp",
   "./icons/icon-512.webp",
@@ -22,6 +23,14 @@ self.addEventListener("install", (event) => {
 self.addEventListener("message", (event) => {
   if (event.data?.type === "SKIP_WAITING") {
     self.skipWaiting();
+    return;
+  }
+
+  if (event.data?.type === "GET_SW_VERSION") {
+    const replyPort = event.ports?.[0];
+    if (replyPort) {
+      replyPort.postMessage({ version: SW_APP_VERSION });
+    }
   }
 });
 

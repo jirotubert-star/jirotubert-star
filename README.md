@@ -19,9 +19,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.6.27`
+- Aktuell: `1.6.28`
 
 ## Aenderungsprotokoll
+- `1.6.28` (2026-02-17): Sprachauswahl auf Vollbild umgestellt (Full-Screen-Overlay statt kompakter Karte), visuell an Intro-Look angepasst.
 - `1.6.27` (2026-02-17): Intro-Einleitung auf echten Vollbildmodus umgestellt (keine kleine Karte mehr) und Navigationstaste als gruener, abgerundeter Rechteck-Button gestaltet.
 - `1.6.26` (2026-02-17): Erststart-Einleitung (3 Schritte) nach Sprachauswahl eingebaut, inklusive lokalisierter Texte in 5 Sprachen, auffaelligem Weiter-Pfeil und Abschluss-Button „Los geht's ->“; Einleitung wird als einmaliger Flow gespeichert und nach Reset erneut angezeigt; Manifest-Cache-Buster auf `v=1626`.
 - `1.6.25` (2026-02-15): Reines Versionsupdate auf `1.6.25`; Manifest-Cache-Buster auf `v=1625`.

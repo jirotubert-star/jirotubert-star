@@ -1398,11 +1398,13 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
 .language-modal {
   position: fixed;
   inset: 0;
-  background: rgba(31, 42, 46, 0.55);
+  background:
+    radial-gradient(120% 120% at 90% 10%, rgba(108, 164, 130, 0.34), transparent 60%),
+    rgba(31, 42, 46, 0.55);
   z-index: 40;
   display: grid;
-  place-items: center;
-  padding: 20px;
+  place-items: stretch;
+  padding: 0;
 }
 
 .intro-modal {
@@ -1472,27 +1474,36 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
 }
 
 .language-card {
-  width: min(560px, 100%);
-  background: var(--panel);
-  border: 1px solid #e6dfd3;
-  border-radius: 16px;
-  box-shadow: 0 16px 36px rgba(31, 42, 46, 0.2);
-  padding: 20px;
+  width: 100vw;
+  min-height: 100dvh;
+  background: linear-gradient(140deg, #f8f4ec, #edf7f1);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: clamp(24px, 5vw, 54px);
+  display: grid;
+  align-content: start;
+  gap: 12px;
 }
 
 .language-card h2 {
-  margin: 0 0 8px 0;
+  margin: 0;
+  font-size: clamp(1.4rem, 2.3vw, 2rem);
 }
 
 .language-card p {
-  margin: 0 0 12px 0;
-  color: var(--muted);
+  margin: 0;
+  color: #33423f;
+  line-height: 1.7;
+  font-size: clamp(1.03rem, 1.5vw, 1.16rem);
+  max-width: 68ch;
 }
 
 .language-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 220px));
+  gap: 12px;
+  margin-top: 8px;
 }
 
 .language-grid .btn:last-child {

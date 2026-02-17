@@ -19,9 +19,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.6.39`
+- Aktuell: `1.6.40`
 
 ## Aenderungsprotokoll
+- `1.6.40` (2026-02-17): Kalender-UX verbessert: der heutige Tag ist jetzt immer anklickbar und oeffnet die Tagesdetailansicht, auch wenn fuer heute noch keine Summary-Werte vorhanden sind.
 - `1.6.39` (2026-02-17): Kalender-Detailansicht ergaenzt: Klick auf vergangene Kalendertage zeigt gespeicherte Aufgabenliste mit Status `Erledigt/Offen`; Tageshistorie (`dayTaskHistory`) wird lokal mitgefuehrt.
 - `1.6.38` (2026-02-17): Vorschlags-/Autopilot-Funktion entfernt. Fokus wieder auf dem einfachen Kernfluss: alle 3 Tage manuell ein neues Ziel auswaehlen oder zufaellig hinzufuegen.
 - `1.6.37` (2026-02-17): Lean-Mode: zusaetzliche Jahresvorsatz-Komplexitaet im Goals-Tab wieder entfernt (kein extra Editor, kein Goal-Linking/Unlinking); Jahresvorsatz bleibt als Nordstern in Intro + Progress erhalten, Autopilot wieder vereinfacht.

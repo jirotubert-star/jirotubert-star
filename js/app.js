@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.39";
+const APP_VERSION = "1.6.40";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -3758,6 +3758,7 @@ function renderCalendar(state) {
 
   const year = base.getFullYear();
   const month = base.getMonth();
+  const today = todayISO(state.simulationOffsetDays);
   const monthName = base.toLocaleDateString("de-DE", { month: "long", year: "numeric" });
   calTitle.textContent = monthName;
 
@@ -3797,7 +3798,7 @@ function renderCalendar(state) {
         cell.classList.add("done-full");
       }
     }
-    if (summary || hasDetails) {
+    if (summary || hasDetails || iso === today) {
       cell.classList.add("has-detail");
       cell.addEventListener("click", () => openDayDetails(state, iso));
     }

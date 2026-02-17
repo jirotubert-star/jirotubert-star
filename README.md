@@ -19,9 +19,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.6.24`
+- Aktuell: `1.6.25`
 
 ## Aenderungsprotokoll
+- `1.6.25` (2026-02-15): Reines Versionsupdate auf `1.6.25`; Manifest-Cache-Buster auf `v=1625`.
 - `1.6.24` (2026-02-15): Side-Quest-Unlock auf Tag 9 vorgezogen und Hinweistext praezisiert: Side Quests sind verfuegbar, aber erst nach vollstaendig erledigten Hauptaufgaben nutzbar; Manifest-Cache-Buster auf `v=1624`.
 - `1.6.23` (2026-02-15): Onboarding-Text fuer Tag 9-12 angepasst: Hinweis auf Extra-Aufgaben bei vollstaendig erledigten Aufgaben; Versionen konsistent auf `1.6.23` gesetzt und Manifest-Cache-Buster auf `v=1623`.
 - `1.6.22` (2026-02-15): Onboarding-Hinweis fuer Tag 4-6 praezisiert: Wochenplan-Text vereinheitlicht und in allen 5 Sprachen lokalisiert; neue Day-Range-Logik fuer `onboardingTextWeekPlan` an Tag 5-6 (Tag 4 weiterhin Unlock); Manifest-Cache-Buster auf `v=1622`.

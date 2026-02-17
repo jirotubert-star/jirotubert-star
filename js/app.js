@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.3";
+const APP_VERSION = "1.7.4";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -1964,15 +1964,6 @@ const appendGoalTaskToState = (state, goal) => {
   return true;
 };
 
-const autoUnlockOnboardingTask = (state) => {
-  const access = getFeatureAccess(state);
-  if (!FAST_ONBOARDING_ENABLED || !access.onboardingActive) return;
-  if (!shouldUnlockNewTask(state)) return;
-  const goal = pickTaskFromGoals(state);
-  if (!goal) return;
-  appendGoalTaskToState(state, goal);
-};
-
 const ensureTodayTasks = (state) => {
   // Wenn das Datum wechselt, bleiben die Tasks sichtbar,
   // aber wir markieren sie als neue Tagesliste.
@@ -2030,7 +2021,6 @@ const ensureTodayTasks = (state) => {
     state.lastTaskUnlockDate = today;
   }
 
-  autoUnlockOnboardingTask(state);
 };
 
 // ---------------------------

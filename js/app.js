@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.0";
+const APP_VERSION = "1.7.1";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -1348,6 +1348,7 @@ let swRegistrationRef = null;
 let draggingGoalId = null;
 let introStepIndex = 0;
 let introGoalDraft = "";
+let runtimeAppVersion = APP_VERSION;
 const SIDE_QUEST_REVEAL_SCROLL_MS = 520;
 
 // ---------------------------
@@ -1417,6 +1418,28 @@ const readWorkerVersion = (worker) =>
       finish(null);
     }
   });
+
+const setVersionLabel = (state) => {
+  const versionEl = document.getElementById("version");
+  if (!versionEl) return;
+  const resolvedVersion = runtimeAppVersion || APP_VERSION;
+  versionEl.textContent = state?.proEnabled
+    ? `Version ${resolvedVersion} Pro`
+    : `Version ${resolvedVersion}`;
+};
+
+const syncRuntimeVersionWithActiveSW = async () => {
+  if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) return;
+  const activeWorker = navigator.serviceWorker.controller || swRegistrationRef?.active;
+  if (!activeWorker) {
+    runtimeAppVersion = APP_VERSION;
+    setVersionLabel(loadState());
+    return;
+  }
+  const activeVersion = await readWorkerVersion(activeWorker);
+  runtimeAppVersion = activeVersion || APP_VERSION;
+  setVersionLabel(loadState());
+};
 
 const setLanguage = (lang) => {
   if (!SUPPORTED_LANGS.includes(lang)) return;
@@ -2694,12 +2717,7 @@ const applyMode = (state) => {
   if (modeHint) {
     modeHint.style.display = "block";
   }
-  const versionEl = document.getElementById("version");
-  if (versionEl) {
-    versionEl.textContent = state.proEnabled
-      ? `Version ${APP_VERSION} Pro`
-      : `Version ${APP_VERSION}`;
-  }
+  setVersionLabel(state);
 };
 
 const renderAll = (state) => {
@@ -3463,6 +3481,7 @@ const init = () => {
   updateStreak(state);
   saveState(state);
   renderAll(state);
+  syncRuntimeVersionWithActiveSW();
   // Keep templates collapsed on every page load/start.
   if (templatesSection) {
     templatesSection.open = false;
@@ -3824,6 +3843,7 @@ const registerServiceWorker = () => {
     try {
       const registration = await navigator.serviceWorker.register("./service-worker.js");
       swRegistrationRef = registration;
+      syncRuntimeVersionWithActiveSW();
       if (registration.waiting) {
         showUpdateBanner(registration.waiting);
       }

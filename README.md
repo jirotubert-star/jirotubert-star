@@ -19,9 +19,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.7.0`
+- Aktuell: `1.7.1`
 
 ## Aenderungsprotokoll
+- `1.7.1` (2026-02-17): Versionsanzeige im Footer gehaertet: App liest zusaetzlich die Version des aktiven Service Workers und synchronisiert die angezeigte Version, damit nach Mobile-Updates keine veraltete Anzeige bleibt.
 - `1.7.0` (2026-02-17): Versionssprung auf `1.7.0`; Manifest-Cache-Buster auf `v=1700`.
 - `1.6.40` (2026-02-17): Kalender-UX verbessert: der heutige Tag ist jetzt immer anklickbar und oeffnet die Tagesdetailansicht, auch wenn fuer heute noch keine Summary-Werte vorhanden sind.
 - `1.6.39` (2026-02-17): Kalender-Detailansicht ergaenzt: Klick auf vergangene Kalendertage zeigt gespeicherte Aufgabenliste mit Status `Erledigt/Offen`; Tageshistorie (`dayTaskHistory`) wird lokal mitgefuehrt.

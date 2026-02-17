@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.31";
+const APP_VERSION = "1.6.32";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -511,6 +511,10 @@ const STATIC_TEXT = {
     updateNow: "Jetzt aktualisieren",
     updateRetry: "Erneut prüfen",
     updateNote: "Bugfixes und Verbesserungen sind bereit.",
+    checkUpdatesBtn: "Auf Updates prüfen",
+    toastUpdateCheck: "Update-Prüfung gestartet",
+    toastUpdateCheckError: "Update-Prüfung fehlgeschlagen",
+    toastUpdateUnsupported: "Update-Prüfung nicht verfügbar",
     tutorialCheck1: "Sprache festlegen",
     tutorialCheck2: "Erstes Ziel erstellen",
     tutorialCheck3: "Erste Aufgabe erledigen",
@@ -599,6 +603,10 @@ const STATIC_TEXT = {
     updateNow: "Update now",
     updateRetry: "Check again",
     updateNote: "Bug fixes and improvements are ready.",
+    checkUpdatesBtn: "Check for updates",
+    toastUpdateCheck: "Update check started",
+    toastUpdateCheckError: "Update check failed",
+    toastUpdateUnsupported: "Update check unavailable",
     tutorialCheck1: "Set language",
     tutorialCheck2: "Create first goal",
     tutorialCheck3: "Complete first task",
@@ -687,6 +695,10 @@ const STATIC_TEXT = {
     updateNow: "Обновить сейчас",
     updateRetry: "Проверить снова",
     updateNote: "Исправления и улучшения готовы.",
+    checkUpdatesBtn: "Проверить обновления",
+    toastUpdateCheck: "Проверка обновлений запущена",
+    toastUpdateCheckError: "Ошибка проверки обновлений",
+    toastUpdateUnsupported: "Проверка обновлений недоступна",
     tutorialCheck1: "Выбрать язык",
     tutorialCheck2: "Создать первую цель",
     tutorialCheck3: "Выполнить первую задачу",
@@ -775,6 +787,10 @@ const STATIC_TEXT = {
     updateNow: "Actualizar ahora",
     updateRetry: "Comprobar de nuevo",
     updateNote: "Hay correcciones y mejoras disponibles.",
+    checkUpdatesBtn: "Buscar actualizaciones",
+    toastUpdateCheck: "Comprobacion de actualizaciones iniciada",
+    toastUpdateCheckError: "Error al comprobar actualizaciones",
+    toastUpdateUnsupported: "Comprobacion no disponible",
     tutorialCheck1: "Elegir idioma",
     tutorialCheck2: "Crear primera meta",
     tutorialCheck3: "Completar primera tarea",
@@ -863,6 +879,10 @@ const STATIC_TEXT = {
     updateNow: "Mettre à jour",
     updateRetry: "Vérifier encore",
     updateNote: "Des correctifs et améliorations sont prêts.",
+    checkUpdatesBtn: "Verifier les mises a jour",
+    toastUpdateCheck: "Verification des mises a jour lancee",
+    toastUpdateCheckError: "Echec de la verification des mises a jour",
+    toastUpdateUnsupported: "Verification non disponible",
     tutorialCheck1: "Choisir la langue",
     tutorialCheck2: "Créer le premier objectif",
     tutorialCheck3: "Terminer la première tâche",
@@ -1029,6 +1049,7 @@ const calTitle = document.getElementById("cal-title");
 const calGrid = document.getElementById("cal-grid");
 const dayOffsetInput = document.getElementById("day-offset");
 const applyOffsetBtn = document.getElementById("apply-offset");
+const checkUpdatesBtn = document.getElementById("check-updates");
 const simulatedDateEl = document.getElementById("simulated-date");
 const resetBtn = document.getElementById("reset-app");
 const planGoalSelect = document.getElementById("plan-goal");
@@ -1292,11 +1313,19 @@ const requestServiceWorkerUpdate = () => {
 };
 
 const retryServiceWorkerUpdateCheck = async () => {
-  if (!swRegistrationRef) return;
+  if (!swRegistrationRef) {
+    showToast((STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).toastUpdateUnsupported);
+    return;
+  }
   try {
+    showToast((STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).toastUpdateCheck);
     await swRegistrationRef.update();
+    if (swRegistrationRef.waiting) {
+      showUpdateBanner(swRegistrationRef.waiting);
+    }
   } catch (error) {
     logClientError("sw_update_retry", error?.message || error);
+    showToast((STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).toastUpdateCheckError);
   }
 };
 
@@ -1475,6 +1504,7 @@ const applyStaticTranslations = () => {
   const goalSubmit = goalForm?.querySelector("button[type='submit']");
   if (goalSubmit) goalSubmit.textContent = t("btnAdd");
   if (applyOffsetBtn) applyOffsetBtn.textContent = s.applyBtn;
+  if (checkUpdatesBtn) checkUpdatesBtn.textContent = s.checkUpdatesBtn;
   if (resetBtn) resetBtn.textContent = s.resetBtn;
   if (exportDataBtn) exportDataBtn.textContent = s.exportData;
   if (importDataBtn) importDataBtn.textContent = s.importData;
@@ -3152,6 +3182,11 @@ const init = () => {
       const value = Number(dayOffsetInput.value || 0);
       setSimulationOffset(value);
     });
+    if (checkUpdatesBtn) {
+      checkUpdatesBtn.addEventListener("click", () => {
+        retryServiceWorkerUpdateCheck();
+      });
+    }
 
     resetBtn.addEventListener("click", () => {
       const confirmed = window.confirm(t("resetConfirm"));

@@ -19,9 +19,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.6.35`
+- Aktuell: `1.6.36`
 
 ## Aenderungsprotokoll
+- `1.6.36` (2026-02-17): Goals-Tab erweitert: Jahresvorsatz kann jetzt direkt unter `Goals` bearbeitet/neu gesetzt werden. Zudem koennen einzelne Goals per einfachem Toggle mit dem Jahresvorsatz verknuepft oder geloest werden; verknuepfte Goals sind sichtbar markiert und werden vom Autopilot bevorzugt.
 - `1.6.35` (2026-02-17): Signature-Mechanismen erweitert: neuer `Identity Score` (0-100, Konsistenz der letzten 14 Tage) im Progress-Bereich und `Goal-to-Day Autopilot` im Today-Bereich mit Vorschlag auf Basis des Jahresvorsatzes plus Direkt-Button zum Hinzufuegen als heutige Aufgabe.
 - `1.6.34` (2026-02-17): Intro Schritt `3/3` aufgeraeumt: die drei Beispiel-Chips (z. B. Schlafen/Laufen/Essen) werden nicht mehr angezeigt.
 - `1.6.33` (2026-02-17): Jahresvorsatz entwickelt: optionales Eingabefeld in der Intro-Einleitung (letzter Schritt), Speicherung im State und neue Anzeige im Progress-Bereich inkl. "Seit"-Datum sowie Jahreszahlen (erledigte Aufgaben/aktive Tage).

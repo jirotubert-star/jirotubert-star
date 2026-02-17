@@ -655,6 +655,43 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   max-width: 140px;
 }
 
+.goals-annual-editor {
+  border: 1px solid #d6e3dd;
+  border-radius: 12px;
+  background: rgba(247, 252, 249, 0.92);
+  padding: 12px;
+  margin-bottom: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.goals-annual-editor label {
+  font-weight: 700;
+  color: #26463d;
+}
+
+.goals-annual-editor input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d9d2c6;
+  font-size: 1rem;
+  background: #fff;
+}
+
+.goal-annual-tag {
+  font-size: 0.78rem;
+  border-radius: 999px;
+  padding: 4px 8px;
+  border: 1px solid #c8ddd1;
+  color: #2a4a3f;
+  background: #eef7f1;
+}
+
+.goal-link-toggle {
+  margin-left: auto;
+}
+
 .btn {
   padding: 10px 14px;
   border-radius: 10px;

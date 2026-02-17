@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.35";
+const APP_VERSION = "1.6.36";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -551,6 +551,12 @@ const STATIC_TEXT = {
     annualGoalSince: "Seit",
     annualGoalYearDone: "Erledigt dieses Jahr",
     annualGoalYearActiveDays: "Aktive Tage dieses Jahr",
+    goalsAnnualLabel: "Jahresvorsatz",
+    goalsAnnualPlaceholder: "z. B. fitter und energiegeladener werden",
+    goalsAnnualSave: "Jahresvorsatz speichern",
+    goalLinkAnnual: "Verknuepfen",
+    goalUnlinkAnnual: "Loesen",
+    goalLinkedTag: "Jahresvorsatz",
     progressWeekRate: "Wochenquote",
     progressMonthRate: "Monatsquote",
     progressBestDay: "Stärkster Wochentag",
@@ -659,6 +665,12 @@ const STATIC_TEXT = {
     annualGoalSince: "Since",
     annualGoalYearDone: "Done this year",
     annualGoalYearActiveDays: "Active days this year",
+    goalsAnnualLabel: "Year goal",
+    goalsAnnualPlaceholder: "e.g. become fitter and more energetic",
+    goalsAnnualSave: "Save year goal",
+    goalLinkAnnual: "Link",
+    goalUnlinkAnnual: "Unlink",
+    goalLinkedTag: "Year goal",
     progressWeekRate: "Week rate",
     progressMonthRate: "Month rate",
     progressBestDay: "Strongest weekday",
@@ -767,6 +779,12 @@ const STATIC_TEXT = {
     annualGoalSince: "С",
     annualGoalYearDone: "Сделано в этом году",
     annualGoalYearActiveDays: "Активные дни в этом году",
+    goalsAnnualLabel: "Годовая цель",
+    goalsAnnualPlaceholder: "например: стать выносливее и энергичнее",
+    goalsAnnualSave: "Сохранить годовую цель",
+    goalLinkAnnual: "Связать",
+    goalUnlinkAnnual: "Отвязать",
+    goalLinkedTag: "Годовая цель",
     progressWeekRate: "Процент недели",
     progressMonthRate: "Процент месяца",
     progressBestDay: "Лучший день недели",
@@ -875,6 +893,12 @@ const STATIC_TEXT = {
     annualGoalSince: "Desde",
     annualGoalYearDone: "Hechas este ano",
     annualGoalYearActiveDays: "Dias activos este ano",
+    goalsAnnualLabel: "Objetivo anual",
+    goalsAnnualPlaceholder: "p. ej. estar mas en forma y con mas energia",
+    goalsAnnualSave: "Guardar objetivo anual",
+    goalLinkAnnual: "Vincular",
+    goalUnlinkAnnual: "Quitar vinculo",
+    goalLinkedTag: "Objetivo anual",
     progressWeekRate: "Ratio semanal",
     progressMonthRate: "Ratio mensual",
     progressBestDay: "Mejor día de la semana",
@@ -983,6 +1007,12 @@ const STATIC_TEXT = {
     annualGoalSince: "Depuis",
     annualGoalYearDone: "Faites cette annee",
     annualGoalYearActiveDays: "Jours actifs cette annee",
+    goalsAnnualLabel: "Objectif annuel",
+    goalsAnnualPlaceholder: "ex. etre plus en forme et plus energique",
+    goalsAnnualSave: "Enregistrer l'objectif annuel",
+    goalLinkAnnual: "Lier",
+    goalUnlinkAnnual: "Delier",
+    goalLinkedTag: "Objectif annuel",
     progressWeekRate: "Taux semaine",
     progressMonthRate: "Taux mois",
     progressBestDay: "Jour le plus fort",
@@ -1062,8 +1092,10 @@ const getAutopilotSuggestion = (state) => {
     return !!entry.active;
   });
   if (!candidates.length) return null;
+  const linkedCandidates = candidates.filter((goal) => goal.linkedToAnnual);
+  const scopedCandidates = linkedCandidates.length ? linkedCandidates : candidates;
 
-  const scored = candidates.map((goal) => {
+  const scored = scopedCandidates.map((goal) => {
     const goalTokens = tokenize(goal.title);
     const tokenMatchCount = goalTokens.filter((token) => annualTokens.has(token)).length;
     return { goal, score: tokenMatchCount };
@@ -1142,6 +1174,7 @@ const loadState = () => {
     normalized.goals = normalized.goals.map((goal) => ({
       ...goal,
       difficulty: goal.difficulty || "noon",
+      linkedToAnnual: !!goal.linkedToAnnual,
     }));
     normalized.todayTasks = normalized.todayTasks.map((task) => ({
       ...task,
@@ -1205,6 +1238,8 @@ const sideQuestSelect = document.getElementById("side-quest-select");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
 const goalDifficulty = document.getElementById("goal-difficulty");
+const goalsAnnualInput = document.getElementById("goals-annual-input");
+const goalsAnnualSaveBtn = document.getElementById("goals-annual-save");
 const streakEl = document.getElementById("streak");
 const totalDoneEl = document.getElementById("total-done");
 const motivationEl = document.getElementById("motivation");
@@ -1678,6 +1713,7 @@ const applyStaticTranslations = () => {
   setText("settings-version-title", s.settingsVersionTitle);
   setText("settings-system-title", s.settingsSystemTitle);
   setText("backup-title", s.backupTitle);
+  setText("goals-annual-label", s.goalsAnnualLabel);
   setText("autopilot-title", s.autopilotTitle);
   setText("autopilot-text", s.autopilotNoAnnualGoal);
   setText("annual-goal-title", s.annualGoalTitle);
@@ -1695,6 +1731,7 @@ const applyStaticTranslations = () => {
 
   if (quickTaskInput) quickTaskInput.placeholder = t("quickTaskPlaceholder");
   if (goalInput) goalInput.placeholder = t("goalPlaceholder");
+  if (goalsAnnualInput) goalsAnnualInput.placeholder = s.goalsAnnualPlaceholder;
   if (quickTaskTomorrowBtn) quickTaskTomorrowBtn.textContent = t("btnTomorrow");
   const quickTaskTodayBtn = document.getElementById("quick-task-today");
   if (quickTaskTodayBtn) quickTaskTodayBtn.textContent = t("btnAdd");
@@ -1704,6 +1741,7 @@ const applyStaticTranslations = () => {
   }
   const goalSubmit = goalForm?.querySelector("button[type='submit']");
   if (goalSubmit) goalSubmit.textContent = t("btnAdd");
+  if (goalsAnnualSaveBtn) goalsAnnualSaveBtn.textContent = s.goalsAnnualSave;
   if (applyOffsetBtn) applyOffsetBtn.textContent = s.applyBtn;
   if (autopilotAddBtn) autopilotAddBtn.textContent = s.autopilotAddBtn;
   if (checkUpdatesBtn) checkUpdatesBtn.textContent = s.checkUpdatesBtn;
@@ -2378,6 +2416,7 @@ const renderGoals = (state) => {
   goalsList.innerHTML = "";
   const activeGoalIds = new Set(state.todayTasks.map((task) => task.goalId));
   const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+  if (goalsAnnualInput) goalsAnnualInput.value = state.annualGoal || "";
 
   if (state.goals.length === 0) {
     const empty = document.createElement("li");
@@ -2414,6 +2453,10 @@ const renderGoals = (state) => {
     const badge = document.createElement("span");
     badge.className = `difficulty ${goal.difficulty}`;
     badge.textContent = difficultyLabel(goal.difficulty);
+    const annualTag = document.createElement("span");
+    annualTag.className = "goal-annual-tag";
+    annualTag.textContent = s.goalLinkedTag;
+    annualTag.hidden = !goal.linkedToAnnual;
 
     if (editingGoalId === goal.id) {
       const input = document.createElement("input");
@@ -2437,6 +2480,7 @@ const renderGoals = (state) => {
 
       li.appendChild(input);
       li.appendChild(saveBtn);
+      li.appendChild(annualTag);
       li.appendChild(removeBtn);
     } else {
       const editBtn = document.createElement("button");
@@ -2445,9 +2489,17 @@ const renderGoals = (state) => {
       editBtn.textContent = s.btnEdit;
       editBtn.addEventListener("click", () => startEditGoal(goal.id));
 
+      const linkBtn = document.createElement("button");
+      linkBtn.type = "button";
+      linkBtn.className = "btn ghost goal-link-toggle";
+      linkBtn.textContent = goal.linkedToAnnual ? s.goalUnlinkAnnual : s.goalLinkAnnual;
+      linkBtn.addEventListener("click", () => toggleGoalAnnualLink(goal.id));
+
       li.appendChild(title);
       li.appendChild(badge);
+      li.appendChild(annualTag);
       li.appendChild(editBtn);
+      li.appendChild(linkBtn);
     }
     goalsList.appendChild(li);
   });
@@ -2696,6 +2748,7 @@ const addGoal = (title, difficulty) => {
     id: crypto.randomUUID(),
     title,
     difficulty,
+    linkedToAnnual: false,
     createdAt: today,
   });
 
@@ -3054,6 +3107,24 @@ const finishEditGoal = (goalId, newTitle) => {
 
   saveState(state);
   editingGoalId = null;
+  renderAll(state);
+};
+
+const saveAnnualGoalFromGoals = () => {
+  const state = loadState();
+  const value = (goalsAnnualInput?.value || "").trim();
+  state.annualGoal = value;
+  state.annualGoalUpdatedAt = value ? todayISO(state.simulationOffsetDays) : null;
+  saveState(state);
+  renderAll(state);
+};
+
+const toggleGoalAnnualLink = (goalId) => {
+  const state = loadState();
+  const goal = state.goals.find((item) => item.id === goalId);
+  if (!goal) return;
+  goal.linkedToAnnual = !goal.linkedToAnnual;
+  saveState(state);
   renderAll(state);
 };
 
@@ -3445,6 +3516,16 @@ const init = () => {
       addGoal(value, goalDifficulty.value);
       goalInput.value = "";
     });
+    if (goalsAnnualSaveBtn) {
+      goalsAnnualSaveBtn.addEventListener("click", saveAnnualGoalFromGoals);
+    }
+    if (goalsAnnualInput) {
+      goalsAnnualInput.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        saveAnnualGoalFromGoals();
+      });
+    }
 
     applyOffsetBtn.addEventListener("click", () => {
       const value = Number(dayOffsetInput.value || 0);

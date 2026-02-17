@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-user.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-user.png" />
-    <link rel="manifest" href="site.webmanifest?v=1634" />
+    <link rel="manifest" href="site.webmanifest?v=1635" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -90,6 +90,11 @@
             <button id="quick-task-tomorrow" type="button" class="btn ghost">Für morgen</button>
           </div>
         </form>
+        <div id="autopilot-card" class="autopilot-card">
+          <div class="soft-note" id="autopilot-title">Autopilot</div>
+          <div class="autopilot-text" id="autopilot-text">Füge einen Jahresvorsatz hinzu, um einen Tagesvorschlag zu erhalten.</div>
+          <button id="autopilot-add" class="btn ghost" type="button" hidden>Vorschlag als heutige Aufgabe</button>
+        </div>
         <div id="unlock-controls" class="unlock" aria-live="polite"></div>
         <ul id="today-list" class="checklist" aria-live="polite"></ul>
         <form id="side-quest-form" class="side-quest-form" autocomplete="off">
@@ -173,6 +178,11 @@
           </div>
         </div>
         <div class="progress-insights">
+          <div class="identity-score-card">
+            <div class="soft-note" id="identity-score-title">Identity Score</div>
+            <div class="identity-score-value" id="identity-score-value">0/100</div>
+            <div class="soft-note" id="identity-score-meta">Konsistenz der letzten 14 Tage</div>
+          </div>
           <div class="annual-goal-card">
             <div class="soft-note" id="annual-goal-title">Jahresvorsatz</div>
             <div class="annual-goal-value" id="annual-goal-value">Noch nicht gesetzt</div>
@@ -278,7 +288,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.6.34</span>
+      <span class="soft-note" id="version">Version 1.6.35</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">

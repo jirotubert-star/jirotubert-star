@@ -20,11 +20,13 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.2";
+const APP_VERSION = "1.7.3";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
 const SUPPORTED_LANGS = ["de", "en", "ru", "es", "fr"];
+const FAST_ONBOARDING_ENABLED = true;
+const FAST_ONBOARDING_TOTAL_DAYS = 6;
 let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "";
 
 const I18N = {
@@ -52,6 +54,7 @@ const I18N = {
     maxSideQuest: "Maximal 3 Side Quests erreicht",
     noGoalsAvailable: "Keine weiteren Ziele verfügbar",
     unlockIntro: "3 Tage sind vorbei – du kannst eine weitere Aufgabe hinzufügen oder zufällig auswählen.",
+    unlockIntroDaily: "Onboarding Fast: Heute ist eine weitere Aufgabe freigeschaltet.",
     resetConfirm: "Möchtest du wirklich alles zurücksetzen?",
     toastGoalAdded: "Ziel hinzugefügt",
     toastTaskAdded: "Neue Tagesaufgabe hinzugefügt",
@@ -119,6 +122,7 @@ const I18N = {
     maxSideQuest: "Max 3 side quests reached",
     noGoalsAvailable: "No more goals available",
     unlockIntro: "3 days passed – add one more task or pick random.",
+    unlockIntroDaily: "Fast onboarding: one more task is unlocked today.",
     resetConfirm: "Reset all app data?",
     toastGoalAdded: "Goal added",
     toastTaskAdded: "Daily task added",
@@ -180,6 +184,7 @@ const I18N = {
     maxSideQuest: "Достигнут лимит 3 side quests",
     noGoalsAvailable: "Больше целей нет",
     unlockIntro: "Прошло 3 дня — добавьте задачу или выберите случайно.",
+    unlockIntroDaily: "Быстрый онбординг: сегодня открыта еще одна задача.",
     resetConfirm: "Сбросить все данные?",
     toastGoalAdded: "Цель добавлена",
     toastTaskAdded: "Задача дня добавлена",
@@ -241,6 +246,7 @@ const I18N = {
     maxSideQuest: "Máximo 3 side quests alcanzado",
     noGoalsAvailable: "No hay más metas",
     unlockIntro: "Pasaron 3 días: añade una tarea o elige al azar.",
+    unlockIntroDaily: "Onboarding rápido: hoy se desbloqueó una tarea más.",
     resetConfirm: "¿Restablecer todos los datos?",
     toastGoalAdded: "Meta añadida",
     toastTaskAdded: "Tarea diaria añadida",
@@ -302,6 +308,7 @@ const I18N = {
     maxSideQuest: "Maximum 3 side quests atteint",
     noGoalsAvailable: "Plus d'objectifs disponibles",
     unlockIntro: "3 jours passés : ajoute une tâche ou choisis au hasard.",
+    unlockIntroDaily: "Onboarding rapide : une tâche de plus est débloquée aujourd'hui.",
     resetConfirm: "Réinitialiser toutes les données ?",
     toastGoalAdded: "Objectif ajouté",
     toastTaskAdded: "Tâche du jour ajoutée",
@@ -1859,12 +1866,22 @@ const getOnboardingDay = (state) => {
 
 const getFeatureAccess = (state) => {
   const day = getOnboardingDay(state);
+  const weeklyPlanDay = FAST_ONBOARDING_ENABLED ? 2 : 4;
+  const quickTasksDay = FAST_ONBOARDING_ENABLED ? 3 : 7;
+  const sideQuestDay = FAST_ONBOARDING_ENABLED ? 4 : 9;
+  const onboardingTotal = FAST_ONBOARDING_ENABLED ? FAST_ONBOARDING_TOTAL_DAYS : 12;
   return {
     day,
-    weeklyPlan: day >= 4,
-    quickTasks: day >= 7,
-    sideQuest: day >= 9,
-    onboardingActive: day <= 12,
+    weeklyPlan: day >= weeklyPlanDay,
+    quickTasks: day >= quickTasksDay,
+    sideQuest: day >= sideQuestDay,
+    onboardingActive: day <= onboardingTotal,
+    onboardingTotal,
+    unlockDays: {
+      weeklyPlan: weeklyPlanDay,
+      quickTasks: quickTasksDay,
+      sideQuest: sideQuestDay,
+    },
   };
 };
 
@@ -1880,18 +1897,19 @@ const applyFeatureGating = (state) => {
 };
 
 // ---------------------------
-// Task-Logik: 3-Tage-Freischaltung
+// Task-Logik: Unlock-Rhythmus
 // ---------------------------
 const shouldUnlockNewTask = (state) => {
   // Wenn noch nie freigeschaltet wurde, ist es sofort möglich.
   if (!state.lastTaskUnlockDate) return true;
 
-  // Alle 3 Tage wird eine neue Aufgabe freigeschaltet.
+  const access = getFeatureAccess(state);
+  const requiredDays = FAST_ONBOARDING_ENABLED && access.onboardingActive ? 1 : 3;
   const diff = daysBetween(
     state.lastTaskUnlockDate,
     todayISO(state.simulationOffsetDays)
   );
-  return diff >= 3;
+  return diff >= requiredDays;
 };
 
 const pickTaskFromGoals = (state) => {
@@ -1913,6 +1931,46 @@ const pickTaskFromGoals = (state) => {
   // Zufällige Auswahl, damit die Erfahrung abwechslungsreich bleibt.
   const index = Math.floor(Math.random() * candidates.length);
   return candidates[index];
+};
+
+const appendGoalTaskToState = (state, goal) => {
+  const today = todayISO(state.simulationOffsetDays);
+  if (state.todayTasks.some((task) => task.goalId === goal.id && task.date === today)) return false;
+  const weekdayKey = weekdayKeyFromISO(today);
+  const plan = getPlanForGoal(state, goal.id);
+  const entry = plan[weekdayKey];
+  const hasActivePlan = planHasAnyActive(plan);
+  state.todayTasks.push({
+    id: crypto.randomUUID(),
+    goalId: goal.id,
+    label: getLabelForToday(goal, entry, hasActivePlan),
+    difficulty: goal.difficulty,
+    isRestDay: hasActivePlan && entry && !entry.active,
+    done: false,
+    doneAt: null,
+    date: today,
+  });
+
+  state.sideQuests = (state.sideQuests || []).filter((q) => q.goalId !== goal.id);
+  Object.keys(state.sideQuestChecks || {}).forEach((dateKey) => {
+    if (!state.sideQuestChecks[dateKey]) return;
+    delete state.sideQuestChecks[dateKey][goal.id];
+    if (Object.keys(state.sideQuestChecks[dateKey]).length === 0) {
+      delete state.sideQuestChecks[dateKey];
+    }
+  });
+
+  state.lastTaskUnlockDate = today;
+  return true;
+};
+
+const autoUnlockOnboardingTask = (state) => {
+  const access = getFeatureAccess(state);
+  if (!FAST_ONBOARDING_ENABLED || !access.onboardingActive) return;
+  if (!shouldUnlockNewTask(state)) return;
+  const goal = pickTaskFromGoals(state);
+  if (!goal) return;
+  appendGoalTaskToState(state, goal);
 };
 
 const ensureTodayTasks = (state) => {
@@ -1971,6 +2029,8 @@ const ensureTodayTasks = (state) => {
     });
     state.lastTaskUnlockDate = today;
   }
+
+  autoUnlockOnboardingTask(state);
 };
 
 // ---------------------------
@@ -2612,16 +2672,17 @@ const applyTutorial = (state) => {
   tutorialCompletedCache = state.tutorialCompleted;
 
   const access = getFeatureAccess(state);
+  const { weeklyPlan, quickTasks, sideQuest } = access.unlockDays;
   const unlockMessages = {
-    4: {
+    [weeklyPlan]: {
       title: t("unlockWeekTitle"),
       text: t("unlockWeekText"),
     },
-    7: {
+    [quickTasks]: {
       title: t("unlockQuickTitle"),
       text: t("unlockQuickText"),
     },
-    9: {
+    [sideQuest]: {
       title: t("unlockSideTitle"),
       text: t("unlockSideText"),
     },
@@ -2679,7 +2740,7 @@ const applyTutorial = (state) => {
       tutorialSection.style.display = "block";
       const unlock = unlockMessages[access.day];
       tutorialSection.classList.toggle("unlock-highlight", !!unlock);
-      if (tutorialStepLabel) tutorialStepLabel.textContent = `${t("dayWord")} ${access.day}/12`;
+      if (tutorialStepLabel) tutorialStepLabel.textContent = `${t("dayWord")} ${access.day}/${access.onboardingTotal}`;
       if (unlock) {
         if (tutorialTitle) tutorialTitle.textContent = unlock.title;
         if (tutorialText) tutorialText.textContent = unlock.text;
@@ -2846,34 +2907,8 @@ const addTaskFromGoal = (goalId, options = {}) => {
   const goal = state.goals.find((g) => g.id === goalId);
   if (!goal) return;
 
-  const today = todayISO(state.simulationOffsetDays);
-  if (state.todayTasks.some((task) => task.goalId === goalId && task.date === today)) return;
-  const weekdayKey = weekdayKeyFromISO(today);
-  const plan = getPlanForGoal(state, goal.id);
-  const entry = plan[weekdayKey];
-  const hasActivePlan = planHasAnyActive(plan);
-  state.todayTasks.push({
-    id: crypto.randomUUID(),
-    goalId: goal.id,
-    label: getLabelForToday(goal, entry, hasActivePlan),
-    difficulty: goal.difficulty,
-    isRestDay: hasActivePlan && entry && !entry.active,
-    done: false,
-    doneAt: null,
-    date: today,
-  });
-
-  // If this goal was tracked as a side quest, remove it once it joins the main routine.
-  state.sideQuests = (state.sideQuests || []).filter((q) => q.goalId !== goalId);
-  Object.keys(state.sideQuestChecks || {}).forEach((dateKey) => {
-    if (!state.sideQuestChecks[dateKey]) return;
-    delete state.sideQuestChecks[dateKey][goalId];
-    if (Object.keys(state.sideQuestChecks[dateKey]).length === 0) {
-      delete state.sideQuestChecks[dateKey];
-    }
-  });
-
-  state.lastTaskUnlockDate = today;
+  const created = appendGoalTaskToState(state, goal);
+  if (!created) return;
   saveState(state);
   renderAll(state);
   triggerHaptic(14);
@@ -3716,6 +3751,7 @@ const init = () => {
 function renderUnlock(state) {
   unlockControls.innerHTML = "";
 
+  const access = getFeatureAccess(state);
   const eligible = shouldUnlockNewTask(state);
   const candidates = state.goals.filter(
     (g) => !state.todayTasks.some((t) => t.goalId === g.id)
@@ -3729,7 +3765,9 @@ function renderUnlock(state) {
   unlockControls.classList.add("active");
 
   const intro = document.createElement("div");
-  intro.textContent = t("unlockIntro");
+  intro.textContent = FAST_ONBOARDING_ENABLED && access.onboardingActive
+    ? t("unlockIntroDaily")
+    : t("unlockIntro");
 
   const row = document.createElement("div");
   row.className = "unlock-row";

@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.29";
+const APP_VERSION = "1.6.30";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -519,15 +519,18 @@ const STATIC_TEXT = {
     tutorialCta3: "Zu Today",
     introStepLabel: "Schritt",
     introTitle1: "Willkommen bei OneStep",
-    introText1: "Schon allein beim Öffnen der App bist du OneStep näher an deinem Ziel.",
-    introTitle2: "Kein gewöhnlicher Habit-Tracker",
-    introText2: "OneStep ist ein Tool für Disziplin und klare Struktur statt nur täglicher Motivation.",
-    introTitle3: "Langfristig gedacht",
-    introText3: "Diese App hilft dir, schwere Aufgaben in den Alltag zu normalisieren, bis sie ein normaler Tagesablauf werden, wie Schlafen, Essen und Laufen.",
+    introText1: "Jeder Tag startet mit einem klaren, machbaren Schritt.",
+    introTitle2: "Mehr Klarheit, weniger Chaos",
+    introText2: "OneStep zeigt dir täglich, was jetzt wichtig ist, damit du konstant dranbleibst.",
+    introTitle3: "Dein Alltag wird leichter",
+    introText3: "Schwere Aufgaben werden normaler Tagesablauf, wie Schlafen, Essen und Laufen.",
+    introExample1: "Schlafen 23:00",
+    introExample2: "10 Minuten laufen",
+    introExample3: "Proteinreich essen",
     introNextBtn: "Weiter ->",
-    introStartBtn: "Los geht's ->",
+    introStartBtn: "Los geht's: erstes Ziel erstellen ->",
     introNextAria: "Nächste Seite",
-    introStartAria: "Los geht's",
+    introStartAria: "Erstes Ziel erstellen",
     progressWeekRate: "Wochenquote",
     progressMonthRate: "Monatsquote",
     progressBestDay: "Stärkster Wochentag",
@@ -604,15 +607,18 @@ const STATIC_TEXT = {
     tutorialCta3: "Go to Today",
     introStepLabel: "Step",
     introTitle1: "Welcome to OneStep",
-    introText1: "Just by opening the app, you are already one step closer to your goal.",
-    introTitle2: "Not a typical habit tracker",
-    introText2: "OneStep is a tool for discipline and structure, not just daily motivation.",
-    introTitle3: "Built for the long run",
-    introText3: "This app helps you normalize hard and annoying tasks like eating, running, or sleeping over time. Let's start.",
+    introText1: "Every day starts with one clear and doable step.",
+    introTitle2: "More clarity, less chaos",
+    introText2: "OneStep shows what matters now, so you can stay consistent.",
+    introTitle3: "Your routine gets easier",
+    introText3: "Hard tasks become a normal daily rhythm, like sleeping, eating, and running.",
+    introExample1: "Sleep at 23:00",
+    introExample2: "10-minute run",
+    introExample3: "Protein-rich meal",
     introNextBtn: "Next ->",
-    introStartBtn: "Let's go ->",
+    introStartBtn: "Let's go: create first goal ->",
     introNextAria: "Next page",
-    introStartAria: "Let's go",
+    introStartAria: "Create first goal",
     progressWeekRate: "Week rate",
     progressMonthRate: "Month rate",
     progressBestDay: "Strongest weekday",
@@ -689,15 +695,18 @@ const STATIC_TEXT = {
     tutorialCta3: "Открыть Today",
     introStepLabel: "Шаг",
     introTitle1: "Добро пожаловать в OneStep",
-    introText1: "Даже просто открыв приложение, ты уже на один шаг ближе к своей цели.",
-    introTitle2: "Не обычный трекер привычек",
-    introText2: "OneStep - это инструмент для дисциплины и структуры, а не только для ежедневной мотивации.",
-    introTitle3: "Для долгого пути",
-    introText3: "Приложение помогает сделать сложные и неприятные задачи вроде питания, бега или сна нормальной частью жизни. Начнем.",
+    introText1: "Каждый день начинается с одного ясного и посильного шага.",
+    introTitle2: "Больше ясности, меньше хаоса",
+    introText2: "OneStep показывает, что важно сейчас, чтобы ты держал стабильный ритм.",
+    introTitle3: "Рутина становится легче",
+    introText3: "Сложные задачи становятся обычной частью дня, как сон, еда и бег.",
+    introExample1: "Сон в 23:00",
+    introExample2: "Бег 10 минут",
+    introExample3: "Белковый прием пищи",
     introNextBtn: "Дальше ->",
-    introStartBtn: "Поехали ->",
+    introStartBtn: "Поехали: создать первую цель ->",
     introNextAria: "Следующая страница",
-    introStartAria: "Начать",
+    introStartAria: "Создать первую цель",
     progressWeekRate: "Процент недели",
     progressMonthRate: "Процент месяца",
     progressBestDay: "Лучший день недели",
@@ -774,15 +783,18 @@ const STATIC_TEXT = {
     tutorialCta3: "Ir a Today",
     introStepLabel: "Paso",
     introTitle1: "Bienvenido a OneStep",
-    introText1: "Con solo abrir la app, ya estas un paso mas cerca de tu objetivo.",
-    introTitle2: "No es un tracker comun",
-    introText2: "OneStep es una herramienta para disciplina y estructura, no solo motivacion diaria.",
-    introTitle3: "Pensada para largo plazo",
-    introText3: "La app esta hecha para normalizar tareas pesadas y molestas como comer, correr o dormir. Empecemos.",
+    introText1: "Cada dia empieza con un paso claro y alcanzable.",
+    introTitle2: "Mas claridad, menos caos",
+    introText2: "OneStep te muestra que hacer ahora para mantener constancia.",
+    introTitle3: "Tu rutina se vuelve mas facil",
+    introText3: "Las tareas dificiles se vuelven parte normal del dia, como dormir, comer y correr.",
+    introExample1: "Dormir a las 23:00",
+    introExample2: "Correr 10 minutos",
+    introExample3: "Comida rica en proteina",
     introNextBtn: "Siguiente ->",
-    introStartBtn: "Empezar ->",
+    introStartBtn: "Empezar: crear primera meta ->",
     introNextAria: "Pagina siguiente",
-    introStartAria: "Empezar",
+    introStartAria: "Crear primera meta",
     progressWeekRate: "Ratio semanal",
     progressMonthRate: "Ratio mensual",
     progressBestDay: "Mejor día de la semana",
@@ -859,15 +871,18 @@ const STATIC_TEXT = {
     tutorialCta3: "Aller à Today",
     introStepLabel: "Etape",
     introTitle1: "Bienvenue sur OneStep",
-    introText1: "Rien qu'en ouvrant l'app, tu es deja un pas plus proche de ton objectif.",
-    introTitle2: "Pas un tracker habituel",
-    introText2: "OneStep est un outil pour la discipline et la structure, pas seulement la motivation quotidienne.",
-    introTitle3: "Pense pour le long terme",
-    introText3: "L'app est faite pour normaliser des taches difficiles et penibles comme manger, courir ou dormir. On commence.",
+    introText1: "Chaque jour commence par une etape claire et realiste.",
+    introTitle2: "Plus de clarte, moins de chaos",
+    introText2: "OneStep te montre quoi faire maintenant pour rester regulier.",
+    introTitle3: "Ta routine devient plus simple",
+    introText3: "Les taches difficiles deviennent un rythme normal, comme dormir, manger et courir.",
+    introExample1: "Dormir a 23:00",
+    introExample2: "Courir 10 minutes",
+    introExample3: "Repas riche en proteines",
     introNextBtn: "Suivant ->",
-    introStartBtn: "C'est parti ->",
+    introStartBtn: "C'est parti : creer le premier objectif ->",
     introNextAria: "Page suivante",
-    introStartAria: "Commencer",
+    introStartAria: "Creer le premier objectif",
     progressWeekRate: "Taux semaine",
     progressMonthRate: "Taux mois",
     progressBestDay: "Jour le plus fort",
@@ -1037,9 +1052,12 @@ const toastEl = document.getElementById("toast");
 const languageModal = document.getElementById("language-modal");
 const languageButtons = document.querySelectorAll("[data-lang]");
 const introModal = document.getElementById("intro-modal");
+const introCardEl = document.querySelector(".intro-card");
 const introStepEl = document.getElementById("intro-step");
+const introProgressFillEl = document.getElementById("intro-progress-fill");
 const introTitleEl = document.getElementById("intro-title");
 const introTextEl = document.getElementById("intro-text");
+const introExamplesEl = document.getElementById("intro-examples");
 const introNextBtn = document.getElementById("intro-next");
 const updateBanner = document.getElementById("update-banner");
 const updateBannerText = document.getElementById("update-banner-text");
@@ -1134,18 +1152,21 @@ const getIntroSlides = () => {
       text: s.introText1,
       action: s.introNextBtn,
       aria: s.introNextAria,
+      examples: [],
     },
     {
       title: s.introTitle2,
       text: s.introText2,
       action: s.introNextBtn,
       aria: s.introNextAria,
+      examples: [],
     },
     {
       title: s.introTitle3,
       text: s.introText3,
       action: s.introStartBtn,
       aria: s.introStartAria,
+      examples: [s.introExample1, s.introExample2, s.introExample3],
     },
   ];
 };
@@ -1161,6 +1182,28 @@ const renderIntro = () => {
   introTextEl.textContent = slide.text;
   introNextBtn.textContent = slide.action;
   introNextBtn.setAttribute("aria-label", slide.aria);
+  if (introProgressFillEl) {
+    const ratio = ((introStepIndex + 1) / slides.length) * 100;
+    introProgressFillEl.style.width = `${ratio}%`;
+  }
+  if (introExamplesEl) {
+    introExamplesEl.innerHTML = "";
+    if (slide.examples?.length) {
+      slide.examples.forEach((text) => {
+        const item = document.createElement("li");
+        item.textContent = text;
+        introExamplesEl.appendChild(item);
+      });
+      introExamplesEl.hidden = false;
+    } else {
+      introExamplesEl.hidden = true;
+    }
+  }
+  if (introCardEl) {
+    introCardEl.classList.remove("intro-animate");
+    void introCardEl.offsetWidth;
+    introCardEl.classList.add("intro-animate");
+  }
 };
 
 const openIntroIfNeeded = (state) => {
@@ -1187,6 +1230,7 @@ const handleIntroNext = () => {
   saveState(state);
   if (introModal) introModal.hidden = true;
   renderAll(state);
+  setActiveTab("goals");
 };
 
 const showUpdateBanner = (worker) => {

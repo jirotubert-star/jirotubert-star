@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-user.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-user.png" />
-    <link rel="manifest" href="site.webmanifest?v=1629" />
+    <link rel="manifest" href="site.webmanifest?v=1630" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -30,8 +30,12 @@
     <div id="intro-modal" class="intro-modal" hidden>
       <div class="intro-card">
         <div class="intro-step" id="intro-step">1/3</div>
+        <div class="intro-progress" aria-hidden="true">
+          <span id="intro-progress-fill"></span>
+        </div>
         <h2 id="intro-title">Willkommen bei OneStep</h2>
         <p id="intro-text"></p>
+        <ul id="intro-examples" class="intro-examples" hidden></ul>
         <button id="intro-next" class="intro-next" type="button" aria-label="Nächste Seite">→</button>
       </div>
     </div>
@@ -262,7 +266,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.6.29</span>
+      <span class="soft-note" id="version">Version 1.6.30</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">

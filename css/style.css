@@ -1413,21 +1413,21 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
     rgba(31, 42, 46, 0.55);
   z-index: 39;
   display: grid;
-  place-items: center;
-  padding: 20px;
+  place-items: stretch;
+  padding: 0;
 }
 
 .intro-card {
-  width: min(620px, 100%);
-  min-height: 320px;
+  width: 100vw;
+  min-height: 100dvh;
   background: linear-gradient(140deg, #f8f4ec, #edf7f1);
-  border: 1px solid #d8e6de;
-  border-radius: 20px;
-  box-shadow: 0 20px 44px rgba(31, 42, 46, 0.28);
-  padding: 24px;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: clamp(24px, 5vw, 54px);
   display: grid;
   grid-template-rows: auto auto 1fr auto;
-  gap: 10px;
+  gap: 14px;
 }
 
 .intro-step {
@@ -1445,22 +1445,25 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   margin: 0;
   color: #33423f;
   line-height: 1.7;
-  font-size: 1.03rem;
+  font-size: clamp(1.03rem, 1.5vw, 1.16rem);
+  max-width: 68ch;
 }
 
 .intro-next {
   justify-self: end;
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-  border: none;
+  align-self: end;
+  min-width: 170px;
+  height: 56px;
+  border-radius: 14px;
+  border: 1px solid #2b6e4e;
   background: linear-gradient(180deg, #2f8b5c, #2f6f62);
   color: #f7faf9;
-  font-size: 1.8rem;
+  font-size: 1.05rem;
   font-weight: 700;
+  letter-spacing: 0.01em;
   cursor: pointer;
   box-shadow:
-    0 0 0 4px rgba(47, 139, 92, 0.18),
+    0 0 0 4px rgba(47, 139, 92, 0.16),
     0 10px 24px rgba(47, 111, 98, 0.32);
 }
 

@@ -728,6 +728,10 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   color: var(--muted);
 }
 
+.calendar-cell.has-detail {
+  cursor: pointer;
+}
+
 .calendar-cell.header {
   background: transparent;
   border: none;
@@ -1421,6 +1425,66 @@ p { margin: 0 0 12px 0; line-height: 1.6; }
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.day-detail-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 42, 46, 0.52);
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.day-detail-card {
+  width: min(560px, 100%);
+  max-height: min(76vh, 720px);
+  overflow: auto;
+  background: var(--panel);
+  border: 1px solid #dfd8cc;
+  border-radius: 14px;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.day-detail-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.day-detail-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid #e6dfd3;
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: #fff;
+}
+
+.day-detail-item.done {
+  border-color: #c9ddd2;
+  background: #f1faf5;
+}
+
+.day-detail-status {
+  font-size: 0.78rem;
+  border-radius: 999px;
+  padding: 3px 8px;
+  border: 1px solid #d3d9d6;
+  color: #3a4a46;
+}
+
+.day-detail-item.done .day-detail-status {
+  border-color: #a8cdb7;
+  color: #235842;
+  background: #e4f5eb;
 }
 
 .language-modal {

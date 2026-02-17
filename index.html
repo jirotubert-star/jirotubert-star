@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-user.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-user.png" />
-    <link rel="manifest" href="site.webmanifest?v=1638" />
+    <link rel="manifest" href="site.webmanifest?v=1639" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -283,7 +283,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.6.38</span>
+      <span class="soft-note" id="version">Version 1.6.39</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">
@@ -312,6 +312,16 @@
       <div class="update-banner-actions">
         <button id="update-banner-retry" type="button" class="btn ghost">Erneut prüfen</button>
         <button id="update-banner-btn" type="button" class="btn">Jetzt aktualisieren</button>
+      </div>
+    </div>
+    <div id="day-detail-modal" class="day-detail-modal" hidden>
+      <div class="day-detail-card">
+        <div class="panel-head">
+          <h3 id="day-detail-title">Tagesdetails</h3>
+          <button id="day-detail-close" class="btn ghost" type="button">×</button>
+        </div>
+        <div class="soft-note" id="day-detail-date"></div>
+        <ul id="day-detail-list" class="day-detail-list"></ul>
       </div>
     </div>
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>

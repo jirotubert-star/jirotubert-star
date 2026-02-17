@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.38";
+const APP_VERSION = "1.6.39";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -545,6 +545,11 @@ const STATIC_TEXT = {
     annualGoalSince: "Seit",
     annualGoalYearDone: "Erledigt dieses Jahr",
     annualGoalYearActiveDays: "Aktive Tage dieses Jahr",
+    dayDetailTitle: "Tagesdetails",
+    dayDetailEmpty: "Keine gespeicherten Details fuer diesen Tag.",
+    dayDetailDone: "Erledigt",
+    dayDetailOpen: "Offen",
+    dayDetailUnknown: "Keine Detailhistorie verfuegbar.",
     goalsAnnualLabel: "Jahresvorsatz",
     goalsAnnualPlaceholder: "z. B. fitter und energiegeladener werden",
     goalsAnnualSave: "Jahresvorsatz speichern",
@@ -653,6 +658,11 @@ const STATIC_TEXT = {
     annualGoalSince: "Since",
     annualGoalYearDone: "Done this year",
     annualGoalYearActiveDays: "Active days this year",
+    dayDetailTitle: "Day details",
+    dayDetailEmpty: "No saved details for this day.",
+    dayDetailDone: "Done",
+    dayDetailOpen: "Open",
+    dayDetailUnknown: "No detailed history available.",
     goalsAnnualLabel: "Year goal",
     goalsAnnualPlaceholder: "e.g. become fitter and more energetic",
     goalsAnnualSave: "Save year goal",
@@ -761,6 +771,11 @@ const STATIC_TEXT = {
     annualGoalSince: "С",
     annualGoalYearDone: "Сделано в этом году",
     annualGoalYearActiveDays: "Активные дни в этом году",
+    dayDetailTitle: "Детали дня",
+    dayDetailEmpty: "Нет сохраненных деталей за этот день.",
+    dayDetailDone: "Сделано",
+    dayDetailOpen: "Открыто",
+    dayDetailUnknown: "Подробная история недоступна.",
     goalsAnnualLabel: "Годовая цель",
     goalsAnnualPlaceholder: "например: стать выносливее и энергичнее",
     goalsAnnualSave: "Сохранить годовую цель",
@@ -869,6 +884,11 @@ const STATIC_TEXT = {
     annualGoalSince: "Desde",
     annualGoalYearDone: "Hechas este ano",
     annualGoalYearActiveDays: "Dias activos este ano",
+    dayDetailTitle: "Detalles del dia",
+    dayDetailEmpty: "No hay detalles guardados para este dia.",
+    dayDetailDone: "Hecha",
+    dayDetailOpen: "Abierta",
+    dayDetailUnknown: "No hay historial detallado disponible.",
     goalsAnnualLabel: "Objetivo anual",
     goalsAnnualPlaceholder: "p. ej. estar mas en forma y con mas energia",
     goalsAnnualSave: "Guardar objetivo anual",
@@ -977,6 +997,11 @@ const STATIC_TEXT = {
     annualGoalSince: "Depuis",
     annualGoalYearDone: "Faites cette annee",
     annualGoalYearActiveDays: "Jours actifs cette annee",
+    dayDetailTitle: "Details du jour",
+    dayDetailEmpty: "Aucun detail enregistre pour ce jour.",
+    dayDetailDone: "Faite",
+    dayDetailOpen: "Ouverte",
+    dayDetailUnknown: "Historique detaille indisponible.",
     goalsAnnualLabel: "Objectif annuel",
     goalsAnnualPlaceholder: "ex. etre plus en forme et plus energique",
     goalsAnnualSave: "Enregistrer l'objectif annuel",
@@ -1063,6 +1088,75 @@ const getIdentityScore = (state, currentISO) => {
   return Math.max(0, Math.min(100, score));
 };
 
+const captureDayTaskHistory = (state, iso = todayISO(state.simulationOffsetDays)) => {
+  const entries = [];
+  const mainTasks = (state.todayTasks || []).filter((task) => task.date === iso);
+  mainTasks.forEach((task) => {
+    entries.push({
+      label: task.label,
+      done: !!task.done || !!task.isRestDay,
+    });
+  });
+
+  const quickEntries = [
+    ...Object.values(state.quickTasks || {}),
+    ...Object.values(state.quickTasksTomorrow || {}),
+  ].filter((task) => task.date === iso);
+  quickEntries.forEach((task) => {
+    entries.push({
+      label: task.label,
+      done: !!task.done,
+    });
+  });
+
+  state.dayTaskHistory = state.dayTaskHistory || {};
+  if (!entries.length) {
+    delete state.dayTaskHistory[iso];
+    return;
+  }
+  state.dayTaskHistory[iso] = entries;
+};
+
+const openDayDetails = (state, iso) => {
+  if (!dayDetailModal || !dayDetailList) return;
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+  if (dayDetailTitle) dayDetailTitle.textContent = s.dayDetailTitle;
+  if (dayDetailDate) dayDetailDate.textContent = formatISODate(iso);
+  dayDetailList.innerHTML = "";
+  const entries = state.dayTaskHistory?.[iso] || [];
+  if (!entries.length) {
+    const summary = state.daySummary?.[iso];
+    const li = document.createElement("li");
+    li.className = "day-detail-item";
+    li.textContent = summary
+      ? `${summary.done}/${summary.total} · ${s.dayDetailUnknown}`
+      : s.dayDetailEmpty;
+    dayDetailList.appendChild(li);
+    dayDetailModal.hidden = false;
+    return;
+  }
+
+  entries.forEach((entry) => {
+    const li = document.createElement("li");
+    li.className = "day-detail-item";
+    if (entry.done) li.classList.add("done");
+    const text = document.createElement("span");
+    text.textContent = entry.label;
+    const status = document.createElement("span");
+    status.className = "day-detail-status";
+    status.textContent = entry.done ? s.dayDetailDone : s.dayDetailOpen;
+    li.appendChild(text);
+    li.appendChild(status);
+    dayDetailList.appendChild(li);
+  });
+  dayDetailModal.hidden = false;
+};
+
+const closeDayDetails = () => {
+  if (!dayDetailModal) return;
+  dayDetailModal.hidden = true;
+};
+
 // ---------------------------
 // State-Form
 // ---------------------------
@@ -1082,6 +1176,7 @@ const defaultState = () => ({
   simulationOffsetDays: 0,
   completedDays: {},
   daySummary: {},
+  dayTaskHistory: {},
   weeklyPlans: {},
   tutorialStep: 1,
   tutorialCompleted: false,
@@ -1119,6 +1214,7 @@ const loadState = () => {
     normalized.sideQuestChecks = normalized.sideQuestChecks || {};
     normalized.completedDays = normalized.completedDays || {};
     normalized.daySummary = normalized.daySummary || {};
+    normalized.dayTaskHistory = normalized.dayTaskHistory || {};
     normalized.weeklyPlans = normalized.weeklyPlans || {};
     normalized.tutorialStep = normalized.tutorialStep || 1;
     normalized.tutorialCompleted = normalized.tutorialCompleted || false;
@@ -1217,6 +1313,11 @@ const updateBannerText = document.getElementById("update-banner-text");
 const updateBannerNote = document.getElementById("update-banner-note");
 const updateBannerBtn = document.getElementById("update-banner-btn");
 const updateBannerRetryBtn = document.getElementById("update-banner-retry");
+const dayDetailModal = document.getElementById("day-detail-modal");
+const dayDetailTitle = document.getElementById("day-detail-title");
+const dayDetailDate = document.getElementById("day-detail-date");
+const dayDetailList = document.getElementById("day-detail-list");
+const dayDetailClose = document.getElementById("day-detail-close");
 const exportDataBtn = document.getElementById("export-data");
 const importDataBtn = document.getElementById("import-data");
 const importFileInput = document.getElementById("import-file");
@@ -1528,6 +1629,7 @@ const mergeStates = (current, incoming) => {
   merged.weeklyPlans = { ...(current.weeklyPlans || {}), ...(incoming.weeklyPlans || {}) };
   merged.completedDays = { ...(current.completedDays || {}), ...(incoming.completedDays || {}) };
   merged.daySummary = { ...(current.daySummary || {}), ...(incoming.daySummary || {}) };
+  merged.dayTaskHistory = { ...(current.dayTaskHistory || {}), ...(incoming.dayTaskHistory || {}) };
   merged.streak = Math.max(Number(current.streak || 0), Number(incoming.streak || 0));
   merged.totalDone = Math.max(Number(current.totalDone || 0), Number(incoming.totalDone || 0));
   return merged;
@@ -1638,6 +1740,7 @@ const applyStaticTranslations = () => {
   setText("settings-version-title", s.settingsVersionTitle);
   setText("settings-system-title", s.settingsSystemTitle);
   setText("backup-title", s.backupTitle);
+  setText("day-detail-title", s.dayDetailTitle);
   setText("annual-goal-title", s.annualGoalTitle);
   setText("identity-score-title", s.identityScoreTitle);
   setText("identity-score-meta", s.identityScoreMeta);
@@ -1794,6 +1897,10 @@ const ensureTodayTasks = (state) => {
   // aber wir markieren sie als neue Tagesliste.
   const today = todayISO(state.simulationOffsetDays);
   const weekdayKey = weekdayKeyFromISO(today);
+  const previousDate = state.todayTasks?.[0]?.date || Object.values(state.quickTasks || {})[0]?.date || null;
+  if (previousDate && previousDate !== today) {
+    captureDayTaskHistory(state, previousDate);
+  }
 
   // Wenn wir noch keine Tasks für heute haben, setzen wir das Datum neu.
   if (!state.todayTasks.length || state.todayTasks[0].date !== today) {
@@ -2607,6 +2714,7 @@ const renderAll = (state) => {
   renderCalendar(state);
   renderSimulatedDate(state);
   applyFeatureGating(state);
+  captureDayTaskHistory(state);
   const updated = applyTutorial(state);
   applyMode(updated);
   saveState(updated);
@@ -3549,6 +3657,14 @@ const init = () => {
     if (updateBannerRetryBtn) {
       updateBannerRetryBtn.addEventListener("click", retryServiceWorkerUpdateCheck);
     }
+    if (dayDetailClose) {
+      dayDetailClose.addEventListener("click", closeDayDetails);
+    }
+    if (dayDetailModal) {
+      dayDetailModal.addEventListener("click", (event) => {
+        if (event.target === dayDetailModal) closeDayDetails();
+      });
+    }
     if (exportDataBtn) {
       exportDataBtn.addEventListener("click", exportBackup);
     }
@@ -3669,6 +3785,7 @@ function renderCalendar(state) {
     cell.className = "calendar-cell";
     const iso = new Date(year, month, day).toISOString().slice(0, 10);
     const summary = state.daySummary?.[iso];
+    const hasDetails = Array.isArray(state.dayTaskHistory?.[iso]) && state.dayTaskHistory[iso].length > 0;
     if (summary && summary.total > 0) {
       const percent = Math.max(0, Math.min(100, Math.round((summary.done / summary.total) * 100)));
       // Progress color gets stronger with higher completion.
@@ -3679,6 +3796,10 @@ function renderCalendar(state) {
       if (percent >= 100) {
         cell.classList.add("done-full");
       }
+    }
+    if (summary || hasDetails) {
+      cell.classList.add("has-detail");
+      cell.addEventListener("click", () => openDayDetails(state, iso));
     }
     cell.textContent = String(day);
     calGrid.appendChild(cell);

@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.6.37";
+const APP_VERSION = "1.6.38";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -515,12 +515,6 @@ const STATIC_TEXT = {
     toastUpdateCheck: "Update-Prüfung gestartet",
     toastUpdateCheckError: "Update-Prüfung fehlgeschlagen",
     toastUpdateUnsupported: "Update-Prüfung nicht verfügbar",
-    autopilotTitle: "Autopilot",
-    autopilotNoAnnualGoal: "Fuege einen Jahresvorsatz hinzu, um einen Tagesvorschlag zu erhalten.",
-    autopilotNoSuggestion: "Heute gibt es keinen passenden Vorschlag. Füge ein neues Goal hinzu.",
-    autopilotSuggestPrefix: "Vorschlag fuer heute",
-    autopilotAddBtn: "Vorschlag als heutige Aufgabe",
-    toastAutopilotAdded: "Autopilot-Aufgabe hinzugefügt",
     identityScoreTitle: "Identity Score",
     identityScoreMeta: "Konsistenz der letzten 14 Tage",
     tutorialCheck1: "Sprache festlegen",
@@ -629,12 +623,6 @@ const STATIC_TEXT = {
     toastUpdateCheck: "Update check started",
     toastUpdateCheckError: "Update check failed",
     toastUpdateUnsupported: "Update check unavailable",
-    autopilotTitle: "Autopilot",
-    autopilotNoAnnualGoal: "Add a year goal to get a daily suggestion.",
-    autopilotNoSuggestion: "No fitting suggestion for today. Add a new goal.",
-    autopilotSuggestPrefix: "Suggestion for today",
-    autopilotAddBtn: "Add suggestion to today",
-    toastAutopilotAdded: "Autopilot task added",
     identityScoreTitle: "Identity Score",
     identityScoreMeta: "Consistency over the last 14 days",
     tutorialCheck1: "Set language",
@@ -743,12 +731,6 @@ const STATIC_TEXT = {
     toastUpdateCheck: "Проверка обновлений запущена",
     toastUpdateCheckError: "Ошибка проверки обновлений",
     toastUpdateUnsupported: "Проверка обновлений недоступна",
-    autopilotTitle: "Автопилот",
-    autopilotNoAnnualGoal: "Добавь годовую цель, чтобы получить предложение на день.",
-    autopilotNoSuggestion: "На сегодня нет подходящего предложения. Добавь новую цель.",
-    autopilotSuggestPrefix: "Предложение на сегодня",
-    autopilotAddBtn: "Добавить предложение в Today",
-    toastAutopilotAdded: "Задача автопилота добавлена",
     identityScoreTitle: "Identity Score",
     identityScoreMeta: "Стабильность за последние 14 дней",
     tutorialCheck1: "Выбрать язык",
@@ -857,12 +839,6 @@ const STATIC_TEXT = {
     toastUpdateCheck: "Comprobacion de actualizaciones iniciada",
     toastUpdateCheckError: "Error al comprobar actualizaciones",
     toastUpdateUnsupported: "Comprobacion no disponible",
-    autopilotTitle: "Autopilot",
-    autopilotNoAnnualGoal: "Anade un objetivo anual para recibir una sugerencia diaria.",
-    autopilotNoSuggestion: "No hay sugerencia adecuada para hoy. Anade una meta nueva.",
-    autopilotSuggestPrefix: "Sugerencia para hoy",
-    autopilotAddBtn: "Anadir sugerencia a hoy",
-    toastAutopilotAdded: "Tarea de autopilot anadida",
     identityScoreTitle: "Identity Score",
     identityScoreMeta: "Constancia en los ultimos 14 dias",
     tutorialCheck1: "Elegir idioma",
@@ -971,12 +947,6 @@ const STATIC_TEXT = {
     toastUpdateCheck: "Verification des mises a jour lancee",
     toastUpdateCheckError: "Echec de la verification des mises a jour",
     toastUpdateUnsupported: "Verification non disponible",
-    autopilotTitle: "Autopilot",
-    autopilotNoAnnualGoal: "Ajoute un objectif annuel pour obtenir une suggestion quotidienne.",
-    autopilotNoSuggestion: "Aucune suggestion adaptee aujourd'hui. Ajoute un nouvel objectif.",
-    autopilotSuggestPrefix: "Suggestion du jour",
-    autopilotAddBtn: "Ajouter la suggestion a Today",
-    toastAutopilotAdded: "Tache autopilot ajoutee",
     identityScoreTitle: "Identity Score",
     identityScoreMeta: "Regularite sur les 14 derniers jours",
     tutorialCheck1: "Choisir la langue",
@@ -1064,41 +1034,6 @@ const formatISODate = (iso) => {
   const date = new Date(`${iso}T00:00:00`);
   if (Number.isNaN(date.getTime())) return iso;
   return date.toLocaleDateString(localeForLanguage());
-};
-
-const tokenize = (value) => {
-  if (!value) return [];
-  const matches = value
-    .toLowerCase()
-    .match(/[\p{L}\p{N}]+/gu);
-  return matches || [];
-};
-
-const getAutopilotSuggestion = (state) => {
-  const annualGoal = (state.annualGoal || "").trim();
-  if (!annualGoal) return null;
-
-  const today = todayISO(state.simulationOffsetDays);
-  const weekdayKey = weekdayKeyFromISO(today);
-  const usedGoalIds = new Set((state.todayTasks || []).map((task) => task.goalId));
-  const annualTokens = new Set(tokenize(annualGoal));
-
-  const candidates = (state.goals || []).filter((goal) => {
-    if (usedGoalIds.has(goal.id)) return false;
-    const plan = getPlanForGoal(state, goal.id);
-    if (!planHasAnyActive(plan)) return true;
-    const entry = plan[weekdayKey];
-    if (!entry) return true;
-    return !!entry.active;
-  });
-  if (!candidates.length) return null;
-  const scored = candidates.map((goal) => {
-    const goalTokens = tokenize(goal.title);
-    const tokenMatchCount = goalTokens.filter((token) => annualTokens.has(token)).length;
-    return { goal, score: tokenMatchCount };
-  });
-  scored.sort((a, b) => b.score - a.score);
-  return scored[0]?.goal || null;
 };
 
 const getIdentityScore = (state, currentISO) => {
@@ -1220,10 +1155,6 @@ const saveState = (state) => {
 const welcomeSection = document.getElementById("welcome");
 const todayList = document.getElementById("today-list");
 const todayCount = document.getElementById("today-count");
-const autopilotCardEl = document.getElementById("autopilot-card");
-const autopilotTitleEl = document.getElementById("autopilot-title");
-const autopilotTextEl = document.getElementById("autopilot-text");
-const autopilotAddBtn = document.getElementById("autopilot-add");
 const unlockControls = document.getElementById("unlock-controls");
 const goalsList = document.getElementById("goals-list");
 const quickTaskForm = document.getElementById("quick-task-form");
@@ -1707,8 +1638,6 @@ const applyStaticTranslations = () => {
   setText("settings-version-title", s.settingsVersionTitle);
   setText("settings-system-title", s.settingsSystemTitle);
   setText("backup-title", s.backupTitle);
-  setText("autopilot-title", s.autopilotTitle);
-  setText("autopilot-text", s.autopilotNoAnnualGoal);
   setText("annual-goal-title", s.annualGoalTitle);
   setText("identity-score-title", s.identityScoreTitle);
   setText("identity-score-meta", s.identityScoreMeta);
@@ -1734,7 +1663,6 @@ const applyStaticTranslations = () => {
   const goalSubmit = goalForm?.querySelector("button[type='submit']");
   if (goalSubmit) goalSubmit.textContent = t("btnAdd");
   if (applyOffsetBtn) applyOffsetBtn.textContent = s.applyBtn;
-  if (autopilotAddBtn) autopilotAddBtn.textContent = s.autopilotAddBtn;
   if (checkUpdatesBtn) checkUpdatesBtn.textContent = s.checkUpdatesBtn;
   if (resetBtn) resetBtn.textContent = s.resetBtn;
   if (exportDataBtn) exportDataBtn.textContent = s.exportData;
@@ -1950,7 +1878,6 @@ const renderWelcome = (state) => {
 
 const renderToday = (state) => {
   todayList.innerHTML = "";
-  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
 
   const quickTaskEntries = Object.values(state.quickTasks || {});
   const quickTomorrowEntries = Object.values(state.quickTasksTomorrow || {});
@@ -1990,28 +1917,6 @@ const renderToday = (state) => {
     renderSideQuestOptions(state);
   }
 
-  const suggestion = getAutopilotSuggestion(state);
-  if (autopilotCardEl) autopilotCardEl.hidden = false;
-  if (autopilotTitleEl) autopilotTitleEl.textContent = s.autopilotTitle;
-  if (autopilotTextEl) {
-    if (!state.annualGoal?.trim()) {
-      autopilotTextEl.textContent = s.autopilotNoAnnualGoal;
-    } else if (!suggestion) {
-      autopilotTextEl.textContent = s.autopilotNoSuggestion;
-    } else {
-      autopilotTextEl.textContent = `${s.autopilotSuggestPrefix}: ${suggestion.title}`;
-    }
-  }
-  if (autopilotAddBtn) {
-    if (suggestion) {
-      autopilotAddBtn.hidden = false;
-      autopilotAddBtn.dataset.goalId = suggestion.id;
-      autopilotAddBtn.textContent = s.autopilotAddBtn;
-    } else {
-      autopilotAddBtn.hidden = true;
-      autopilotAddBtn.dataset.goalId = "";
-    }
-  }
   if (
     state.todayTasks.length === 0 &&
     quickTaskEntries.length === 0 &&
@@ -2851,12 +2756,6 @@ const addTaskFromGoal = (goalId, options = {}) => {
   }
 };
 
-const addAutopilotTask = (goalId) => {
-  if (!goalId) return;
-  addTaskFromGoal(goalId, { skipToast: true });
-  showToast((STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).toastAutopilotAdded);
-};
-
 const addRandomTask = () => {
   const state = loadState();
   const goal = pickTaskFromGoals(state);
@@ -3478,12 +3377,6 @@ const init = () => {
       const value = Number(dayOffsetInput.value || 0);
       setSimulationOffset(value);
     });
-    if (autopilotAddBtn) {
-      autopilotAddBtn.addEventListener("click", () => {
-        const goalId = autopilotAddBtn.dataset.goalId || "";
-        addAutopilotTask(goalId);
-      });
-    }
     if (checkUpdatesBtn) {
       checkUpdatesBtn.addEventListener("click", () => {
         retryServiceWorkerUpdateCheck();

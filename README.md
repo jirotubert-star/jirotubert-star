@@ -37,9 +37,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.7.17`
+- Aktuell: `1.7.18`
 
 ## Aenderungsprotokoll
+- `1.7.18` (2026-02-18): Wochenplaner kompakter gestaltet: reduzierte Abstaende, kleinere Zeilenhoehen, schmalere Spalten und kompaktere Select/Input-Controls fuer bessere Platznutzung.
 - `1.7.17` (2026-02-18): Design-Polish-Paket umgesetzt: verfeinerte Typografie-Hierarchie, erweitertes Design-Token-System, vereinheitlichte Card/Input/Button-Styles und staerkere visuelle Prioritaet fuer den Today-Bereich.
 - `1.7.16` (2026-02-18): Einstellungen in der Bottom-Navigation mit Zahnrad-Symbol (`⚙`) statt Info-Symbol gekennzeichnet.
 - `1.7.15` (2026-02-18): Header kompakter gemacht und Sticky-Verhalten entfernt: OneStep-Header scrollt jetzt normal nach oben aus dem Sichtbereich und nutzt deutlich weniger vertikalen Platz.

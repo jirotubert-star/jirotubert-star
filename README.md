@@ -19,9 +19,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.7.10`
+- Aktuell: `1.7.11`
 
 ## Aenderungsprotokoll
+- `1.7.11` (2026-02-18): Vorlagen-UX verbessert: zusaetzlich zum bestehenden Vorlagen-Aufklapper hat jetzt jede Vorlage-Kategorie einen eigenen Auf-/Zuklapp-Bereich (Details/Summary), damit die Liste kompakter bleibt.
 - `1.7.10` (2026-02-18): Checkbox-Design angepasst: Innenflaeche der Aufgaben-Checkboxen ist jetzt hell/weiß statt schwarz, inkl. hellem Checked-Hintergrund fuer konsistenteres UI.
 - `1.7.9` (2026-02-18): i18n-Vervollstaendigung: Side-Quest-Begriffe in allen Sprachen lokalisiert, Navigation/Tab-Titel komplett sprachabhaengig, Kalender-Wochentage + Tooltip-Text lokalisiert, Monatsname nach aktiver Sprache formatiert, fehlendes Side-Quest-Label in der UI angebunden.
 - `1.7.8` (2026-02-18): iPad/Chrome-Devtools-Layoutfix: aktiver Content-Tab nutzt auf Tablet/Desktop nun volle Grid-Breite, dadurch kein leerer rechter Bereich mehr bei einzelner Tab-Ansicht.

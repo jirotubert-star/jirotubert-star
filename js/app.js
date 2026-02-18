@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.10";
+const APP_VERSION = "1.7.11";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -3466,11 +3466,12 @@ const renderTemplates = () => {
   if (!templateCategories) return;
   templateCategories.innerHTML = "";
 
-  getTemplateCategories().forEach((category) => {
-    const wrapper = document.createElement("div");
+  getTemplateCategories().forEach((category, index) => {
+    const wrapper = document.createElement("details");
     wrapper.className = "template-category";
+    wrapper.open = index === 0;
 
-    const title = document.createElement("div");
+    const title = document.createElement("summary");
     title.className = "template-title";
     title.textContent = category.title;
 

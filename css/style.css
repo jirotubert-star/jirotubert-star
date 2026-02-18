@@ -201,16 +201,36 @@ body::before {
 .template-category {
   border: 1px solid #ece7df;
   border-radius: 12px;
-  padding: 10px;
+  padding: 0;
   background: #ffffff;
+  overflow: hidden;
 }
 
 .template-title {
   font-weight: 600;
-  margin-bottom: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  list-style: none;
+  position: relative;
+}
+
+.template-title::-webkit-details-marker {
+  display: none;
+}
+
+.template-title::after {
+  content: "▾";
+  position: absolute;
+  right: 12px;
+  color: var(--muted);
+}
+
+.template-category[open] .template-title::after {
+  content: "▴";
 }
 
 .template-items {
+  padding: 0 10px 10px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 8px;

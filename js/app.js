@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.5";
+const APP_VERSION = "1.7.6";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -1029,12 +1029,19 @@ const STATIC_TEXT = {
 // ---------------------------
 // Grundlegende Zeit-Utilities
 // ---------------------------
+const isoDateFromLocalDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 const todayISO = (offsetDays = 0) => {
   // Testmodus: Wir können das Datum um X Tage verschieben,
   // um die 3-Tage-Logik schnell zu testen.
   const date = new Date();
   date.setDate(date.getDate() + offsetDays);
-  return date.toISOString().slice(0, 10); // YYYY-MM-DD
+  return isoDateFromLocalDate(date); // YYYY-MM-DD (lokal)
 };
 
 const weekdayKeyFromISO = (iso) => {
@@ -1078,7 +1085,7 @@ const getIdentityScore = (state, currentISO) => {
   for (let offset = 0; offset < 14; offset += 1) {
     const date = new Date(baseDate);
     date.setDate(baseDate.getDate() - offset);
-    const iso = date.toISOString().slice(0, 10);
+    const iso = isoDateFromLocalDate(date);
     const summary = state.daySummary?.[iso];
     const done = Number(summary?.done || 0);
     const total = Number(summary?.total || 0);
@@ -3238,7 +3245,7 @@ const getWeeklyCompletionStats = (state, anchorISO) => {
   for (let i = 0; i < 7; i += 1) {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
-    const iso = d.toISOString().slice(0, 10);
+    const iso = isoDateFromLocalDate(d);
     const summary = state.daySummary?.[iso];
     if (!summary || summary.total <= 0) continue;
     const ratio = summary.done / summary.total;
@@ -3256,7 +3263,7 @@ const getPersonalWeeklyRecords = (state) => {
   summaryEntries.forEach(([iso, summary]) => {
     if (!summary || summary.total <= 0) return;
     const date = new Date(iso + "T00:00:00");
-    const weekStartISO = getWeekStartFromDate(date).toISOString().slice(0, 10);
+    const weekStartISO = isoDateFromLocalDate(getWeekStartFromDate(date));
     if (!byWeek[weekStartISO]) {
       byWeek[weekStartISO] = { activeDays: 0, perfectDays: 0 };
     }
@@ -3283,7 +3290,7 @@ const getWeeklyRate = (state, anchorISO) => {
   for (let i = 0; i < 7; i += 1) {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
-    const iso = d.toISOString().slice(0, 10);
+    const iso = isoDateFromLocalDate(d);
     const summary = state.daySummary?.[iso];
     if (!summary || summary.total <= 0) continue;
     done += summary.done;
@@ -3832,7 +3839,7 @@ function renderCalendar(state) {
   for (let day = 1; day <= daysInMonth; day += 1) {
     const cell = document.createElement("div");
     cell.className = "calendar-cell";
-    const iso = new Date(year, month, day).toISOString().slice(0, 10);
+    const iso = isoDateFromLocalDate(new Date(year, month, day));
     const summary = state.daySummary?.[iso];
     const hasDetails = Array.isArray(state.dayTaskHistory?.[iso]) && state.dayTaskHistory[iso].length > 0;
     if (summary && summary.total > 0) {

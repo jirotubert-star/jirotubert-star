@@ -1881,6 +1881,9 @@ summary:focus-visible {
   .welcome {
     grid-column: 1 / -1;
   }
+  .layout > [data-section]:not(.section-hidden) {
+    grid-column: 1 / -1;
+  }
   .panel {
     padding: 24px;
   }
@@ -1928,6 +1931,9 @@ summary:focus-visible {
   }
   #tutorial,
   .welcome {
+    grid-column: 1 / -1;
+  }
+  .layout > [data-section]:not(.section-hidden) {
     grid-column: 1 / -1;
   }
   [data-section="today"],

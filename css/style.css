@@ -1867,6 +1867,117 @@ summary:focus-visible {
   }
 }
 
+@media (min-width: 768px) and (max-width: 1199px) {
+  .brand {
+    max-width: 1120px;
+  }
+  .layout {
+    max-width: 1120px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    padding: 20px 24px 44px;
+  }
+  #tutorial,
+  .welcome {
+    grid-column: 1 / -1;
+  }
+  .panel {
+    padding: 24px;
+  }
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .progress-insights {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+  }
+  .calendar-grid {
+    gap: 8px;
+  }
+  .calendar-cell {
+    font-size: 0.9rem;
+  }
+  .bottom-nav {
+    left: 24px;
+    right: 24px;
+    bottom: 12px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .footer {
+    max-width: 1120px;
+    padding: 18px 24px calc(110px + var(--safe-bottom));
+  }
+}
+
+@media (min-width: 1200px) {
+  .top {
+    padding: 16px 28px 12px;
+  }
+  .brand {
+    max-width: 1360px;
+    padding: 12px 18px;
+  }
+  .layout {
+    max-width: 1360px;
+    grid-template-columns: minmax(640px, 1.12fr) minmax(420px, 0.88fr);
+    gap: 24px;
+    padding: 22px 28px 54px;
+    align-items: start;
+  }
+  #tutorial,
+  .welcome {
+    grid-column: 1 / -1;
+  }
+  [data-section="today"],
+  [data-section="goals"] {
+    grid-column: 1;
+  }
+  [data-section="progress"],
+  [data-section="info"] {
+    grid-column: 2;
+  }
+  .panel {
+    padding: 24px;
+  }
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .progress-insights {
+    gap: 10px;
+  }
+  .bottom-nav {
+    left: auto;
+    right: 22px;
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+    width: 112px;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 10px;
+    border-radius: 18px;
+  }
+  .nav-item {
+    padding: 10px 8px;
+  }
+  .nav-item.active::after {
+    top: 50%;
+    left: 6px;
+    width: 3px;
+    height: 24px;
+    transform: translateY(-50%);
+  }
+  .app-shell {
+    padding-bottom: 48px;
+  }
+  .footer {
+    max-width: 1360px;
+    padding: 18px 146px 34px 28px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .panel,
   .panel:hover,

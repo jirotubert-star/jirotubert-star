@@ -19,9 +19,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
 ## Version
-- Aktuell: `1.7.6`
+- Aktuell: `1.7.7`
 
 ## Aenderungsprotokoll
+- `1.7.7` (2026-02-18): Responsive-Optimierung fuer iPad und Desktop: breiteres Grid-Layout, angepasste Karten-/Abstandssysteme, optimierte Statistik-/Progress-Raster sowie Navigation als Side-Rail auf grossen Screens fuer bessere Bedienung in Quer- und Hochformat.
 - `1.7.6` (2026-02-17): Kalender-Datumsfix (Zeitzone): ISO-Tage werden jetzt lokal statt UTC berechnet. Dadurch werden erledigte Aufgaben am korrekten Kalendertag gespeichert und angezeigt (kein +1-Tag-Versatz mehr).
 - `1.7.5` (2026-02-17): Daily-Unlock-Fix fuer Fast-Onboarding: automatische Seed-Aufgabe wird jetzt strikt nur einmal beim allerersten Start erstellt und nicht mehr an Folgetagen. Taegliche Freischaltung bleibt manuell (selbst auswaehlen oder zufaellig).
 - `1.7.4` (2026-02-17): Fast-Onboarding korrigiert fuer Tester: keine automatische Ziel-Hinzufuegung mehr; stattdessen taeglich manuelle Freischaltung von genau einer neuen Aufgabe (wie beim 3-Tage-Flow, nur im Testmodus taeglich).

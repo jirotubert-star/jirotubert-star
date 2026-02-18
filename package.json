@@ -1,6 +1,6 @@
 {
   "name": "onestep",
-  "version": "1.7.11",
+  "version": "1.7.12",
   "private": true,
   "description": "OneStep static app build setup",
   "scripts": {

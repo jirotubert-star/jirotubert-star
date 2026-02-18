@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.11";
+const APP_VERSION = "1.7.12";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -1394,6 +1394,52 @@ let introStepIndex = 0;
 let introGoalDraft = "";
 let runtimeAppVersion = APP_VERSION;
 const SIDE_QUEST_REVEAL_SCROLL_MS = 520;
+let analyticsProvider = "none";
+let analyticsEnabled = false;
+let analyticsQueue = [];
+
+const flushAnalyticsQueue = () => {
+  if (analyticsProvider !== "plausible" || typeof window.plausible !== "function") return;
+  while (analyticsQueue.length > 0) {
+    const { name, props } = analyticsQueue.shift();
+    window.plausible(name, { props });
+  }
+};
+
+const trackEvent = (name, props = {}) => {
+  if (!analyticsEnabled || !name) return;
+  if (analyticsProvider === "plausible" && typeof window.plausible === "function") {
+    window.plausible(name, { props });
+    return;
+  }
+  analyticsQueue.push({ name, props });
+};
+
+const initAnalytics = () => {
+  const cfg = window.__ONESTEP_ANALYTICS__ || {};
+  if (!cfg.enabled || cfg.provider !== "plausible" || !cfg.domain) return;
+
+  analyticsEnabled = true;
+  analyticsProvider = "plausible";
+
+  const script = document.createElement("script");
+  script.defer = true;
+  script.dataset.domain = cfg.domain;
+  script.src = `${cfg.apiHost || "https://plausible.io"}/js/script.js`;
+  script.addEventListener("load", () => {
+    flushAnalyticsQueue();
+    trackEvent("app_open", {
+      version: APP_VERSION,
+      lang: currentLanguage || "unset",
+    });
+  });
+  script.addEventListener("error", () => {
+    analyticsEnabled = false;
+    analyticsProvider = "none";
+    analyticsQueue = [];
+  });
+  document.head.appendChild(script);
+};
 
 // ---------------------------
 // Motivationstexte
@@ -1495,6 +1541,7 @@ const setLanguage = (lang) => {
   if (languageModal) languageModal.hidden = true;
   openIntroIfNeeded(loadState());
   showToast(t("languageSaved"));
+  trackEvent("language_changed", { lang });
 };
 
 const showLanguageModalIfNeeded = () => {
@@ -2854,6 +2901,10 @@ const addGoal = (title, difficulty) => {
   renderAll(state);
   triggerHaptic(14);
   showToast(t("toastGoalAdded"));
+  trackEvent("goal_added", {
+    difficulty,
+    goals_count: state.goals.length,
+  });
   if (hadNoGoals) {
     setActiveTab("today");
   }
@@ -2896,6 +2947,9 @@ const toggleTask = (taskId, textEl, labelEl) => {
       state.totalDone += 1;
       task.doneAt = today;
       updateStreak(state);
+      trackEvent("main_task_completed", {
+        difficulty: task.difficulty || "unknown",
+      });
     }
   }
 
@@ -2944,6 +2998,9 @@ const addTaskFromGoal = (goalId, options = {}) => {
   if (!options.skipToast) {
     showToast(t("toastTaskAdded"));
   }
+  trackEvent("goal_task_added", {
+    difficulty: goal.difficulty || "unknown",
+  });
 };
 
 const addRandomTask = () => {
@@ -2968,6 +3025,7 @@ const addQuickTask = (label) => {
   renderAll(state);
   triggerHaptic(12);
   showToast(t("toastTodayAdded"));
+  trackEvent("quick_task_today_added");
 };
 
 const addQuickTaskTomorrow = (label) => {
@@ -2985,6 +3043,7 @@ const addQuickTaskTomorrow = (label) => {
   renderAll(state);
   triggerHaptic(12);
   showToast(t("toastTomorrowAdded"));
+  trackEvent("quick_task_tomorrow_added");
 };
 
 const renderSideQuestOptions = (state) => {
@@ -3037,6 +3096,7 @@ const addSideQuest = (goalId) => {
   renderAll(state);
   triggerHaptic(12);
   showToast(t("toastSideAdded"));
+  trackEvent("side_task_added");
 };
 
 const removeSideQuest = (goalId) => {
@@ -3062,6 +3122,7 @@ const toggleSideQuest = (goalId, textEl, labelEl) => {
   state.sideQuestChecks[today] = state.sideQuestChecks[today] || {};
   const nowDone = !state.sideQuestChecks[today][goalId];
   state.sideQuestChecks[today][goalId] = nowDone;
+  if (nowDone) trackEvent("side_task_completed");
   saveState(state);
   triggerHaptic(nowDone ? 14 : 8);
 
@@ -3539,6 +3600,7 @@ const goToAdjacentTab = (direction) => {
 };
 
 const init = () => {
+  initAnalytics();
   const state = loadState();
   applyStaticTranslations();
   showLanguageModalIfNeeded();

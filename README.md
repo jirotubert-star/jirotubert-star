@@ -18,10 +18,29 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `npm run android:open`: oeffnet das Android-Projekt in Android Studio
 - `npm run ios:open`: oeffnet das iOS-Projekt in Xcode
 
+## Nutzer-Tracking (optional)
+- Tracking ist standardmaessig deaktiviert.
+- In `index.html` den Block `window.__ONESTEP_ANALYTICS__` anpassen:
+  - `enabled: true`
+  - `provider: "plausible"`
+  - `domain: "deine-domain.tld"`
+  - optional `apiHost` fuer Self-Hosted Plausible
+- Erfasste Events:
+  - `app_open`
+  - `language_changed`
+  - `goal_added`
+  - `goal_task_added`
+  - `main_task_completed`
+  - `quick_task_today_added`
+  - `quick_task_tomorrow_added`
+  - `side_task_added`
+  - `side_task_completed`
+
 ## Version
-- Aktuell: `1.7.11`
+- Aktuell: `1.7.12`
 
 ## Aenderungsprotokoll
+- `1.7.12` (2026-02-18): Optionales Nutzer-Tracking integriert (Plausible): konfigurierbarer Bootstrap in `index.html`, Besucherzaehlung ueber Plausible-Script und zentrale App-Events (Goal/Task/Language) fuer Nutzungsanalyse.
 - `1.7.11` (2026-02-18): Vorlagen-UX verbessert: zusaetzlich zum bestehenden Vorlagen-Aufklapper hat jetzt jede Vorlage-Kategorie einen eigenen Auf-/Zuklapp-Bereich (Details/Summary), damit die Liste kompakter bleibt.
 - `1.7.10` (2026-02-18): Checkbox-Design angepasst: Innenflaeche der Aufgaben-Checkboxen ist jetzt hell/weiß statt schwarz, inkl. hellem Checked-Hintergrund fuer konsistenteres UI.
 - `1.7.9` (2026-02-18): i18n-Vervollstaendigung: Side-Quest-Begriffe in allen Sprachen lokalisiert, Navigation/Tab-Titel komplett sprachabhaengig, Kalender-Wochentage + Tooltip-Text lokalisiert, Monatsname nach aktiver Sprache formatiert, fehlendes Side-Quest-Label in der UI angebunden.

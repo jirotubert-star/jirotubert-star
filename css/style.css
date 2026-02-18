@@ -348,7 +348,7 @@ body::before {
 
 .plan-row {
   display: grid;
-  grid-template-columns: 92px 22px 1fr;
+  grid-template-columns: 92px 1fr;
   gap: 8px;
   align-items: center;
   padding: 6px 8px;
@@ -363,12 +363,6 @@ body::before {
   border-radius: 8px;
   border: 1px solid #d9d2c6;
   font-size: 0.9rem;
-}
-
-.plan-row input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--accent);
 }
 
 .plan-hint {

@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.18";
+const APP_VERSION = "1.7.19";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -69,6 +69,8 @@ const I18N = {
     toastProOff: "Pro-Modus deaktiviert",
     planNeed: "Bitte mindestens 4 Tage eintragen",
     planWeek: "Woche geplant",
+    planRestDayInfo: "Nicht ausgefüllte Tage gelten als Rest Day.",
+    restDayPrefix: "Rest Day",
     tutorialStart: "Start",
     tutorialStep: "Schritt",
     dayWord: "Tag",
@@ -138,6 +140,8 @@ const I18N = {
     toastProOff: "Pro mode off",
     planNeed: "Please set at least 4 days",
     planWeek: "Week planned",
+    planRestDayInfo: "Days left empty are treated as rest days.",
+    restDayPrefix: "Rest Day",
     tutorialStart: "Start",
     tutorialStep: "Step",
     dayWord: "Day",
@@ -201,6 +205,8 @@ const I18N = {
     toastProOff: "Pro режим выключен",
     planNeed: "Укажите минимум 4 дня",
     planWeek: "Неделя запланирована",
+    planRestDayInfo: "Незаполненные дни считаются днями отдыха.",
+    restDayPrefix: "День отдыха",
     tutorialStart: "Старт",
     tutorialStep: "Шаг",
     dayWord: "День",
@@ -264,6 +270,8 @@ const I18N = {
     toastProOff: "Modo Pro desactivado",
     planNeed: "Añade al menos 4 días",
     planWeek: "Semana planificada",
+    planRestDayInfo: "Los días sin completar se consideran días de descanso.",
+    restDayPrefix: "Día de descanso",
     tutorialStart: "Inicio",
     tutorialStep: "Paso",
     dayWord: "Día",
@@ -327,6 +335,8 @@ const I18N = {
     toastProOff: "Mode Pro désactivé",
     planNeed: "Ajoute au moins 4 jours",
     planWeek: "Semaine planifiée",
+    planRestDayInfo: "Les jours non remplis sont considérés comme jours de repos.",
+    restDayPrefix: "Jour de repos",
     tutorialStart: "Début",
     tutorialStep: "Étape",
     dayWord: "Jour",
@@ -2021,7 +2031,7 @@ const pickTaskFromGoals = (state) => {
     if (!planHasAnyActive(plan)) return true;
     const entry = plan[weekdayKey];
     if (!entry) return true;
-    if (!entry.active) return false;
+    if (!isPlanEntryActive(entry)) return false;
     return true;
   });
   if (candidates.length === 0) return null;
@@ -2043,7 +2053,7 @@ const appendGoalTaskToState = (state, goal) => {
     goalId: goal.id,
     label: getLabelForToday(goal, entry, hasActivePlan),
     difficulty: goal.difficulty,
-    isRestDay: hasActivePlan && entry && !entry.active,
+    isRestDay: hasActivePlan && !isPlanEntryActive(entry),
     done: false,
     doneAt: null,
     date: today,
@@ -2086,7 +2096,7 @@ const ensureTodayTasks = (state) => {
         return {
           ...task,
           label,
-          isRestDay: hasActivePlan && entry && !entry.active,
+          isRestDay: hasActivePlan && !isPlanEntryActive(entry),
           date: today,
           done: false,
           doneAt: null,
@@ -2112,7 +2122,7 @@ const ensureTodayTasks = (state) => {
       goalId: firstGoal.id,
       label,
       difficulty: firstGoal.difficulty,
-      isRestDay: hasActivePlan && entry && !entry.active,
+      isRestDay: hasActivePlan && !isPlanEntryActive(entry),
       done: false,
       doneAt: null,
       date: today,
@@ -2398,7 +2408,7 @@ const renderToday = (state) => {
         const entry = plan[weekdayKey];
         const hasActivePlan = planHasAnyActive(plan);
         const label = getLabelForToday(goal, entry, hasActivePlan);
-        const restDay = hasActivePlan && entry && !entry.active;
+        const restDay = hasActivePlan && !isPlanEntryActive(entry);
         const done = restDay
           ? true
           : !!state.sideQuestChecks?.[today]?.[goal.id];
@@ -3296,10 +3306,13 @@ const getPlanForGoal = (state, goalId) => {
   if (plan) return plan;
   const defaults = {};
   WEEKDAYS.forEach((d) => {
-    defaults[d.key] = { active: false, text: "" };
+    defaults[d.key] = { text: "" };
   });
   return defaults;
 };
+
+const isPlanEntryActive = (entry) =>
+  typeof entry?.text === "string" && entry.text.trim().length > 0;
 
 const getWeekdayLabel = (key) => {
   const labels = I18N[currentLanguage]?.weekdays || I18N.de.weekdays;
@@ -3310,13 +3323,13 @@ const getTemplateCategories = () =>
   I18N[currentLanguage]?.templates || I18N.de.templates;
 
 const planHasAnyActive = (plan) =>
-  WEEKDAYS.some((day) => plan[day.key]?.active);
+  WEEKDAYS.some((day) => isPlanEntryActive(plan[day.key]));
 
 const getLabelForToday = (goal, planEntry, hasActivePlan) => {
-  if (hasActivePlan && planEntry && !planEntry.active) {
-    return `Rest Day (${goal.title})`;
+  if (hasActivePlan && !isPlanEntryActive(planEntry)) {
+    return `${t("restDayPrefix")} (${goal.title})`;
   }
-  if (planEntry && planEntry.active && planEntry.text) {
+  if (isPlanEntryActive(planEntry)) {
     return planEntry.text;
   }
   return goal.title;
@@ -3329,7 +3342,7 @@ const isRestDayForTask = (state, task, isoDate) => {
   if (!planHasAnyActive(plan)) return false;
   const weekdayKey = weekdayKeyFromISO(isoDate);
   const entry = plan[weekdayKey];
-  return !!(entry && !entry.active);
+  return !isPlanEntryActive(entry);
 };
 
 const getWeekStartFromDate = (date) => {
@@ -3489,50 +3502,40 @@ const renderWeeklyPlan = (state) => {
     const label = document.createElement("div");
     label.textContent = getWeekdayLabel(day.key);
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = plan[day.key]?.active || false;
-    if (checkbox.checked) activeCount += 1;
-
     const input = document.createElement("input");
     input.type = "text";
     input.placeholder = t("planTaskPlaceholder");
     input.value = plan[day.key]?.text || "";
-    input.disabled = !checkbox.checked;
-
-    checkbox.addEventListener("change", () => {
-      const stateNow = loadState();
-      const currentPlan = getPlanForGoal(stateNow, selectedGoalId);
-      currentPlan[day.key] = {
-        active: checkbox.checked,
-        text: checkbox.checked ? input.value : "",
-      };
-      stateNow.weeklyPlans[selectedGoalId] = currentPlan;
-      saveState(stateNow);
-      renderWeeklyPlan(stateNow);
-    });
+    if (input.value.trim().length > 0) activeCount += 1;
 
     input.addEventListener("input", () => {
       const stateNow = loadState();
       const currentPlan = getPlanForGoal(stateNow, selectedGoalId);
       currentPlan[day.key] = {
-        active: checkbox.checked,
         text: input.value,
       };
       stateNow.weeklyPlans[selectedGoalId] = currentPlan;
       saveState(stateNow);
+      const currentCount = WEEKDAYS.reduce((count, wd) => {
+        const value = currentPlan[wd.key]?.text || "";
+        return value.trim().length > 0 ? count + 1 : count;
+      }, 0);
+      if (currentCount < 4) {
+        planHint.textContent = `${t("planNeed")} (${currentCount}). ${t("planRestDayInfo")}`;
+      } else {
+        planHint.textContent = `${t("planWeek")}: ${currentCount}. ${t("planRestDayInfo")}`;
+      }
     });
 
     row.appendChild(label);
-    row.appendChild(checkbox);
     row.appendChild(input);
     planGrid.appendChild(row);
   });
 
   if (activeCount < 4) {
-    planHint.textContent = `${t("planNeed")} (${activeCount}).`;
+    planHint.textContent = `${t("planNeed")} (${activeCount}). ${t("planRestDayInfo")}`;
   } else {
-    planHint.textContent = `${t("planWeek")}: ${activeCount}`;
+    planHint.textContent = `${t("planWeek")}: ${activeCount}. ${t("planRestDayInfo")}`;
   }
 };
 

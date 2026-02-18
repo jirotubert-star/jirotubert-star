@@ -37,9 +37,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.7.13`
+- Aktuell: `1.7.14`
 
 ## Aenderungsprotokoll
+- `1.7.14` (2026-02-18): Plausible-Setup auf personalisiertes Script umgestellt: offizielles `pa-...` Snippet eingebunden und Analytics-Init so erweitert, dass entweder globales Plausible-Snippet oder konfigurierter Script-Loader genutzt wird.
 - `1.7.13` (2026-02-18): Plausible-Tracking-Konfiguration aktiviert und Domain auf `jirotubert-star.github.io` gesetzt, damit Besucher- und Event-Daten direkt im Dashboard sichtbar werden.
 - `1.7.12` (2026-02-18): Optionales Nutzer-Tracking integriert (Plausible): konfigurierbarer Bootstrap in `index.html`, Besucherzaehlung ueber Plausible-Script und zentrale App-Events (Goal/Task/Language) fuer Nutzungsanalyse.
 - `1.7.11` (2026-02-18): Vorlagen-UX verbessert: zusaetzlich zum bestehenden Vorlagen-Aufklapper hat jetzt jede Vorlage-Kategorie einen eigenen Auf-/Zuklapp-Bereich (Details/Summary), damit die Liste kompakter bleibt.

@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-user.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-user.png" />
-    <link rel="manifest" href="site.webmanifest?v=1713" />
+    <link rel="manifest" href="site.webmanifest?v=1714" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -283,7 +283,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.7.13</span>
+      <span class="soft-note" id="version">Version 1.7.14</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">
@@ -326,12 +326,22 @@
     </div>
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
+    <script async src="https://plausible.io/js/pa-Yo5rD-tnsB9Pz60fVTI3i.js"></script>
     <script>
+      window.plausible = window.plausible || function() {
+        (window.plausible.q = window.plausible.q || []).push(arguments);
+      };
+      window.plausible.init = window.plausible.init || function(options) {
+        window.plausible.o = options || {};
+      };
+      window.plausible.init();
+
       window.__ONESTEP_ANALYTICS__ = {
         enabled: true,
         provider: "plausible",
         domain: "jirotubert-star.github.io",
-        apiHost: "https://plausible.io"
+        apiHost: "https://plausible.io",
+        scriptSrc: "https://plausible.io/js/pa-Yo5rD-tnsB9Pz60fVTI3i.js"
       };
     </script>
     <script src="js/app.js"></script>

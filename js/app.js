@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.13";
+const APP_VERSION = "1.7.14";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -1417,15 +1417,28 @@ const trackEvent = (name, props = {}) => {
 
 const initAnalytics = () => {
   const cfg = window.__ONESTEP_ANALYTICS__ || {};
-  if (!cfg.enabled || cfg.provider !== "plausible" || !cfg.domain) return;
+  if (!cfg.enabled || cfg.provider !== "plausible") return;
 
   analyticsEnabled = true;
   analyticsProvider = "plausible";
 
+  if (typeof window.plausible === "function") {
+    flushAnalyticsQueue();
+    trackEvent("app_open", {
+      version: APP_VERSION,
+      lang: currentLanguage || "unset",
+    });
+    return;
+  }
+
+  const scriptSrc = cfg.scriptSrc || `${cfg.apiHost || "https://plausible.io"}/js/script.js`;
+  const needsDomainAttr = !cfg.scriptSrc;
+  if (needsDomainAttr && !cfg.domain) return;
+
   const script = document.createElement("script");
   script.defer = true;
-  script.dataset.domain = cfg.domain;
-  script.src = `${cfg.apiHost || "https://plausible.io"}/js/script.js`;
+  if (needsDomainAttr) script.dataset.domain = cfg.domain;
+  script.src = scriptSrc;
   script.addEventListener("load", () => {
     flushAnalyticsQueue();
     trackEvent("app_open", {

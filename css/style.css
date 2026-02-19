@@ -781,6 +781,8 @@ p {
   background: linear-gradient(180deg, #f7fbf9 0%, #eef6f2 100%);
   scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;
+  touch-action: none;
+  overscroll-behavior: contain;
   scrollbar-width: none;
   padding: 72px 0;
 }
@@ -839,6 +841,7 @@ p {
   justify-content: center;
   scroll-snap-align: center;
   cursor: pointer;
+  user-select: none;
 }
 
 .time-wheel-item.active {

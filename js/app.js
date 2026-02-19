@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.21";
+const APP_VERSION = "1.7.22";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -1467,6 +1467,8 @@ let pickerMinute = 0;
 const WHEEL_ITEM_HEIGHT = 36;
 const WHEEL_REPEAT = 7;
 const WHEEL_CENTER_REPEAT = Math.floor(WHEEL_REPEAT / 2);
+const HOUR_VALUES = Array.from({ length: 24 }, (_, i) => i);
+const MINUTE_VALUES = Array.from({ length: 60 }, (_, i) => i);
 const wheelScrollTimers = { hour: null, minute: null };
 let wheelSyncLock = false;
 const SIDE_QUEST_REVEAL_SCROLL_MS = 520;
@@ -4094,8 +4096,8 @@ function setGoalTimeValue(value) {
   if (goalTimeToggle) goalTimeToggle.textContent = `${t("timePrefix")}: ${formatted}`;
   if (timePickerValueEl) timePickerValueEl.textContent = formatted;
   if (goalTimePicker && !goalTimePicker.hidden) {
-    setWheelToValue(timeHourWheel, Array.from({ length: 24 }, (_, i) => i), pickerHour);
-    setWheelToValue(timeMinuteWheel, Array.from({ length: 60 }, (_, i) => i), pickerMinute);
+    setWheelToValue(timeHourWheel, HOUR_VALUES, pickerHour);
+    setWheelToValue(timeMinuteWheel, MINUTE_VALUES, pickerMinute);
   }
 }
 
@@ -4103,7 +4105,7 @@ function mod(value, base) {
   return ((value % base) + base) % base;
 }
 
-function buildWheel(container, values, selected, wheelKey) {
+function buildWheel(container, values, selected) {
   if (!container) return;
   container.innerHTML = "";
   const focus = document.createElement("div");
@@ -4112,23 +4114,13 @@ function buildWheel(container, values, selected, wheelKey) {
 
   for (let repeat = 0; repeat < WHEEL_REPEAT; repeat += 1) {
     values.forEach((value) => {
-      const item = document.createElement("button");
-      item.type = "button";
+      const item = document.createElement("div");
       item.className = "time-wheel-item";
       item.dataset.value = String(value);
       item.textContent = String(value).padStart(2, "0");
       if (value === selected && repeat === WHEEL_CENTER_REPEAT) {
         item.classList.add("active");
       }
-      item.addEventListener("click", () => {
-        const baseIndex = values.indexOf(value);
-        const targetIndex = (WHEEL_CENTER_REPEAT * values.length) + baseIndex;
-        container.scrollTo({ top: targetIndex * WHEEL_ITEM_HEIGHT, behavior: "smooth" });
-        if (wheelKey === "hour") pickerHour = value;
-        if (wheelKey === "minute") pickerMinute = value;
-        setGoalTimeValue(`${String(pickerHour).padStart(2, "0")}:${String(pickerMinute).padStart(2, "0")}`);
-        highlightWheelSelection(container, values);
-      });
       container.appendChild(item);
     });
   }
@@ -4156,6 +4148,16 @@ function recenterWheel(container, values) {
   wheelSyncLock = false;
 }
 
+function finalizeWheelSelection(container, values, wheelKey) {
+  recenterWheel(container, values);
+  const index = Math.round(container.scrollTop / WHEEL_ITEM_HEIGHT);
+  const value = values[mod(index, values.length)];
+  if (wheelKey === "hour") pickerHour = value;
+  if (wheelKey === "minute") pickerMinute = value;
+  setGoalTimeValue(`${String(pickerHour).padStart(2, "0")}:${String(pickerMinute).padStart(2, "0")}`);
+  highlightWheelSelection(container, values);
+}
+
 function bindWheelScroll(container, values, wheelKey) {
   if (!container) return;
   if (container.dataset.boundWheel === wheelKey) return;
@@ -4165,15 +4167,44 @@ function bindWheelScroll(container, values, wheelKey) {
     if (wheelSyncLock) return;
     if (wheelScrollTimers[timerKey]) clearTimeout(wheelScrollTimers[timerKey]);
     wheelScrollTimers[timerKey] = setTimeout(() => {
-      recenterWheel(container, values);
-      const index = Math.round(container.scrollTop / WHEEL_ITEM_HEIGHT);
-      const value = values[mod(index, values.length)];
-      if (wheelKey === "hour") pickerHour = value;
-      if (wheelKey === "minute") pickerMinute = value;
-      setGoalTimeValue(`${String(pickerHour).padStart(2, "0")}:${String(pickerMinute).padStart(2, "0")}`);
-      highlightWheelSelection(container, values);
+      finalizeWheelSelection(container, values, wheelKey);
     }, 70);
   });
+}
+
+function bindWheelDrag(container, values, wheelKey) {
+  if (!container) return;
+  if (container.dataset.boundWheelDrag === wheelKey) return;
+  container.dataset.boundWheelDrag = wheelKey;
+  let dragging = false;
+  let startY = 0;
+  let startScrollTop = 0;
+
+  container.addEventListener("pointerdown", (event) => {
+    dragging = true;
+    startY = event.clientY;
+    startScrollTop = container.scrollTop;
+    container.setPointerCapture(event.pointerId);
+  });
+
+  container.addEventListener("pointermove", (event) => {
+    if (!dragging) return;
+    const deltaY = event.clientY - startY;
+    container.scrollTop = startScrollTop - deltaY;
+    event.preventDefault();
+  });
+
+  const endDrag = (event) => {
+    if (!dragging) return;
+    dragging = false;
+    if (container.hasPointerCapture(event.pointerId)) {
+      container.releasePointerCapture(event.pointerId);
+    }
+    finalizeWheelSelection(container, values, wheelKey);
+  };
+
+  container.addEventListener("pointerup", endDrag);
+  container.addEventListener("pointercancel", endDrag);
 }
 
 function setWheelToValue(container, values, value) {
@@ -4188,12 +4219,10 @@ function setWheelToValue(container, values, value) {
 }
 
 function renderGoalTimePicker() {
-  const hours = Array.from({ length: 24 }, (_, i) => i);
-  const minutes = Array.from({ length: 60 }, (_, i) => i);
-  buildWheel(timeHourWheel, hours, pickerHour, "hour");
-  buildWheel(timeMinuteWheel, minutes, pickerMinute, "minute");
-  setWheelToValue(timeHourWheel, hours, pickerHour);
-  setWheelToValue(timeMinuteWheel, minutes, pickerMinute);
+  buildWheel(timeHourWheel, HOUR_VALUES, pickerHour);
+  buildWheel(timeMinuteWheel, MINUTE_VALUES, pickerMinute);
+  setWheelToValue(timeHourWheel, HOUR_VALUES, pickerHour);
+  setWheelToValue(timeMinuteWheel, MINUTE_VALUES, pickerMinute);
 }
 
 function toggleGoalTimePicker(forceOpen = null) {
@@ -4203,8 +4232,10 @@ function toggleGoalTimePicker(forceOpen = null) {
   goalTimeToggle.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
   if (shouldOpen) {
     renderGoalTimePicker();
-    bindWheelScroll(timeHourWheel, Array.from({ length: 24 }, (_, i) => i), "hour");
-    bindWheelScroll(timeMinuteWheel, Array.from({ length: 60 }, (_, i) => i), "minute");
+    bindWheelScroll(timeHourWheel, HOUR_VALUES, "hour");
+    bindWheelScroll(timeMinuteWheel, MINUTE_VALUES, "minute");
+    bindWheelDrag(timeHourWheel, HOUR_VALUES, "hour");
+    bindWheelDrag(timeMinuteWheel, MINUTE_VALUES, "minute");
   }
 }
 

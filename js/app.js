@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.19";
+const APP_VERSION = "1.7.20";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -41,6 +41,11 @@ const I18N = {
     quickTaskPlaceholder: "Einmalige Aufgabe",
     goalPlaceholder: "z. B. 15 Minuten lesen",
     planTaskPlaceholder: "z. B. 5 km Lauf / Schwimmen",
+    timePickerTitle: "Uhrzeit auswählen",
+    timePickerHour: "Stunde",
+    timePickerMinute: "Minute",
+    timePickerApply: "Übernehmen",
+    timePrefix: "Zeit",
     btnAdd: "Hinzufügen",
     btnTomorrow: "Für morgen",
     btnSideQuestAdd: "Nebenaufgabe hinzufügen",
@@ -112,6 +117,11 @@ const I18N = {
     quickTaskPlaceholder: "One-time task",
     goalPlaceholder: "e.g. read 15 minutes",
     planTaskPlaceholder: "e.g. 5 km run / swim",
+    timePickerTitle: "Choose time",
+    timePickerHour: "Hour",
+    timePickerMinute: "Minute",
+    timePickerApply: "Apply",
+    timePrefix: "Time",
     btnAdd: "Add",
     btnTomorrow: "For tomorrow",
     btnSideQuestAdd: "Add side quest",
@@ -177,6 +187,11 @@ const I18N = {
     quickTaskPlaceholder: "Разовая задача",
     goalPlaceholder: "например: чтение 15 минут",
     planTaskPlaceholder: "например: бег 5 км / плавание",
+    timePickerTitle: "Выберите время",
+    timePickerHour: "Час",
+    timePickerMinute: "Минута",
+    timePickerApply: "Применить",
+    timePrefix: "Время",
     btnAdd: "Добавить",
     btnTomorrow: "На завтра",
     btnSideQuestAdd: "Добавить побочную задачу",
@@ -242,6 +257,11 @@ const I18N = {
     quickTaskPlaceholder: "Tarea puntual",
     goalPlaceholder: "ej.: leer 15 minutos",
     planTaskPlaceholder: "ej.: correr 5 km / nadar",
+    timePickerTitle: "Elegir hora",
+    timePickerHour: "Hora",
+    timePickerMinute: "Minuto",
+    timePickerApply: "Aplicar",
+    timePrefix: "Hora",
     btnAdd: "Añadir",
     btnTomorrow: "Para mañana",
     btnSideQuestAdd: "Añadir tarea secundaria",
@@ -307,6 +327,11 @@ const I18N = {
     quickTaskPlaceholder: "Tâche ponctuelle",
     goalPlaceholder: "ex. : lire 15 minutes",
     planTaskPlaceholder: "ex. : course 5 km / natation",
+    timePickerTitle: "Choisir l'heure",
+    timePickerHour: "Heure",
+    timePickerMinute: "Minute",
+    timePickerApply: "Appliquer",
+    timePrefix: "Heure",
     btnAdd: "Ajouter",
     btnTomorrow: "Pour demain",
     btnSideQuestAdd: "Ajouter une quête secondaire",
@@ -534,6 +559,11 @@ const STATIC_TEXT = {
     weeklyPlanHintMinDays: "Mindestens 4 Tage eintragen",
     planGoalLabel: "Ziel",
     templateSummary: "Vorlagen (10 Kategorien)",
+    timePickerTitle: "Uhrzeit auswählen",
+    timePickerHour: "Stunde",
+    timePickerMinute: "Minute",
+    timePickerApply: "Übernehmen",
+    timePrefix: "Zeit",
     updateAvailable: "Neue Version verfügbar",
     updateNow: "Jetzt aktualisieren",
     updateRetry: "Erneut prüfen",
@@ -652,6 +682,11 @@ const STATIC_TEXT = {
     weeklyPlanHintMinDays: "Set at least 4 days",
     planGoalLabel: "Goal",
     templateSummary: "Templates (10 categories)",
+    timePickerTitle: "Choose time",
+    timePickerHour: "Hour",
+    timePickerMinute: "Minute",
+    timePickerApply: "Apply",
+    timePrefix: "Time",
     updateAvailable: "New version available",
     updateNow: "Update now",
     updateRetry: "Check again",
@@ -770,6 +805,11 @@ const STATIC_TEXT = {
     weeklyPlanHintMinDays: "Заполни минимум 4 дня",
     planGoalLabel: "Цель",
     templateSummary: "Шаблоны (10 категорий)",
+    timePickerTitle: "Выберите время",
+    timePickerHour: "Час",
+    timePickerMinute: "Минута",
+    timePickerApply: "Применить",
+    timePrefix: "Время",
     updateAvailable: "Доступна новая версия",
     updateNow: "Обновить сейчас",
     updateRetry: "Проверить снова",
@@ -888,6 +928,11 @@ const STATIC_TEXT = {
     weeklyPlanHintMinDays: "Añade al menos 4 días",
     planGoalLabel: "Meta",
     templateSummary: "Plantillas (10 categorías)",
+    timePickerTitle: "Elegir hora",
+    timePickerHour: "Hora",
+    timePickerMinute: "Minuto",
+    timePickerApply: "Aplicar",
+    timePrefix: "Hora",
     updateAvailable: "Nueva versión disponible",
     updateNow: "Actualizar ahora",
     updateRetry: "Comprobar de nuevo",
@@ -1006,6 +1051,11 @@ const STATIC_TEXT = {
     weeklyPlanHintMinDays: "Ajoute au moins 4 jours",
     planGoalLabel: "Objectif",
     templateSummary: "Modèles (10 catégories)",
+    timePickerTitle: "Choisir l'heure",
+    timePickerHour: "Heure",
+    timePickerMinute: "Minute",
+    timePickerApply: "Appliquer",
+    timePrefix: "Heure",
     updateAvailable: "Nouvelle version disponible",
     updateNow: "Mettre à jour",
     updateRetry: "Vérifier encore",
@@ -1254,11 +1304,11 @@ const loadState = () => {
     };
     normalized.goals = normalized.goals.map((goal) => ({
       ...goal,
-      difficulty: goal.difficulty || "noon",
+      difficulty: normalizeGoalTime(goal.difficulty),
     }));
     normalized.todayTasks = normalized.todayTasks.map((task) => ({
       ...task,
-      difficulty: task.difficulty || "noon",
+      difficulty: normalizeGoalTime(task.difficulty),
       doneAt: task.doneAt || null,
       isRestDay: task.isRestDay || false,
     }));
@@ -1314,7 +1364,16 @@ const sideQuestForm = document.getElementById("side-quest-form");
 const sideQuestSelect = document.getElementById("side-quest-select");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
-const goalDifficulty = document.getElementById("goal-difficulty");
+const goalTimeInput = document.getElementById("goal-time-input");
+const goalTimeToggle = document.getElementById("goal-time-toggle");
+const goalTimePicker = document.getElementById("goal-time-picker");
+const goalTimeApplyBtn = document.getElementById("goal-time-apply");
+const timePickerValueEl = document.getElementById("time-picker-value");
+const timePickerTitleEl = document.getElementById("time-picker-title");
+const timeHourTitleEl = document.getElementById("time-hour-title");
+const timeMinuteTitleEl = document.getElementById("time-minute-title");
+const timeHourDial = document.getElementById("time-hour-dial");
+const timeMinuteDial = document.getElementById("time-minute-dial");
 const streakEl = document.getElementById("streak");
 const totalDoneEl = document.getElementById("total-done");
 const motivationEl = document.getElementById("motivation");
@@ -1403,6 +1462,8 @@ let draggingGoalId = null;
 let introStepIndex = 0;
 let introGoalDraft = "";
 let runtimeAppVersion = APP_VERSION;
+let pickerHour = 12;
+let pickerMinute = 0;
 const SIDE_QUEST_REVEAL_SCROLL_MS = 520;
 let analyticsProvider = "none";
 let analyticsEnabled = false;
@@ -1947,12 +2008,11 @@ const applyStaticTranslations = () => {
     footerSpans[1].textContent = s.footer2;
   }
 
-  const diffOptions = goalDifficulty?.querySelectorAll("option");
-  if (diffOptions?.length >= 3) {
-    diffOptions[0].textContent = t("difficultyMorning").replace("🌅 ", "");
-    diffOptions[1].textContent = t("difficultyNoon").replace("☀️ ", "");
-    diffOptions[2].textContent = t("difficultyEvening").replace("🌙 ", "");
-  }
+  if (timePickerTitleEl) timePickerTitleEl.textContent = s.timePickerTitle;
+  if (timeHourTitleEl) timeHourTitleEl.textContent = s.timePickerHour;
+  if (timeMinuteTitleEl) timeMinuteTitleEl.textContent = s.timePickerMinute;
+  if (goalTimeApplyBtn) goalTimeApplyBtn.textContent = s.timePickerApply;
+  setGoalTimeValue(goalTimeInput?.value || "12:00");
 
   const navLabels = document.querySelectorAll(".nav-label");
   if (navLabels.length === 4) {
@@ -2216,10 +2276,9 @@ const renderToday = (state) => {
     empty.textContent = t("emptyToday");
     todayList.appendChild(empty);
   } else {
-    const order = { morning: 0, noon: 1, evening: 2 };
     const sortedTasks = [...state.todayTasks].sort((a, b) => {
-      const aOrder = order[a.difficulty] ?? 3;
-      const bOrder = order[b.difficulty] ?? 3;
+      const aOrder = timeToMinutes(a.difficulty);
+      const bOrder = timeToMinutes(b.difficulty);
       if (aOrder !== bOrder) return aOrder - bOrder;
       return a.label.localeCompare(b.label, "de");
     });
@@ -2295,7 +2354,7 @@ const renderToday = (state) => {
       if (restDay) text.classList.add("rest-day");
 
       const badge = document.createElement("span");
-      badge.className = `difficulty ${task.difficulty}`;
+      badge.className = `difficulty ${toneClassForTime(task.difficulty)}`;
       badge.textContent = difficultyLabel(task.difficulty);
 
       label.appendChild(checkbox);
@@ -2635,7 +2694,7 @@ const renderGoals = (state) => {
     title.className = "goal-title";
 
     const badge = document.createElement("span");
-    badge.className = `difficulty ${goal.difficulty}`;
+    badge.className = `difficulty ${toneClassForTime(goal.difficulty)}`;
     badge.textContent = difficultyLabel(goal.difficulty);
     if (editingGoalId === goal.id) {
       const input = document.createElement("input");
@@ -2914,7 +2973,7 @@ const addGoal = (title, difficulty) => {
   state.goals.push({
     id: crypto.randomUUID(),
     title,
-    difficulty,
+    difficulty: normalizeGoalTime(difficulty),
     createdAt: today,
   });
 
@@ -2925,7 +2984,7 @@ const addGoal = (title, difficulty) => {
   triggerHaptic(14);
   showToast(t("toastGoalAdded"));
   trackEvent("goal_added", {
-    difficulty,
+    difficulty: normalizeGoalTime(difficulty),
     goals_count: state.goals.length,
   });
   if (hadNoGoals) {
@@ -3561,7 +3620,7 @@ const renderTemplates = () => {
       chip.className = "template-chip";
       chip.textContent = item;
       chip.addEventListener("click", () => {
-        const timeOfDay = goalDifficulty ? goalDifficulty.value : "noon";
+        const timeOfDay = goalTimeInput ? goalTimeInput.value : "12:00";
         addGoal(item, timeOfDay);
       });
       items.appendChild(chip);
@@ -3632,6 +3691,7 @@ const init = () => {
   openIntroIfNeeded(state);
   const startTab = state.tutorialCompleted || state.tutorialStep >= 2 ? "today" : "goals";
   setActiveTab(startTab);
+  setGoalTimeValue(goalTimeInput?.value || "12:00");
 
   if (!listenersBound) {
     goalForm.addEventListener("submit", (event) => {
@@ -3639,8 +3699,25 @@ const init = () => {
       const value = goalInput.value.trim();
       if (!value) return;
 
-      addGoal(value, goalDifficulty.value);
+      addGoal(value, goalTimeInput?.value || "12:00");
       goalInput.value = "";
+    });
+    if (goalTimeToggle) {
+      goalTimeToggle.addEventListener("click", () => {
+        toggleGoalTimePicker();
+      });
+    }
+    if (goalTimeApplyBtn) {
+      goalTimeApplyBtn.addEventListener("click", () => {
+        toggleGoalTimePicker(false);
+      });
+    }
+    window.addEventListener("click", (event) => {
+      if (!goalTimePicker || !goalTimeToggle || goalTimePicker.hidden) return;
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (goalTimePicker.contains(target) || goalTimeToggle.contains(target)) return;
+      toggleGoalTimePicker(false);
     });
 
     applyOffsetBtn.addEventListener("click", () => {
@@ -3973,10 +4050,133 @@ function renderCalendar(state) {
   }
 }
 
+function isClockTime(value) {
+  return /^\d{2}:\d{2}$/.test(value || "");
+}
+
+function normalizeGoalTime(value) {
+  if (isClockTime(value)) return value;
+  if (value === "morning") return "08:00";
+  if (value === "evening") return "19:00";
+  return "12:00";
+}
+
+function timeToMinutes(value) {
+  const normalized = normalizeGoalTime(value);
+  const [h, m] = normalized.split(":").map(Number);
+  return (h * 60) + m;
+}
+
+function formatTime(value) {
+  const normalized = normalizeGoalTime(value);
+  const [h, m] = normalized.split(":").map(Number);
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
+
+function toneClassForTime(value) {
+  const minutes = timeToMinutes(value);
+  if (minutes < 11 * 60) return "morning";
+  if (minutes < 17 * 60) return "noon";
+  return "evening";
+}
+
+function setGoalTimeValue(value) {
+  const formatted = formatTime(value);
+  const [h, m] = formatted.split(":").map(Number);
+  pickerHour = h;
+  pickerMinute = m;
+  if (goalTimeInput) goalTimeInput.value = formatted;
+  if (goalTimeToggle) goalTimeToggle.textContent = `${t("timePrefix")}: ${formatted}`;
+  if (timePickerValueEl) timePickerValueEl.textContent = formatted;
+}
+
+function positionDialDot(el, angleDeg, radiusPx) {
+  const radians = (angleDeg * Math.PI) / 180;
+  const x = Math.cos(radians) * radiusPx;
+  const y = Math.sin(radians) * radiusPx;
+  el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+}
+
+function renderDial(container, values, activeValue, radiusPx, formatter, onSelect) {
+  if (!container) return;
+  container.innerHTML = "";
+  const hand = document.createElement("div");
+  hand.className = "time-hand";
+  container.appendChild(hand);
+  values.forEach((value, index) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = "time-dot";
+    dot.textContent = formatter(value);
+    const angle = ((index / values.length) * 360) - 90;
+    positionDialDot(dot, angle, radiusPx);
+    if (value === activeValue) {
+      dot.classList.add("active");
+      hand.style.setProperty("--dial-hand-angle", `${angle}deg`);
+      hand.style.setProperty("--dial-hand-length", `${radiusPx}px`);
+    }
+    dot.addEventListener("click", () => onSelect(value));
+    container.appendChild(dot);
+  });
+}
+
+function renderHourDial(container, activeValue, onSelect) {
+  if (!container) return;
+  container.innerHTML = "";
+  const hand = document.createElement("div");
+  hand.className = "time-hand";
+  container.appendChild(hand);
+  for (let value = 0; value < 24; value += 1) {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = "time-dot";
+    dot.textContent = String(value).padStart(2, "0");
+    const angle = (((value % 12) / 12) * 360) - 90;
+    const radius = value < 12 ? 52 : 34;
+    positionDialDot(dot, angle, radius);
+    if (value === activeValue) {
+      dot.classList.add("active");
+      hand.style.setProperty("--dial-hand-angle", `${angle}deg`);
+      hand.style.setProperty("--dial-hand-length", `${radius}px`);
+    }
+    dot.addEventListener("click", () => onSelect(value));
+    container.appendChild(dot);
+  }
+}
+
+function renderGoalTimePicker() {
+  renderHourDial(timeHourDial, pickerHour, (next) => {
+    pickerHour = next;
+    setGoalTimeValue(`${String(pickerHour).padStart(2, "0")}:${String(pickerMinute).padStart(2, "0")}`);
+    renderGoalTimePicker();
+  });
+  renderDial(
+    timeMinuteDial,
+    Array.from({ length: 12 }, (_, i) => i * 5),
+    pickerMinute,
+    52,
+    (value) => String(value).padStart(2, "0"),
+    (next) => {
+      pickerMinute = next;
+      setGoalTimeValue(`${String(pickerHour).padStart(2, "0")}:${String(pickerMinute).padStart(2, "0")}`);
+      renderGoalTimePicker();
+    }
+  );
+}
+
+function toggleGoalTimePicker(forceOpen = null) {
+  if (!goalTimePicker || !goalTimeToggle) return;
+  const shouldOpen = forceOpen === null ? goalTimePicker.hidden : forceOpen;
+  goalTimePicker.hidden = !shouldOpen;
+  goalTimeToggle.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+  if (shouldOpen) renderGoalTimePicker();
+}
+
 function difficultyLabel(value) {
   if (value === "morning") return t("difficultyMorning");
+  if (value === "noon") return t("difficultyNoon");
   if (value === "evening") return t("difficultyEvening");
-  return t("difficultyNoon");
+  return formatTime(value);
 }
 
 const registerServiceWorker = () => {

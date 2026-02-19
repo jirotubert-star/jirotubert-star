@@ -529,6 +529,7 @@ p {
 .goal-form {
   display: flex;
   gap: 10px;
+  align-items: flex-start;
   margin-bottom: 12px;
 }
 
@@ -705,6 +706,150 @@ p {
 
 .goal-form select {
   max-width: 140px;
+}
+
+.time-picker {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.time-picker-toggle {
+  min-width: 126px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.time-picker-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  width: min(92vw, 360px);
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid #d8d3c7;
+  background: #fff;
+  box-shadow: 0 18px 40px rgba(33, 48, 53, 0.2);
+  display: grid;
+  gap: 10px;
+}
+
+.time-picker-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 0.9rem;
+}
+
+.time-picker-head strong {
+  font-size: 1.1rem;
+  color: #1f4f41;
+}
+
+.time-picker-dials {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.time-dial-wrap {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+}
+
+.time-dial-title {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.time-dial {
+  position: relative;
+  width: 144px;
+  height: 144px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, #ffffff 0 18%, #f3f8f5 18% 40%, #e9f1ed 40% 42%, #f7faf8 42% 100%);
+  border: 1px solid #d8e2dd;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.time-dial::before,
+.time-dial::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.time-dial::before {
+  width: 122px;
+  height: 122px;
+  border: 1px solid rgba(59, 108, 92, 0.16);
+}
+
+.time-dial::after {
+  width: 78px;
+  height: 78px;
+  border: 1px solid rgba(59, 108, 92, 0.18);
+}
+
+.time-hand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  height: var(--dial-hand-length, 52px);
+  background: linear-gradient(180deg, #2f7b68, #2b6259);
+  transform-origin: 50% 100%;
+  transform: translate(-50%, -100%) rotate(var(--dial-hand-angle, 0deg));
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.time-hand::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: #2f7b68;
+}
+
+.time-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.54rem;
+  line-height: 1;
+  padding: 0;
+  background: transparent;
+  color: #3d5b52;
+  cursor: pointer;
+}
+
+.time-dot.active {
+  background: #2f7b68;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(47, 123, 104, 0.35);
 }
 
 .btn {
@@ -1860,6 +2005,23 @@ summary:focus-visible {
   }
   .goal-form select {
     max-width: none;
+  }
+  .time-picker {
+    width: 100%;
+  }
+  .time-picker-toggle {
+    width: 100%;
+  }
+  .time-picker-popover {
+    position: static;
+    width: 100%;
+  }
+  .time-picker-dials {
+    grid-template-columns: 1fr;
+  }
+  .time-dial {
+    width: min(80vw, 160px);
+    height: min(80vw, 160px);
   }
   .plan-controls {
     flex-direction: column;

@@ -2014,10 +2014,16 @@ summary:focus-visible {
     width: 100%;
   }
   .time-picker-wheels {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
   }
   .time-wheel {
-    width: min(78vw, 220px);
+    width: min(38vw, 120px);
+    height: 164px;
+    padding: 64px 0;
+  }
+  .time-dial-title {
+    font-size: 0.74rem;
   }
   .plan-controls {
     flex-direction: column;

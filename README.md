@@ -37,9 +37,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.7.22`
+- Aktuell: `1.7.23`
 
 ## Aenderungsprotokoll
+- `1.7.23` (2026-02-19): Zeitpicker-Layout kompakter gemacht: Stunde bleibt links und Minute rechts (auch auf kleinen Screens), Wheel-Breiten reduziert und vertikale Hoehe leicht gesenkt fuer bessere Platznutzung.
 - `1.7.22` (2026-02-19): Wheel-Swipe-Bedienung fuer Uhrzeitpicker stabilisiert: direkte Pointer-Drag-Steuerung (hoch/runter), Touch-Scroll-Capture im Wheel, robustes Snap+Finalize nach Gesture-Ende und zyklisches Recenter fuer verlässliche unendliche Wiederholung.
 - `1.7.21` (2026-02-19): Goal-Zeitpicker von Kreis-UI auf vertikales Wheel (Apple-Wecker-Stil) umgestellt: smooth Swipe nach oben/unten mit Scroll-Snap, stufenloser Stunden-/Minutenwahl und unendlicher Wiederholung der Zahlen per zyklischem Recenter.
 - `1.7.20` (2026-02-19): Goal-Zeitwahl auf echte Uhrzeit umgestellt: statt Morgens/Mittags/Abends jetzt radialer Time-Picker mit zwei Kreisen (Stunde + Minute) und Radius-Linie, Speicherung als `HH:MM`, Anzeige/Sortierung der Aufgaben nach Uhrzeit.

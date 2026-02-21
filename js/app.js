@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.26";
+const APP_VERSION = "1.7.27";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -4149,10 +4149,11 @@ function updateWheelCylinderEffect(container) {
 
 function highlightWheelSelection(container, values) {
   if (!container) return;
+  const items = container.querySelectorAll(".time-wheel-item");
   const index = Math.round(container.scrollTop / WHEEL_ITEM_HEIGHT);
-  const selectedValue = values[mod(index, values.length)];
-  container.querySelectorAll(".time-wheel-item").forEach((node) => {
-    node.classList.toggle("active", Number(node.dataset.value) === selectedValue);
+  const safeIndex = Math.max(0, Math.min(items.length - 1, index));
+  items.forEach((node, i) => {
+    node.classList.toggle("active", i === safeIndex);
   });
   updateWheelCylinderEffect(container);
 }
@@ -4195,43 +4196,8 @@ function bindWheelScroll(container, values, wheelKey) {
     if (wheelScrollTimers[timerKey]) clearTimeout(wheelScrollTimers[timerKey]);
     wheelScrollTimers[timerKey] = setTimeout(() => {
       finalizeWheelSelection(container, values, wheelKey);
-    }, 70);
+    }, 160);
   });
-}
-
-function bindWheelDrag(container, values, wheelKey) {
-  if (!container) return;
-  if (container.dataset.boundWheelDrag === wheelKey) return;
-  container.dataset.boundWheelDrag = wheelKey;
-  let dragging = false;
-  let startY = 0;
-  let startScrollTop = 0;
-
-  container.addEventListener("pointerdown", (event) => {
-    dragging = true;
-    startY = event.clientY;
-    startScrollTop = container.scrollTop;
-    container.setPointerCapture(event.pointerId);
-  });
-
-  container.addEventListener("pointermove", (event) => {
-    if (!dragging) return;
-    const deltaY = event.clientY - startY;
-    container.scrollTop = startScrollTop - deltaY;
-    event.preventDefault();
-  });
-
-  const endDrag = (event) => {
-    if (!dragging) return;
-    dragging = false;
-    if (container.hasPointerCapture(event.pointerId)) {
-      container.releasePointerCapture(event.pointerId);
-    }
-    finalizeWheelSelection(container, values, wheelKey);
-  };
-
-  container.addEventListener("pointerup", endDrag);
-  container.addEventListener("pointercancel", endDrag);
 }
 
 function setWheelToValue(container, values, value) {
@@ -4266,8 +4232,6 @@ function toggleGoalTimePicker(forceOpen = null) {
     renderGoalTimePicker();
     bindWheelScroll(timeHourWheel, HOUR_VALUES, "hour");
     bindWheelScroll(timeMinuteWheel, MINUTE_VALUES, "minute");
-    bindWheelDrag(timeHourWheel, HOUR_VALUES, "hour");
-    bindWheelDrag(timeMinuteWheel, MINUTE_VALUES, "minute");
   }
 }
 

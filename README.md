@@ -37,9 +37,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.7.26`
+- Aktuell: `1.7.27`
 
 ## Aenderungsprotokoll
+- `1.7.27` (2026-02-19): Zeitpicker-Wheel gegen Springen stabilisiert: konkurrierende Custom-Drag-Logik entfernt, Scroll-Ende-Debounce entschärft, aktive Markierung auf exakt zentriertes Item umgestellt und Touch-Handling auf nativen vertikalen Scroll (`pan-y`) korrigiert.
 - `1.7.26` (2026-02-19): Zeitpicker-Wheel stabilisiert: Endlos-Nachregeln beim Oeffnen/Stoppen entfernt, exaktes Einrasten auf Mittelposition erzwungen und Re-Sync-Loops zwischen Scroll-Ende und Value-Update unterbunden.
 - `1.7.25` (2026-02-19): 3D-Zylinder-Effekt im Zeitpicker visuell verstaerkt und browser-robuster gemacht: perspektivische Rotation pro Item, staerkere Tiefenstaffelung, zusaetzliche Fokusunschärfe/Opacity-Abstufung und Performance-Hinweise via `will-change`.
 - `1.7.24` (2026-02-19): Zeitpicker-Wheel um 3D-Zylinder-Optik erweitert: Zahlen kippen beim Scrollen nach vorne/hinten (Perspektive, Tiefe, Rotation), sodass ein rotierender breiter Zylinder-Eindruck entsteht.

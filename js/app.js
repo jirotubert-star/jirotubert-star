@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.28";
+const APP_VERSION = "1.7.29";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -63,6 +63,7 @@ const I18N = {
     unlockIntroDaily: "Onboarding Fast: Heute ist eine weitere Aufgabe freigeschaltet.",
     resetConfirm: "Möchtest du wirklich alles zurücksetzen?",
     toastGoalAdded: "Ziel hinzugefügt",
+    toastGoalTimeUpdated: "Zeit aktualisiert",
     toastTaskAdded: "Neue Tagesaufgabe hinzugefügt",
     toastTodayAdded: "Aufgabe für heute hinzugefügt",
     toastTomorrowAdded: "Aufgabe für morgen geplant",
@@ -139,6 +140,7 @@ const I18N = {
     unlockIntroDaily: "Fast onboarding: one more task is unlocked today.",
     resetConfirm: "Reset all app data?",
     toastGoalAdded: "Goal added",
+    toastGoalTimeUpdated: "Time updated",
     toastTaskAdded: "Daily task added",
     toastTodayAdded: "Task added for today",
     toastTomorrowAdded: "Task planned for tomorrow",
@@ -209,6 +211,7 @@ const I18N = {
     unlockIntroDaily: "Быстрый онбординг: сегодня открыта еще одна задача.",
     resetConfirm: "Сбросить все данные?",
     toastGoalAdded: "Цель добавлена",
+    toastGoalTimeUpdated: "Время обновлено",
     toastTaskAdded: "Задача дня добавлена",
     toastTodayAdded: "Задача на сегодня добавлена",
     toastTomorrowAdded: "Задача на завтра запланирована",
@@ -279,6 +282,7 @@ const I18N = {
     unlockIntroDaily: "Onboarding rápido: hoy se desbloqueó una tarea más.",
     resetConfirm: "¿Restablecer todos los datos?",
     toastGoalAdded: "Meta añadida",
+    toastGoalTimeUpdated: "Hora actualizada",
     toastTaskAdded: "Tarea diaria añadida",
     toastTodayAdded: "Tarea añadida para hoy",
     toastTomorrowAdded: "Tarea planificada para mañana",
@@ -349,6 +353,7 @@ const I18N = {
     unlockIntroDaily: "Onboarding rapide : une tâche de plus est débloquée aujourd'hui.",
     resetConfirm: "Réinitialiser toutes les données ?",
     toastGoalAdded: "Objectif ajouté",
+    toastGoalTimeUpdated: "Heure mise à jour",
     toastTaskAdded: "Tâche du jour ajoutée",
     toastTodayAdded: "Tâche ajoutée pour aujourd'hui",
     toastTomorrowAdded: "Tâche planifiée pour demain",
@@ -1464,6 +1469,7 @@ let introGoalDraft = "";
 let runtimeAppVersion = APP_VERSION;
 let pickerHour = 12;
 let pickerMinute = 0;
+let editingGoalTimeId = null;
 const WHEEL_ITEM_HEIGHT = 36;
 const WHEEL_REPEAT = 7;
 const WHEEL_CENTER_REPEAT = Math.floor(WHEEL_REPEAT / 2);
@@ -2703,6 +2709,13 @@ const renderGoals = (state) => {
     const badge = document.createElement("span");
     badge.className = `difficulty ${toneClassForTime(goal.difficulty)}`;
     badge.textContent = difficultyLabel(goal.difficulty);
+    badge.classList.add("time-edit-trigger");
+    badge.title = `${t("timePickerTitle")}: ${difficultyLabel(goal.difficulty)}`;
+    badge.addEventListener("click", () => {
+      editingGoalTimeId = goal.id;
+      setGoalTimeValue(goal.difficulty);
+      toggleGoalTimePicker(true);
+    });
     if (editingGoalId === goal.id) {
       const input = document.createElement("input");
       input.type = "text";
@@ -2997,6 +3010,24 @@ const addGoal = (title, difficulty) => {
   if (hadNoGoals) {
     setActiveTab("today");
   }
+};
+
+const updateGoalTime = (goalId, timeValue) => {
+  const state = loadState();
+  const normalized = normalizeGoalTime(timeValue);
+  const goal = state.goals.find((g) => g.id === goalId);
+  if (!goal) return;
+  goal.difficulty = normalized;
+
+  state.todayTasks = state.todayTasks.map((task) => (
+    task.goalId === goalId
+      ? { ...task, difficulty: normalized }
+      : task
+  ));
+
+  saveState(state);
+  renderAll(state);
+  showToast(t("toastGoalTimeUpdated"));
 };
 
 const updateMainDaySummary = (state) => {
@@ -3711,11 +3742,16 @@ const init = () => {
     });
     if (goalTimeToggle) {
       goalTimeToggle.addEventListener("click", () => {
+        editingGoalTimeId = null;
         toggleGoalTimePicker();
       });
     }
     if (goalTimeApplyBtn) {
       goalTimeApplyBtn.addEventListener("click", () => {
+        if (editingGoalTimeId) {
+          updateGoalTime(editingGoalTimeId, `${String(pickerHour).padStart(2, "0")}:${String(pickerMinute).padStart(2, "0")}`);
+          editingGoalTimeId = null;
+        }
         toggleGoalTimePicker(false);
       });
     }
@@ -3724,6 +3760,7 @@ const init = () => {
       const target = event.target;
       if (!(target instanceof Node)) return;
       if (goalTimePicker.contains(target) || goalTimeToggle.contains(target)) return;
+      editingGoalTimeId = null;
       toggleGoalTimePicker(false);
     });
 

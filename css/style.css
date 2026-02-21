@@ -1128,6 +1128,14 @@ summary:focus-visible {
   color: #7a3f35;
 }
 
+.difficulty.time-edit-trigger {
+  cursor: pointer;
+}
+
+.difficulty.time-edit-trigger:hover {
+  filter: brightness(0.97);
+}
+
 .task-text {
   flex: 1;
   min-width: 0;

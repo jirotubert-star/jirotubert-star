@@ -785,6 +785,8 @@ p {
   overscroll-behavior: contain;
   scrollbar-width: none;
   padding: 72px 0;
+  perspective: 540px;
+  transform-style: preserve-3d;
 }
 
 .time-wheel::-webkit-scrollbar {
@@ -842,6 +844,10 @@ p {
   scroll-snap-align: center;
   cursor: pointer;
   user-select: none;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transform-origin: 50% 50%;
+  transition: transform 90ms linear, opacity 90ms linear, color 90ms linear;
 }
 
 .time-wheel-item.active {

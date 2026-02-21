@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.23";
+const APP_VERSION = "1.7.24";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -4126,6 +4126,24 @@ function buildWheel(container, values, selected) {
   }
 }
 
+function updateWheelCylinderEffect(container) {
+  if (!container) return;
+  const centerY = container.scrollTop + (container.clientHeight / 2);
+  const items = container.querySelectorAll(".time-wheel-item");
+  items.forEach((node) => {
+    const itemCenter = node.offsetTop + (node.offsetHeight / 2);
+    const delta = itemCenter - centerY;
+    const ratio = Math.max(-1.5, Math.min(1.5, delta / 74));
+    const absRatio = Math.min(Math.abs(ratio), 1.25);
+    const rotateX = ratio * -58;
+    const depth = (Math.cos(absRatio * Math.PI * 0.5) * 24) - 12;
+    const scale = 1 - (absRatio * 0.18);
+    const opacity = 1 - (absRatio * 0.45);
+    node.style.transform = `translateZ(${depth}px) rotateX(${rotateX}deg) scale(${scale})`;
+    node.style.opacity = String(Math.max(0.32, opacity));
+  });
+}
+
 function highlightWheelSelection(container, values) {
   if (!container) return;
   const index = Math.round(container.scrollTop / WHEEL_ITEM_HEIGHT);
@@ -4133,6 +4151,7 @@ function highlightWheelSelection(container, values) {
   container.querySelectorAll(".time-wheel-item").forEach((node) => {
     node.classList.toggle("active", Number(node.dataset.value) === selectedValue);
   });
+  updateWheelCylinderEffect(container);
 }
 
 function recenterWheel(container, values) {
@@ -4165,6 +4184,7 @@ function bindWheelScroll(container, values, wheelKey) {
   const timerKey = wheelKey === "hour" ? "hour" : "minute";
   container.addEventListener("scroll", () => {
     if (wheelSyncLock) return;
+    updateWheelCylinderEffect(container);
     if (wheelScrollTimers[timerKey]) clearTimeout(wheelScrollTimers[timerKey]);
     wheelScrollTimers[timerKey] = setTimeout(() => {
       finalizeWheelSelection(container, values, wheelKey);

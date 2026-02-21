@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.34";
+const APP_VERSION = "1.7.35";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -73,6 +73,8 @@ const I18N = {
     toastOffset: "Tag-Offset gesetzt",
     toastProOn: "Pro-Modus aktiv",
     toastProOff: "Pro-Modus deaktiviert",
+    toastWeightSaved: "Gewicht gespeichert",
+    toastWeightInvalid: "Bitte ein gültiges Gewicht zwischen 20 und 400 eingeben",
     planNeed: "Bitte mindestens 4 Tage eintragen",
     planWeek: "Woche geplant",
     planRestDayInfo: "Nicht ausgefüllte Tage gelten als Rest Day.",
@@ -150,6 +152,8 @@ const I18N = {
     toastOffset: "Day offset set",
     toastProOn: "Pro mode on",
     toastProOff: "Pro mode off",
+    toastWeightSaved: "Weight saved",
+    toastWeightInvalid: "Please enter a valid weight between 20 and 400",
     planNeed: "Please set at least 4 days",
     planWeek: "Week planned",
     planRestDayInfo: "Days left empty are treated as rest days.",
@@ -221,6 +225,8 @@ const I18N = {
     toastOffset: "Смещение дня установлено",
     toastProOn: "Pro режим включён",
     toastProOff: "Pro режим выключен",
+    toastWeightSaved: "Вес сохранён",
+    toastWeightInvalid: "Укажи корректный вес от 20 до 400",
     planNeed: "Укажите минимум 4 дня",
     planWeek: "Неделя запланирована",
     planRestDayInfo: "Незаполненные дни считаются днями отдыха.",
@@ -292,6 +298,8 @@ const I18N = {
     toastOffset: "Desfase de día aplicado",
     toastProOn: "Modo Pro activado",
     toastProOff: "Modo Pro desactivado",
+    toastWeightSaved: "Peso guardado",
+    toastWeightInvalid: "Introduce un peso válido entre 20 y 400",
     planNeed: "Añade al menos 4 días",
     planWeek: "Semana planificada",
     planRestDayInfo: "Los días sin completar se consideran días de descanso.",
@@ -363,6 +371,8 @@ const I18N = {
     toastOffset: "Décalage de jour défini",
     toastProOn: "Mode Pro activé",
     toastProOff: "Mode Pro désactivé",
+    toastWeightSaved: "Poids enregistré",
+    toastWeightInvalid: "Entre un poids valide entre 20 et 400",
     planNeed: "Ajoute au moins 4 jours",
     planWeek: "Semaine planifiée",
     planRestDayInfo: "Les jours non remplis sont considérés comme jours de repos.",
@@ -512,8 +522,14 @@ const STATIC_TEXT = {
     trackerChecklist: "Checkliste",
     trackerWeight: "Gewicht",
     weightTrackerTitle: "Gewichts-Tracker",
-    weightTrackerHint: "Beta: Tracker-Wechsel ist aktiv. Gewichtseingabe folgt als nächster Schritt.",
+    weightTrackerHint: "Trage dein Gewicht einmal täglich ein, um den Verlauf zu sehen.",
     weightTrackerMeta: "Gewichts-Tracker",
+    weightInputLabel: "Gewicht (kg)",
+    weightInputPlaceholder: "z. B. 72.4",
+    weightSaveBtn: "Speichern",
+    weightDatePrefix: "Heute",
+    weightChartTitle: "Gewichtsverlauf",
+    weightChartEmpty: "Noch keine Einträge.",
     goalsTitle: "Ziele",
     progressTitle: "Fortschritt",
     infoTitle: "Einstellungen",
@@ -640,8 +656,14 @@ const STATIC_TEXT = {
     trackerChecklist: "Checklist",
     trackerWeight: "Weight",
     weightTrackerTitle: "Weight tracker",
-    weightTrackerHint: "Beta: tracker switch is active. Weight input is the next step.",
+    weightTrackerHint: "Enter your weight once per day to see the trend.",
     weightTrackerMeta: "Weight tracker",
+    weightInputLabel: "Weight (kg)",
+    weightInputPlaceholder: "e.g. 72.4",
+    weightSaveBtn: "Save",
+    weightDatePrefix: "Today",
+    weightChartTitle: "Weight trend",
+    weightChartEmpty: "No entries yet.",
     goalsTitle: "Цели",
     progressTitle: "Прогресс",
     infoTitle: "Settings",
@@ -768,8 +790,14 @@ const STATIC_TEXT = {
     trackerChecklist: "Список",
     trackerWeight: "Вес",
     weightTrackerTitle: "Трекер веса",
-    weightTrackerHint: "Бета: переключение трекеров уже активно. Ввод веса добавим следующим шагом.",
+    weightTrackerHint: "Вводи вес один раз в день, чтобы видеть динамику.",
     weightTrackerMeta: "Трекер веса",
+    weightInputLabel: "Вес (кг)",
+    weightInputPlaceholder: "например: 72.4",
+    weightSaveBtn: "Сохранить",
+    weightDatePrefix: "Сегодня",
+    weightChartTitle: "Динамика веса",
+    weightChartEmpty: "Пока нет записей.",
     goalsTitle: "Metas",
     progressTitle: "Progreso",
     infoTitle: "Настройки",
@@ -896,8 +924,14 @@ const STATIC_TEXT = {
     trackerChecklist: "Lista",
     trackerWeight: "Peso",
     weightTrackerTitle: "Tracker de peso",
-    weightTrackerHint: "Beta: el cambio de tracker ya está activo. El registro de peso llega en el siguiente paso.",
+    weightTrackerHint: "Registra tu peso una vez al día para ver la evolución.",
     weightTrackerMeta: "Tracker de peso",
+    weightInputLabel: "Peso (kg)",
+    weightInputPlaceholder: "ej.: 72.4",
+    weightSaveBtn: "Guardar",
+    weightDatePrefix: "Hoy",
+    weightChartTitle: "Evolución del peso",
+    weightChartEmpty: "Aún no hay registros.",
     goalsTitle: "Objectifs",
     progressTitle: "Progrès",
     infoTitle: "Ajustes",
@@ -1024,8 +1058,14 @@ const STATIC_TEXT = {
     trackerChecklist: "Checklist",
     trackerWeight: "Poids",
     weightTrackerTitle: "Suivi du poids",
-    weightTrackerHint: "Bêta : le changement de tracker est actif. La saisie du poids arrive à l'étape suivante.",
+    weightTrackerHint: "Saisis ton poids une fois par jour pour voir l'évolution.",
     weightTrackerMeta: "Suivi du poids",
+    weightInputLabel: "Poids (kg)",
+    weightInputPlaceholder: "ex. : 72.4",
+    weightSaveBtn: "Enregistrer",
+    weightDatePrefix: "Aujourd'hui",
+    weightChartTitle: "Évolution du poids",
+    weightChartEmpty: "Pas encore de saisies.",
     goalsTitle: "Objectifs",
     progressTitle: "Progrès",
     infoTitle: "Réglages",
@@ -1311,6 +1351,7 @@ const defaultState = () => ({
   completedDays: {},
   daySummary: {},
   dayTaskHistory: {},
+  weightEntries: {},
   weeklyPlans: {},
   tutorialStep: 1,
   tutorialCompleted: false,
@@ -1350,6 +1391,10 @@ const loadState = () => {
     normalized.completedDays = normalized.completedDays || {};
     normalized.daySummary = normalized.daySummary || {};
     normalized.dayTaskHistory = normalized.dayTaskHistory || {};
+    normalized.weightEntries =
+      normalized.weightEntries && typeof normalized.weightEntries === "object"
+        ? normalized.weightEntries
+        : {};
     normalized.weeklyPlans = normalized.weeklyPlans || {};
     normalized.tutorialStep = normalized.tutorialStep || 1;
     normalized.tutorialCompleted = normalized.tutorialCompleted || false;
@@ -1397,6 +1442,13 @@ const sideQuestSelect = document.getElementById("side-quest-select");
 const trackerChecklistBtn = document.getElementById("tracker-checklist-btn");
 const trackerWeightBtn = document.getElementById("tracker-weight-btn");
 const weightTrackerPanel = document.getElementById("weight-tracker-panel");
+const weightForm = document.getElementById("weight-form");
+const weightInput = document.getElementById("weight-input");
+const weightSaveBtn = document.getElementById("weight-save-btn");
+const weightInputLabel = document.getElementById("weight-input-label");
+const weightDateInfo = document.getElementById("weight-date-info");
+const weightChartSvg = document.getElementById("weight-chart");
+const weightChartEmpty = document.getElementById("weight-chart-empty");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
 const goalTimeInput = document.getElementById("goal-time-input");
@@ -1964,6 +2016,11 @@ const applyStaticTranslations = () => {
   setText("tracker-weight-btn", s.trackerWeight);
   setText("weight-tracker-title", s.weightTrackerTitle);
   setText("weight-tracker-hint", s.weightTrackerHint);
+  if (weightInputLabel) weightInputLabel.textContent = s.weightInputLabel;
+  if (weightInput) weightInput.placeholder = s.weightInputPlaceholder;
+  if (weightSaveBtn) weightSaveBtn.textContent = s.weightSaveBtn;
+  setText("weight-chart-title", s.weightChartTitle);
+  setText("weight-chart-empty", s.weightChartEmpty);
   setText("goals-title", s.goalsTitle);
   setText("progress-title", s.progressTitle);
   setText("info-title", s.infoTitle);
@@ -2272,6 +2329,103 @@ const renderWelcome = (state) => {
   welcomeSection.style.display = state.goals.length === 0 ? "block" : "none";
 };
 
+const parseWeightValue = (raw) => {
+  const normalized = String(raw || "").replace(",", ".").trim();
+  if (!normalized) return null;
+  const value = Number(normalized);
+  if (!Number.isFinite(value)) return null;
+  if (value < 20 || value > 400) return null;
+  return Math.round(value * 10) / 10;
+};
+
+const renderWeightChart = (entries) => {
+  if (!weightChartSvg || !weightChartEmpty) return;
+  if (!entries.length) {
+    weightChartSvg.innerHTML = "";
+    weightChartEmpty.hidden = false;
+    return;
+  }
+
+  const recent = entries.slice(-21);
+  const values = recent.map((entry) => entry.value);
+  let minValue = Math.min(...values);
+  let maxValue = Math.max(...values);
+  if (minValue === maxValue) {
+    minValue -= 1;
+    maxValue += 1;
+  }
+
+  const width = 640;
+  const height = 220;
+  const padLeft = 34;
+  const padRight = 16;
+  const padTop = 14;
+  const padBottom = 28;
+  const plotWidth = width - padLeft - padRight;
+  const plotHeight = height - padTop - padBottom;
+  const denominator = recent.length > 1 ? recent.length - 1 : 1;
+  const range = maxValue - minValue;
+  const points = recent.map((entry, index) => {
+    const x = padLeft + ((index / denominator) * plotWidth);
+    const y = padTop + (((maxValue - entry.value) / range) * plotHeight);
+    return { ...entry, x, y };
+  });
+  const polyline = points.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const firstDate = formatISODate(recent[0].iso);
+  const lastDate = formatISODate(recent[recent.length - 1].iso);
+
+  const circles = points
+    .map((p) => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.2" />`)
+    .join("");
+
+  weightChartSvg.innerHTML = `
+    <line class="weight-grid-line" x1="${padLeft}" y1="${padTop}" x2="${width - padRight}" y2="${padTop}" />
+    <line class="weight-grid-line" x1="${padLeft}" y1="${padTop + (plotHeight / 2)}" x2="${width - padRight}" y2="${padTop + (plotHeight / 2)}" />
+    <line class="weight-grid-line" x1="${padLeft}" y1="${height - padBottom}" x2="${width - padRight}" y2="${height - padBottom}" />
+    <polyline class="weight-line" points="${polyline}" />
+    <g class="weight-dots">${circles}</g>
+    <text class="weight-axis-label" x="${padLeft}" y="${height - 6}">${firstDate}</text>
+    <text class="weight-axis-label weight-axis-label-end" x="${width - padRight}" y="${height - 6}">${lastDate}</text>
+    <text class="weight-value-label" x="${padLeft}" y="${padTop - 2}">${maxValue.toFixed(1)} kg</text>
+    <text class="weight-value-label" x="${padLeft}" y="${height - padBottom + 14}">${minValue.toFixed(1)} kg</text>
+  `;
+  weightChartEmpty.hidden = true;
+};
+
+const renderWeightTracker = (state) => {
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+  const today = todayISO(state.simulationOffsetDays);
+  if (weightDateInfo) weightDateInfo.textContent = `${s.weightDatePrefix}: ${formatISODate(today)}`;
+  if (weightInput) {
+    const todayValue = state.weightEntries?.[today];
+    if (Number.isFinite(todayValue)) {
+      weightInput.value = Number(todayValue).toFixed(1);
+    } else {
+      weightInput.value = "";
+    }
+  }
+  const entries = Object.entries(state.weightEntries || {})
+    .map(([iso, value]) => ({ iso, value: Number(value) }))
+    .filter((entry) => Number.isFinite(entry.value))
+    .sort((a, b) => a.iso.localeCompare(b.iso));
+  renderWeightChart(entries);
+};
+
+const saveTodayWeight = (rawValue) => {
+  const parsed = parseWeightValue(rawValue);
+  if (parsed === null) {
+    showToast(t("toastWeightInvalid"));
+    return;
+  }
+  const state = loadState();
+  const today = todayISO(state.simulationOffsetDays);
+  state.weightEntries = state.weightEntries || {};
+  state.weightEntries[today] = parsed;
+  saveState(state);
+  renderAll(state);
+  showToast(t("toastWeightSaved"));
+};
+
 const renderToday = (state) => {
   const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
   const activeTracker = state.todayTracker === "weight" ? "weight" : "checklist";
@@ -2291,6 +2445,7 @@ const renderToday = (state) => {
 
   if (activeTracker === "weight") {
     if (todayCount) todayCount.textContent = s.weightTrackerMeta;
+    renderWeightTracker(state);
     return;
   }
   todayList.innerHTML = "";
@@ -3914,6 +4069,12 @@ const init = () => {
         event.preventDefault();
         if (!sideQuestSelect || !sideQuestSelect.value) return;
         addSideQuest(sideQuestSelect.value);
+      });
+    }
+    if (weightForm) {
+      weightForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        saveTodayWeight(weightInput?.value || "");
       });
     }
     if (trackerChecklistBtn) {

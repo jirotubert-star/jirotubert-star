@@ -37,9 +37,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.7.34`
+- Aktuell: `1.7.35`
 
 ## Aenderungsprotokoll
+- `1.7.35` (2026-02-21): Gewichts-Tracker v1 umgesetzt: taegliche Gewichtseingabe im Today-Tracker (`Gewicht`) inklusive Speicherung pro Datum und Verlaufsdiagramm im Panel.
 - `1.7.34` (2026-02-21): Today-Tracker-Wechsel sichtbar gemacht: neuer Umschalter im Today-Header fuer `Checkliste`/`Gewicht`, persistente Auswahl im State (`todayTracker`) und eigene Gewicht-Panel-Ansicht als erste Basis.
 - `1.7.33` (2026-02-19): Zeit-Update fuer bestehende Goals weiter gehaertet: Ziel-ID wird beim Oeffnen am Picker mitgefuehrt und beim Speichern als Fallback verwendet. Dadurch funktioniert „Übernehmen“ auch dann, wenn der temporaere Edit-State verloren geht.
 - `1.7.32` (2026-02-19): Zeit-Update beim schnellen Tippen auf „Übernehmen“ gefixt: Picker liest jetzt vor dem Speichern immer direkt die aktuelle Wheel-Position aus (Hour/Minute), auch wenn Scroll-Debounce noch nicht ausgelaufen ist.

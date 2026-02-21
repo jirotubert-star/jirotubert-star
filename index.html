@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-user.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-user.png" />
-    <link rel="manifest" href="site.webmanifest?v=1734" />
+    <link rel="manifest" href="site.webmanifest?v=1735" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -105,7 +105,20 @@
         </form>
         <div id="weight-tracker-panel" class="weight-tracker-panel" hidden>
           <h3 id="weight-tracker-title">Gewichts-Tracker</h3>
-          <p id="weight-tracker-hint" class="soft-note">Beta: Tracker-Wechsel ist aktiv. Gewichtseingabe folgt als nächster Schritt.</p>
+          <p id="weight-tracker-hint" class="soft-note">Trage dein Gewicht einmal täglich ein, um den Verlauf zu sehen.</p>
+          <form id="weight-form" class="weight-form" autocomplete="off">
+            <label id="weight-input-label" for="weight-input">Gewicht (kg)</label>
+            <div class="weight-form-row">
+              <input id="weight-input" type="number" min="20" max="400" step="0.1" placeholder="z. B. 72.4" />
+              <button id="weight-save-btn" class="btn" type="submit">Speichern</button>
+            </div>
+            <div id="weight-date-info" class="soft-note">Heute: --</div>
+          </form>
+          <div class="weight-chart-wrap">
+            <div id="weight-chart-title" class="soft-note">Gewichtsverlauf</div>
+            <svg id="weight-chart" class="weight-chart" viewBox="0 0 640 220" role="img" aria-label="Gewichtsverlauf Diagramm"></svg>
+            <div id="weight-chart-empty" class="soft-note">Noch keine Einträge.</div>
+          </div>
         </div>
       </section>
 
@@ -310,7 +323,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.7.34</span>
+      <span class="soft-note" id="version">Version 1.7.35</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">

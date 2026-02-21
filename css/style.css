@@ -614,14 +614,86 @@ p {
 .weight-tracker-panel {
   margin-top: 10px;
   padding: 12px;
-  border-radius: 12px;
-  border: 1px dashed #c6d8cd;
-  background: #f7fbf9;
+  border-radius: 14px;
+  border: 1px solid #d6e4dc;
+  background: linear-gradient(180deg, #f8fcfa, #f2f8f4);
 }
 
 .weight-tracker-panel h3 {
   margin: 0 0 6px;
   font-size: 1rem;
+}
+
+.weight-form {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.weight-form label {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.weight-form-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.weight-form-row input {
+  width: 100%;
+  padding: 9px 11px;
+  border-radius: 10px;
+  border: 1px solid #ccd7d1;
+  background: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.weight-chart-wrap {
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e1ebe5;
+}
+
+.weight-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 6px;
+}
+
+.weight-grid-line {
+  stroke: #dfe8e3;
+  stroke-width: 1;
+}
+
+.weight-line {
+  fill: none;
+  stroke: #2f8b5c;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.weight-dots circle {
+  fill: #2f8b5c;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+}
+
+.weight-axis-label,
+.weight-value-label {
+  fill: #6e7f75;
+  font-size: 12px;
+  font-family: inherit;
+}
+
+.weight-axis-label-end {
+  text-anchor: end;
 }
 
 .side-quest-form.is-collapsed {

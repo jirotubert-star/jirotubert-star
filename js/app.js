@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.32";
+const APP_VERSION = "1.7.33";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -3044,6 +3044,7 @@ const startGoalTimeEdit = (goalId) => {
   const goal = state.goals.find((g) => g.id === goalId);
   if (!goal) return;
   editingGoalTimeId = goal.id;
+  if (goalTimePicker) goalTimePicker.dataset.editGoalId = goal.id;
   setGoalTimeValue(goal.difficulty);
   setActiveTab("goals");
   toggleGoalTimePicker(true);
@@ -3762,15 +3763,19 @@ const init = () => {
     if (goalTimeToggle) {
       goalTimeToggle.addEventListener("click", () => {
         editingGoalTimeId = null;
+        if (goalTimePicker) delete goalTimePicker.dataset.editGoalId;
         toggleGoalTimePicker();
       });
     }
     if (goalTimeApplyBtn) {
       goalTimeApplyBtn.addEventListener("click", () => {
         syncPickerFromWheelPositions();
-        if (editingGoalTimeId) {
-          updateGoalTime(editingGoalTimeId, `${String(pickerHour).padStart(2, "0")}:${String(pickerMinute).padStart(2, "0")}`);
+        const pickerGoalId = goalTimePicker?.dataset?.editGoalId || "";
+        const targetGoalId = editingGoalTimeId || pickerGoalId || null;
+        if (targetGoalId) {
+          updateGoalTime(targetGoalId, `${String(pickerHour).padStart(2, "0")}:${String(pickerMinute).padStart(2, "0")}`);
           editingGoalTimeId = null;
+          if (goalTimePicker) delete goalTimePicker.dataset.editGoalId;
         }
         toggleGoalTimePicker(false);
       });
@@ -3783,6 +3788,7 @@ const init = () => {
       if (targetEl?.closest(".time-edit-trigger")) return;
       if (goalTimePicker.contains(target) || goalTimeToggle.contains(target)) return;
       editingGoalTimeId = null;
+      if (goalTimePicker) delete goalTimePicker.dataset.editGoalId;
       toggleGoalTimePicker(false);
     });
 

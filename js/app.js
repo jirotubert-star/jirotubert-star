@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.25";
+const APP_VERSION = "1.7.26";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -4087,7 +4087,8 @@ function toneClassForTime(value) {
   return "evening";
 }
 
-function setGoalTimeValue(value) {
+function setGoalTimeValue(value, options = {}) {
+  const { syncWheels = true } = options;
   const formatted = formatTime(value);
   const [h, m] = formatted.split(":").map(Number);
   pickerHour = h;
@@ -4095,7 +4096,7 @@ function setGoalTimeValue(value) {
   if (goalTimeInput) goalTimeInput.value = formatted;
   if (goalTimeToggle) goalTimeToggle.textContent = `${t("timePrefix")}: ${formatted}`;
   if (timePickerValueEl) timePickerValueEl.textContent = formatted;
-  if (goalTimePicker && !goalTimePicker.hidden) {
+  if (syncWheels && goalTimePicker && !goalTimePicker.hidden) {
     setWheelToValue(timeHourWheel, HOUR_VALUES, pickerHour);
     setWheelToValue(timeMinuteWheel, MINUTE_VALUES, pickerMinute);
   }
@@ -4173,9 +4174,13 @@ function finalizeWheelSelection(container, values, wheelKey) {
   recenterWheel(container, values);
   const index = Math.round(container.scrollTop / WHEEL_ITEM_HEIGHT);
   const value = values[mod(index, values.length)];
+  setWheelToValue(container, values, value);
   if (wheelKey === "hour") pickerHour = value;
   if (wheelKey === "minute") pickerMinute = value;
-  setGoalTimeValue(`${String(pickerHour).padStart(2, "0")}:${String(pickerMinute).padStart(2, "0")}`);
+  setGoalTimeValue(
+    `${String(pickerHour).padStart(2, "0")}:${String(pickerMinute).padStart(2, "0")}`,
+    { syncWheels: false }
+  );
   highlightWheelSelection(container, values);
 }
 
@@ -4234,8 +4239,13 @@ function setWheelToValue(container, values, value) {
   const baseIndex = values.indexOf(value);
   const safeIndex = baseIndex >= 0 ? baseIndex : 0;
   const targetIndex = (WHEEL_CENTER_REPEAT * values.length) + safeIndex;
+  const targetTop = targetIndex * WHEEL_ITEM_HEIGHT;
+  if (Math.abs(container.scrollTop - targetTop) < 0.5) {
+    highlightWheelSelection(container, values);
+    return;
+  }
   wheelSyncLock = true;
-  container.scrollTop = targetIndex * WHEEL_ITEM_HEIGHT;
+  container.scrollTop = targetTop;
   wheelSyncLock = false;
   highlightWheelSelection(container, values);
 }

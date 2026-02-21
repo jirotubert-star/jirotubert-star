@@ -1130,6 +1130,9 @@ summary:focus-visible {
 
 .difficulty.time-edit-trigger {
   cursor: pointer;
+  border: none;
+  font: inherit;
+  line-height: inherit;
 }
 
 .difficulty.time-edit-trigger:hover {

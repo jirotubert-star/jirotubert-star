@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.29";
+const APP_VERSION = "1.7.30";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -2366,9 +2366,15 @@ const renderToday = (state) => {
       if (task.done && !restDay) text.classList.add("done");
       if (restDay) text.classList.add("rest-day");
 
-      const badge = document.createElement("span");
+      const badge = document.createElement("button");
+      badge.type = "button";
       badge.className = `difficulty ${toneClassForTime(task.difficulty)}`;
+      badge.classList.add("time-edit-trigger");
       badge.textContent = difficultyLabel(task.difficulty);
+      badge.title = `${t("timePickerTitle")}: ${difficultyLabel(task.difficulty)}`;
+      badge.addEventListener("click", () => {
+        if (task.goalId) startGoalTimeEdit(task.goalId);
+      });
 
       label.appendChild(checkbox);
       label.appendChild(frame);
@@ -2706,15 +2712,14 @@ const renderGoals = (state) => {
     title.textContent = goal.title;
     title.className = "goal-title";
 
-    const badge = document.createElement("span");
+    const badge = document.createElement("button");
+    badge.type = "button";
     badge.className = `difficulty ${toneClassForTime(goal.difficulty)}`;
     badge.textContent = difficultyLabel(goal.difficulty);
     badge.classList.add("time-edit-trigger");
     badge.title = `${t("timePickerTitle")}: ${difficultyLabel(goal.difficulty)}`;
     badge.addEventListener("click", () => {
-      editingGoalTimeId = goal.id;
-      setGoalTimeValue(goal.difficulty);
-      toggleGoalTimePicker(true);
+      startGoalTimeEdit(goal.id);
     });
     if (editingGoalId === goal.id) {
       const input = document.createElement("input");
@@ -3028,6 +3033,16 @@ const updateGoalTime = (goalId, timeValue) => {
   saveState(state);
   renderAll(state);
   showToast(t("toastGoalTimeUpdated"));
+};
+
+const startGoalTimeEdit = (goalId) => {
+  const state = loadState();
+  const goal = state.goals.find((g) => g.id === goalId);
+  if (!goal) return;
+  editingGoalTimeId = goal.id;
+  setGoalTimeValue(goal.difficulty);
+  setActiveTab("goals");
+  toggleGoalTimePicker(true);
 };
 
 const updateMainDaySummary = (state) => {

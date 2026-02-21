@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.27";
+const APP_VERSION = "1.7.28";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -4136,13 +4136,11 @@ function updateWheelCylinderEffect(container) {
     const delta = itemCenter - centerY;
     const ratio = Math.max(-4, Math.min(4, delta / WHEEL_ITEM_HEIGHT));
     const absRatio = Math.min(Math.abs(ratio), 4);
-    const rotateX = ratio * -18;
-    const depth = Math.max(-18, 30 - (absRatio * 12));
-    const scale = 1 - (absRatio * 0.08);
-    const opacity = 1 - (absRatio * 0.14);
-    const blur = absRatio * 0.5;
-    node.style.transform = `perspective(560px) rotateX(${rotateX}deg) translateZ(${depth}px) scale(${scale})`;
-    node.style.opacity = String(Math.max(0.38, opacity));
+    const scale = 1 - (absRatio * 0.09);
+    const opacity = 1 - (absRatio * 0.17);
+    const blur = absRatio * 0.35;
+    node.style.transform = `scale(${scale})`;
+    node.style.opacity = String(Math.max(0.34, opacity));
     node.style.filter = `blur(${blur}px)`;
   });
 }

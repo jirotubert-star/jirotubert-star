@@ -847,7 +847,8 @@ p {
   transform-style: preserve-3d;
   backface-visibility: hidden;
   transform-origin: 50% 50%;
-  transition: transform 90ms linear, opacity 90ms linear, color 90ms linear;
+  transition: transform 90ms linear, opacity 90ms linear, filter 90ms linear, color 90ms linear;
+  will-change: transform, opacity, filter;
 }
 
 .time-wheel-item.active {

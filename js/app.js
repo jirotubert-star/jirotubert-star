@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.24";
+const APP_VERSION = "1.7.25";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -4133,14 +4133,16 @@ function updateWheelCylinderEffect(container) {
   items.forEach((node) => {
     const itemCenter = node.offsetTop + (node.offsetHeight / 2);
     const delta = itemCenter - centerY;
-    const ratio = Math.max(-1.5, Math.min(1.5, delta / 74));
-    const absRatio = Math.min(Math.abs(ratio), 1.25);
-    const rotateX = ratio * -58;
-    const depth = (Math.cos(absRatio * Math.PI * 0.5) * 24) - 12;
-    const scale = 1 - (absRatio * 0.18);
-    const opacity = 1 - (absRatio * 0.45);
-    node.style.transform = `translateZ(${depth}px) rotateX(${rotateX}deg) scale(${scale})`;
-    node.style.opacity = String(Math.max(0.32, opacity));
+    const ratio = Math.max(-4, Math.min(4, delta / WHEEL_ITEM_HEIGHT));
+    const absRatio = Math.min(Math.abs(ratio), 4);
+    const rotateX = ratio * -18;
+    const depth = Math.max(-18, 30 - (absRatio * 12));
+    const scale = 1 - (absRatio * 0.08);
+    const opacity = 1 - (absRatio * 0.14);
+    const blur = absRatio * 0.5;
+    node.style.transform = `perspective(560px) rotateX(${rotateX}deg) translateZ(${depth}px) scale(${scale})`;
+    node.style.opacity = String(Math.max(0.38, opacity));
+    node.style.filter = `blur(${blur}px)`;
   });
 }
 

@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.30";
+const APP_VERSION = "1.7.31";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -2372,7 +2372,9 @@ const renderToday = (state) => {
       badge.classList.add("time-edit-trigger");
       badge.textContent = difficultyLabel(task.difficulty);
       badge.title = `${t("timePickerTitle")}: ${difficultyLabel(task.difficulty)}`;
-      badge.addEventListener("click", () => {
+      badge.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         if (task.goalId) startGoalTimeEdit(task.goalId);
       });
 
@@ -2718,7 +2720,9 @@ const renderGoals = (state) => {
     badge.textContent = difficultyLabel(goal.difficulty);
     badge.classList.add("time-edit-trigger");
     badge.title = `${t("timePickerTitle")}: ${difficultyLabel(goal.difficulty)}`;
-    badge.addEventListener("click", () => {
+    badge.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       startGoalTimeEdit(goal.id);
     });
     if (editingGoalId === goal.id) {
@@ -3774,6 +3778,8 @@ const init = () => {
       if (!goalTimePicker || !goalTimeToggle || goalTimePicker.hidden) return;
       const target = event.target;
       if (!(target instanceof Node)) return;
+      const targetEl = target instanceof Element ? target : null;
+      if (targetEl?.closest(".time-edit-trigger")) return;
       if (goalTimePicker.contains(target) || goalTimeToggle.contains(target)) return;
       editingGoalTimeId = null;
       toggleGoalTimePicker(false);

@@ -37,9 +37,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.7.30`
+- Aktuell: `1.7.31`
 
 ## Aenderungsprotokoll
+- `1.7.31` (2026-02-19): Zeit-Edit-Fix: Time-Picker schließt nicht mehr sofort beim Klick auf Zeit-Badges in `Today`/`Goals`. Ursache war ein globaler Outside-Click-Handler; Badge-Klicks werden jetzt von diesem Handler ausgeschlossen und stoppen Event-Bubbling.
 - `1.7.30` (2026-02-19): Zeit-Badge als echter Button in `Today` und `Goals` umgesetzt: Klick auf Uhrzeit oeffnet immer den Time-Wheel-Picker mit aktueller Zielzeit; bei Klick aus `Today` wird direkt in `Goals` mit offenem Picker fokussiert. Speichern aktualisiert Goal-Zeit und sortiert die Today-Liste automatisch neu.
 - `1.7.29` (2026-02-19): Bestehende Goal-Zeiten direkt bearbeitbar gemacht: klickbares Zeit-Badge pro Goal oeffnet den bestehenden Time-Wheel-Picker, Speichern uebernimmt die neue Zeit ins Goal und in heutige Hauptaufgaben; neues Toast-Feedback nach erfolgreicher Aktualisierung.
 - `1.7.28` (2026-02-19): Zeitpicker-Effekt vereinfacht fuer maximale Stabilitaet: 3D-Anwinkeln entfernt, Darstellung jetzt nur ueber Verkleinerung + Verblassung (inkl. leichter Unschaerfe) je nach Abstand zur Mitte.

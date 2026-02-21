@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.31";
+const APP_VERSION = "1.7.32";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -3767,6 +3767,7 @@ const init = () => {
     }
     if (goalTimeApplyBtn) {
       goalTimeApplyBtn.addEventListener("click", () => {
+        syncPickerFromWheelPositions();
         if (editingGoalTimeId) {
           updateGoalTime(editingGoalTimeId, `${String(pickerHour).padStart(2, "0")}:${String(pickerMinute).padStart(2, "0")}`);
           editingGoalTimeId = null;
@@ -4225,6 +4226,24 @@ function recenterWheel(container, values) {
   wheelSyncLock = true;
   container.scrollTop = recentered * WHEEL_ITEM_HEIGHT;
   wheelSyncLock = false;
+}
+
+function getCenteredWheelValue(container, values) {
+  if (!container) return values[0];
+  recenterWheel(container, values);
+  const index = Math.round(container.scrollTop / WHEEL_ITEM_HEIGHT);
+  return values[mod(index, values.length)];
+}
+
+function syncPickerFromWheelPositions() {
+  const hourValue = getCenteredWheelValue(timeHourWheel, HOUR_VALUES);
+  const minuteValue = getCenteredWheelValue(timeMinuteWheel, MINUTE_VALUES);
+  pickerHour = hourValue;
+  pickerMinute = minuteValue;
+  setGoalTimeValue(
+    `${String(pickerHour).padStart(2, "0")}:${String(pickerMinute).padStart(2, "0")}`,
+    { syncWheels: false }
+  );
 }
 
 function finalizeWheelSelection(container, values, wheelKey) {

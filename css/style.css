@@ -386,6 +386,43 @@ body::before {
   margin-bottom: 12px;
 }
 
+.panel-head--today {
+  align-items: center;
+  gap: 10px;
+}
+
+.panel-head-main {
+  min-width: 0;
+}
+
+.today-tracker-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #f5f1e8;
+}
+
+.tracker-btn {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.tracker-btn.is-active {
+  background: #e6f2ec;
+  border-color: #b8d7c8;
+  color: #1e5a48;
+}
+
 .panel-head h2 {
   letter-spacing: 0.01em;
   font-size: clamp(1.1rem, 1.3vw, 1.28rem);
@@ -572,6 +609,19 @@ p {
     opacity 220ms ease,
     transform 220ms ease,
     margin 220ms ease;
+}
+
+.weight-tracker-panel {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px dashed #c6d8cd;
+  background: #f7fbf9;
+}
+
+.weight-tracker-panel h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
 }
 
 .side-quest-form.is-collapsed {

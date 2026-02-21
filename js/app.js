@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.33";
+const APP_VERSION = "1.7.34";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -509,6 +509,11 @@ const STATIC_TEXT = {
     welcomeP1: "Kleine Schritte, jeden Tag.",
     welcomeP2: "Starte mit einem Ziel.",
     todayTitle: "Heute",
+    trackerChecklist: "Checkliste",
+    trackerWeight: "Gewicht",
+    weightTrackerTitle: "Gewichts-Tracker",
+    weightTrackerHint: "Beta: Tracker-Wechsel ist aktiv. Gewichtseingabe folgt als nächster Schritt.",
+    weightTrackerMeta: "Gewichts-Tracker",
     goalsTitle: "Ziele",
     progressTitle: "Fortschritt",
     infoTitle: "Einstellungen",
@@ -632,6 +637,11 @@ const STATIC_TEXT = {
     welcomeP1: "Small steps, every day.",
     welcomeP2: "Start with one goal.",
     todayTitle: "Сегодня",
+    trackerChecklist: "Checklist",
+    trackerWeight: "Weight",
+    weightTrackerTitle: "Weight tracker",
+    weightTrackerHint: "Beta: tracker switch is active. Weight input is the next step.",
+    weightTrackerMeta: "Weight tracker",
     goalsTitle: "Цели",
     progressTitle: "Прогресс",
     infoTitle: "Settings",
@@ -755,6 +765,11 @@ const STATIC_TEXT = {
     welcomeP1: "Маленькие шаги каждый день.",
     welcomeP2: "Начни с одной цели.",
     todayTitle: "Hoy",
+    trackerChecklist: "Список",
+    trackerWeight: "Вес",
+    weightTrackerTitle: "Трекер веса",
+    weightTrackerHint: "Бета: переключение трекеров уже активно. Ввод веса добавим следующим шагом.",
+    weightTrackerMeta: "Трекер веса",
     goalsTitle: "Metas",
     progressTitle: "Progreso",
     infoTitle: "Настройки",
@@ -878,6 +893,11 @@ const STATIC_TEXT = {
     welcomeP1: "Pequeños pasos cada día.",
     welcomeP2: "Empieza con una meta.",
     todayTitle: "Aujourd'hui",
+    trackerChecklist: "Lista",
+    trackerWeight: "Peso",
+    weightTrackerTitle: "Tracker de peso",
+    weightTrackerHint: "Beta: el cambio de tracker ya está activo. El registro de peso llega en el siguiente paso.",
+    weightTrackerMeta: "Tracker de peso",
     goalsTitle: "Objectifs",
     progressTitle: "Progrès",
     infoTitle: "Ajustes",
@@ -1001,6 +1021,11 @@ const STATIC_TEXT = {
     welcomeP1: "Petits pas chaque jour.",
     welcomeP2: "Commence avec un objectif.",
     todayTitle: "Aujourd'hui",
+    trackerChecklist: "Checklist",
+    trackerWeight: "Poids",
+    weightTrackerTitle: "Suivi du poids",
+    weightTrackerHint: "Bêta : le changement de tracker est actif. La saisie du poids arrive à l'étape suivante.",
+    weightTrackerMeta: "Suivi du poids",
     goalsTitle: "Objectifs",
     progressTitle: "Progrès",
     infoTitle: "Réglages",
@@ -1295,6 +1320,7 @@ const defaultState = () => ({
   onboardingStartDate: null,
   proEnabled: false,
   templatesOpenedOnce: false,
+  todayTracker: "checklist",
 });
 
 const loadState = () => {
@@ -1343,6 +1369,7 @@ const loadState = () => {
     }
     normalized.proEnabled = normalized.proEnabled || false;
     normalized.templatesOpenedOnce = normalized.templatesOpenedOnce || false;
+    normalized.todayTracker = normalized.todayTracker === "weight" ? "weight" : "checklist";
     return normalized;
   } catch (err) {
     console.warn("State konnte nicht geladen werden, zurücksetzen.", err);
@@ -1367,6 +1394,9 @@ const quickTaskInput = document.getElementById("quick-task-input");
 const quickTaskTomorrowBtn = document.getElementById("quick-task-tomorrow");
 const sideQuestForm = document.getElementById("side-quest-form");
 const sideQuestSelect = document.getElementById("side-quest-select");
+const trackerChecklistBtn = document.getElementById("tracker-checklist-btn");
+const trackerWeightBtn = document.getElementById("tracker-weight-btn");
+const weightTrackerPanel = document.getElementById("weight-tracker-panel");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
 const goalTimeInput = document.getElementById("goal-time-input");
@@ -1930,6 +1960,10 @@ const applyStaticTranslations = () => {
     welcomeParagraphs[1].textContent = s.welcomeP2;
   }
   setText("today-title", s.todayTitle);
+  setText("tracker-checklist-btn", s.trackerChecklist);
+  setText("tracker-weight-btn", s.trackerWeight);
+  setText("weight-tracker-title", s.weightTrackerTitle);
+  setText("weight-tracker-hint", s.weightTrackerHint);
   setText("goals-title", s.goalsTitle);
   setText("progress-title", s.progressTitle);
   setText("info-title", s.infoTitle);
@@ -2239,6 +2273,26 @@ const renderWelcome = (state) => {
 };
 
 const renderToday = (state) => {
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+  const activeTracker = state.todayTracker === "weight" ? "weight" : "checklist";
+  if (trackerChecklistBtn) {
+    trackerChecklistBtn.classList.toggle("is-active", activeTracker === "checklist");
+    trackerChecklistBtn.setAttribute("aria-selected", activeTracker === "checklist" ? "true" : "false");
+  }
+  if (trackerWeightBtn) {
+    trackerWeightBtn.classList.toggle("is-active", activeTracker === "weight");
+    trackerWeightBtn.setAttribute("aria-selected", activeTracker === "weight" ? "true" : "false");
+  }
+  if (quickTaskForm) quickTaskForm.hidden = activeTracker !== "checklist";
+  if (unlockControls) unlockControls.hidden = activeTracker !== "checklist";
+  if (todayList) todayList.hidden = activeTracker !== "checklist";
+  if (sideQuestForm) sideQuestForm.hidden = activeTracker !== "checklist";
+  if (weightTrackerPanel) weightTrackerPanel.hidden = activeTracker !== "weight";
+
+  if (activeTracker === "weight") {
+    if (todayCount) todayCount.textContent = s.weightTrackerMeta;
+    return;
+  }
   todayList.innerHTML = "";
 
   const quickTaskEntries = Object.values(state.quickTasks || {});
@@ -3860,6 +3914,24 @@ const init = () => {
         event.preventDefault();
         if (!sideQuestSelect || !sideQuestSelect.value) return;
         addSideQuest(sideQuestSelect.value);
+      });
+    }
+    if (trackerChecklistBtn) {
+      trackerChecklistBtn.addEventListener("click", () => {
+        const stateNow = loadState();
+        if (stateNow.todayTracker === "checklist") return;
+        stateNow.todayTracker = "checklist";
+        saveState(stateNow);
+        renderAll(stateNow);
+      });
+    }
+    if (trackerWeightBtn) {
+      trackerWeightBtn.addEventListener("click", () => {
+        const stateNow = loadState();
+        if (stateNow.todayTracker === "weight") return;
+        stateNow.todayTracker = "weight";
+        saveState(stateNow);
+        renderAll(stateNow);
       });
     }
 

@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-user.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-user.png" />
-    <link rel="manifest" href="site.webmanifest?v=1733" />
+    <link rel="manifest" href="site.webmanifest?v=1734" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -78,9 +78,15 @@
 
       <!-- Today / Checklist -->
       <section class="panel" aria-labelledby="today-title" data-section="today">
-        <div class="panel-head">
-          <h2 id="today-title">Today</h2>
-          <span class="soft-note" id="today-count">0 Aufgaben</span>
+        <div class="panel-head panel-head--today">
+          <div class="panel-head-main">
+            <h2 id="today-title">Today</h2>
+            <span class="soft-note" id="today-count">0 Aufgaben</span>
+          </div>
+          <div id="today-tracker-switch" class="today-tracker-switch" role="tablist" aria-label="Tracker wechseln">
+            <button id="tracker-checklist-btn" class="tracker-btn is-active" type="button" role="tab" aria-selected="true">Checklist</button>
+            <button id="tracker-weight-btn" class="tracker-btn" type="button" role="tab" aria-selected="false">Weight</button>
+          </div>
         </div>
         <form id="quick-task-form" class="quick-task" autocomplete="off">
           <label class="sr-only" for="quick-task-input">Einmalige Aufgabe</label>
@@ -97,6 +103,10 @@
           <select id="side-quest-select"></select>
           <button type="submit" class="btn ghost">Side Quest hinzufügen</button>
         </form>
+        <div id="weight-tracker-panel" class="weight-tracker-panel" hidden>
+          <h3 id="weight-tracker-title">Gewichts-Tracker</h3>
+          <p id="weight-tracker-hint" class="soft-note">Beta: Tracker-Wechsel ist aktiv. Gewichtseingabe folgt als nächster Schritt.</p>
+        </div>
       </section>
 
       <!-- Life Goals -->
@@ -300,7 +310,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.7.33</span>
+      <span class="soft-note" id="version">Version 1.7.34</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">

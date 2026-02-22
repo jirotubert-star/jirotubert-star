@@ -7,13 +7,13 @@
   "theme_color": "#dce8e3",
   "icons": [
     {
-      "src": "assets/onestep-logo-user.png",
+      "src": "assets/onestep-logo-rounded.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any"
     },
     {
-      "src": "assets/onestep-logo-user.png",
+      "src": "assets/onestep-logo-rounded.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any"

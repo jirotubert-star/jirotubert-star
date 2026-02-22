@@ -37,9 +37,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.7.37`
+- Aktuell: `1.7.38`
 
 ## Aenderungsprotokoll
+- `1.7.38` (2026-02-22): Start-Logo als echtes App-Icon abgerundet: neues Asset `assets/onestep-logo-rounded.png` erzeugt und fuer Manifest/Favicon/Apple-Touch-Icon eingebunden.
 - `1.7.37` (2026-02-22): Startscreen-Logo auf Mobile bereinigt: Manifest-Icons von generierten `webp`-Maskable-Assets auf das originale `assets/onestep-logo-user.png` umgestellt, damit keine schwarze, abgerundete Hintergrundkachel mehr um das Logo erscheint.
 - `1.7.36` (2026-02-22): Mobile-Update-Fix fuer den neuen Tracker: harte Cache-Buster fuer `css/style.css` und `js/app.js` eingefuehrt (`?v=1736`) und Service-Worker-App-Shell erweitert; zusaetzlich Today-Tracker-Switch auf kleinen Screens vollbreit und besser tappbar gemacht.
 - `1.7.35` (2026-02-21): Gewichts-Tracker v1 umgesetzt: taegliche Gewichtseingabe im Today-Tracker (`Gewicht`) inklusive Speicherung pro Datum und Verlaufsdiagramm im Panel.

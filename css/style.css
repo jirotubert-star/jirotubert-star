@@ -678,6 +678,10 @@ p {
   color: var(--muted);
 }
 
+#sleep-wake-form .weight-form-row {
+  grid-template-columns: 1fr auto auto;
+}
+
 .weight-chart-wrap {
   margin-top: 10px;
   padding: 8px;
@@ -2179,6 +2183,9 @@ summary:focus-visible {
   }
   .weight-form-row .btn {
     width: 100%;
+  }
+  #sleep-wake-form .weight-form-row {
+    grid-template-columns: 1fr;
   }
   .weight-kpis {
     grid-template-columns: 1fr;

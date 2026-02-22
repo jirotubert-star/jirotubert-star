@@ -38,9 +38,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.7.40`
+- Aktuell: `1.7.41`
 
 ## Aenderungsprotokoll
+- `1.7.41` (2026-02-22): Sleep-Tracker als dritter Today-Tracker eingefuehrt: Abendlicher Bedtime-Eintrag + optionaler Wake-up (inkl. "Jetzt"), offene Nacht-Logik ueber Mitternacht, KPI-Anzeige (7d-Durchschnitt/Konsistenz/Status), Schlafdauer-Chart und Tagesdetails um Schlafdaten erweitert.
 - `1.7.40` (2026-02-22): 10/10-Iteration erweitert: Progress um Outcome-Kennzahlen (30d Goal-Hit-Rate, Trend, D1/D7-Snapshot) ergänzt, Today um smarte Tagesempfehlung erweitert, Gewichts-Tracker um Zielgewicht-/KPI-Visuals verfeinert, Render-Performance über reduzierte Static-Translation-Reapply optimiert und Update-/Backup-UX weiter geschärft.
 - `1.7.39` (2026-02-22): Produkt-Paket umgesetzt: Fast-Onboarding deaktiviert (zurueck auf normales 3-Tage-Freischalten), Gewichts-Tracker mit 7/30-Tage-Mittelwerten + Start-Delta + Zielgewicht erweitert, Tagesdetails um Gewichtseintrag ergaenzt, Identity-Score um Tagesempfehlung erweitert, Backup-Status mit 7-Tage-Erinnerung ergänzt, Intro-A/B-Variante fuer Erststart hinzugefuegt (inkl. Analytics-Events) und Update-Feedback nach Reload verbessert; zusaetzlich `RELEASE_QA.md` fuer Store-Vorbereitung hinzugefuegt.
 - `1.7.38` (2026-02-22): Start-Logo als echtes App-Icon abgerundet: neues Asset `assets/onestep-logo-rounded.png` erzeugt und fuer Manifest/Favicon/Apple-Touch-Icon eingebunden.

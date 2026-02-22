@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-rounded.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-rounded.png" />
-    <link rel="manifest" href="site.webmanifest?v=1740" />
-    <link rel="stylesheet" href="css/style.css?v=1740" />
+    <link rel="manifest" href="site.webmanifest?v=1741" />
+    <link rel="stylesheet" href="css/style.css?v=1741" />
   </head>
   <body>
     <div id="language-modal" class="language-modal" hidden>
@@ -86,6 +86,7 @@
           <div id="today-tracker-switch" class="today-tracker-switch" role="tablist" aria-label="Tracker wechseln">
             <button id="tracker-checklist-btn" class="tracker-btn is-active" type="button" role="tab" aria-selected="true">Checklist</button>
             <button id="tracker-weight-btn" class="tracker-btn" type="button" role="tab" aria-selected="false">Weight</button>
+            <button id="tracker-sleep-btn" class="tracker-btn" type="button" role="tab" aria-selected="false">Sleep</button>
           </div>
         </div>
         <div id="today-smart-plan" class="soft-note today-smart-plan">Heute: Starte mit der frühesten Aufgabe und schließe den Tag sauber ab.</div>
@@ -132,6 +133,37 @@
             <div id="weight-chart-title" class="soft-note">Gewichtsverlauf</div>
             <svg id="weight-chart" class="weight-chart" viewBox="0 0 640 220" role="img" aria-label="Gewichtsverlauf Diagramm"></svg>
             <div id="weight-chart-empty" class="soft-note">Noch keine Einträge.</div>
+          </div>
+        </div>
+        <div id="sleep-tracker-panel" class="weight-tracker-panel" hidden>
+          <h3 id="sleep-tracker-title">Schlaf-Tracker</h3>
+          <p id="sleep-tracker-hint" class="soft-note">Abends nur die Schlafenszeit eintragen. Aufstehen kannst du später ergänzen.</p>
+          <div class="weight-kpis">
+            <div id="sleep-kpi-avg7" class="weight-kpi">Ø Dauer (7d): --</div>
+            <div id="sleep-kpi-consistency" class="weight-kpi">Konsistenz: --</div>
+            <div id="sleep-kpi-status" class="weight-kpi">Status: --</div>
+          </div>
+          <form id="sleep-bed-form" class="weight-form" autocomplete="off">
+            <label id="sleep-bed-label" for="sleep-bed-input">Schlafenszeit</label>
+            <div class="weight-form-row">
+              <input id="sleep-bed-input" type="time" />
+              <button id="sleep-bed-save-btn" class="btn" type="submit">Schlafenszeit speichern</button>
+            </div>
+          </form>
+          <form id="sleep-wake-form" class="weight-target-form" autocomplete="off">
+            <label id="sleep-wake-label" for="sleep-wake-input">Aufstehzeit (optional)</label>
+            <div class="weight-form-row">
+              <input id="sleep-wake-input" type="time" />
+              <button id="sleep-now-btn" class="btn ghost" type="button">Jetzt</button>
+              <button id="sleep-wake-save-btn" class="btn ghost" type="submit">Aufstehzeit speichern</button>
+            </div>
+            <div id="sleep-pending-meta" class="soft-note">Offene Nacht: --</div>
+            <div id="sleep-duration-meta" class="soft-note">Dauer: --</div>
+          </form>
+          <div class="weight-chart-wrap">
+            <div id="sleep-chart-title" class="soft-note">Schlafdauer Verlauf</div>
+            <svg id="sleep-chart" class="weight-chart" viewBox="0 0 640 220" role="img" aria-label="Schlafdauer Diagramm"></svg>
+            <div id="sleep-chart-empty" class="soft-note">Noch keine vollständigen Schlafdaten.</div>
           </div>
         </div>
       </section>
@@ -345,7 +377,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.7.40</span>
+      <span class="soft-note" id="version">Version 1.7.41</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">
@@ -406,6 +438,6 @@
         scriptSrc: "https://plausible.io/js/pa-Yo5rD-tnsB9Pz60fVTI3i.js"
       };
     </script>
-    <script src="js/app.js?v=1740"></script>
+    <script src="js/app.js?v=1741"></script>
   </body>
 </html>

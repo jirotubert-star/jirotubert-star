@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.40";
+const APP_VERSION = "1.7.41";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -523,6 +523,7 @@ const STATIC_TEXT = {
     todayTitle: "Heute",
     trackerChecklist: "Checkliste",
     trackerWeight: "Gewicht",
+    trackerSleep: "Schlaf",
     weightTrackerTitle: "Gewichts-Tracker",
     weightTrackerHint: "Trage dein Gewicht einmal täglich ein, um den Verlauf zu sehen.",
     weightTrackerMeta: "Gewichts-Tracker",
@@ -540,7 +541,26 @@ const STATIC_TEXT = {
     weightTargetSaveBtn: "Ziel speichern",
     weightTargetEmpty: "Noch kein Zielgewicht.",
     weightTargetMeta: "Noch bis Ziel",
+    sleepTrackerTitle: "Schlaf-Tracker",
+    sleepTrackerHint: "Abends nur die Schlafenszeit eintragen. Aufstehen kannst du später ergänzen.",
+    sleepBedLabel: "Schlafenszeit",
+    sleepWakeLabel: "Aufstehzeit (optional)",
+    sleepSaveBedBtn: "Schlafenszeit speichern",
+    sleepSaveWakeBtn: "Aufstehzeit speichern",
+    sleepNowBtn: "Jetzt",
+    sleepAvg7Label: "Ø Dauer (7d)",
+    sleepConsistencyLabel: "Konsistenz",
+    sleepStatusLabel: "Status",
+    sleepPendingLabel: "Offene Nacht",
+    sleepDurationLabel: "Dauer",
+    sleepChartTitle: "Schlafdauer Verlauf",
+    sleepChartEmpty: "Noch keine vollständigen Schlafdaten.",
+    sleepStatusOpen: "Wake-up offen",
+    sleepStatusDone: "vollständig",
     toastWeightTargetSaved: "Zielgewicht gespeichert",
+    toastSleepBedSaved: "Schlafenszeit gespeichert",
+    toastSleepWakeSaved: "Aufstehzeit gespeichert",
+    toastSleepInvalid: "Bitte eine gültige Uhrzeit eingeben",
     updateApplied: "Update installiert. App ist jetzt aktuell.",
     backupStatusNever: "Noch kein Backup exportiert.",
     backupStatusToday: "Backup heute exportiert",
@@ -686,6 +706,7 @@ const STATIC_TEXT = {
     todayTitle: "Сегодня",
     trackerChecklist: "Checklist",
     trackerWeight: "Weight",
+    trackerSleep: "Sleep",
     weightTrackerTitle: "Weight tracker",
     weightTrackerHint: "Enter your weight once per day to see the trend.",
     weightTrackerMeta: "Weight tracker",
@@ -703,7 +724,26 @@ const STATIC_TEXT = {
     weightTargetSaveBtn: "Save target",
     weightTargetEmpty: "No target weight yet.",
     weightTargetMeta: "Left to target",
+    sleepTrackerTitle: "Sleep tracker",
+    sleepTrackerHint: "Only log bedtime in the evening. Wake-up can be added later.",
+    sleepBedLabel: "Bedtime",
+    sleepWakeLabel: "Wake-up time (optional)",
+    sleepSaveBedBtn: "Save bedtime",
+    sleepSaveWakeBtn: "Save wake-up",
+    sleepNowBtn: "Now",
+    sleepAvg7Label: "Avg duration (7d)",
+    sleepConsistencyLabel: "Consistency",
+    sleepStatusLabel: "Status",
+    sleepPendingLabel: "Open night",
+    sleepDurationLabel: "Duration",
+    sleepChartTitle: "Sleep duration trend",
+    sleepChartEmpty: "No complete sleep entries yet.",
+    sleepStatusOpen: "wake-up open",
+    sleepStatusDone: "complete",
     toastWeightTargetSaved: "Target weight saved",
+    toastSleepBedSaved: "Bedtime saved",
+    toastSleepWakeSaved: "Wake-up saved",
+    toastSleepInvalid: "Please enter a valid time",
     updateApplied: "Update installed. App is now current.",
     backupStatusNever: "No backup exported yet.",
     backupStatusToday: "Backup exported today",
@@ -849,6 +889,7 @@ const STATIC_TEXT = {
     todayTitle: "Hoy",
     trackerChecklist: "Список",
     trackerWeight: "Вес",
+    trackerSleep: "Сон",
     weightTrackerTitle: "Трекер веса",
     weightTrackerHint: "Вводи вес один раз в день, чтобы видеть динамику.",
     weightTrackerMeta: "Трекер веса",
@@ -866,7 +907,26 @@ const STATIC_TEXT = {
     weightTargetSaveBtn: "Сохранить цель",
     weightTargetEmpty: "Цель по весу не задана.",
     weightTargetMeta: "Осталось до цели",
+    sleepTrackerTitle: "Трекер сна",
+    sleepTrackerHint: "Вечером укажи только время сна. Подъём можно добавить позже.",
+    sleepBedLabel: "Время сна",
+    sleepWakeLabel: "Время подъёма (опционально)",
+    sleepSaveBedBtn: "Сохранить время сна",
+    sleepSaveWakeBtn: "Сохранить подъём",
+    sleepNowBtn: "Сейчас",
+    sleepAvg7Label: "Ср. длительность (7д)",
+    sleepConsistencyLabel: "Стабильность",
+    sleepStatusLabel: "Статус",
+    sleepPendingLabel: "Открытая ночь",
+    sleepDurationLabel: "Длительность",
+    sleepChartTitle: "Динамика длительности сна",
+    sleepChartEmpty: "Пока нет полных записей сна.",
+    sleepStatusOpen: "подъём не указан",
+    sleepStatusDone: "полная запись",
     toastWeightTargetSaved: "Целевой вес сохранён",
+    toastSleepBedSaved: "Время сна сохранено",
+    toastSleepWakeSaved: "Время подъёма сохранено",
+    toastSleepInvalid: "Укажи корректное время",
     updateApplied: "Обновление установлено. Приложение актуально.",
     backupStatusNever: "Резервная копия ещё не экспортирована.",
     backupStatusToday: "Резервная копия экспортирована сегодня",
@@ -1012,6 +1072,7 @@ const STATIC_TEXT = {
     todayTitle: "Aujourd'hui",
     trackerChecklist: "Lista",
     trackerWeight: "Peso",
+    trackerSleep: "Sueño",
     weightTrackerTitle: "Tracker de peso",
     weightTrackerHint: "Registra tu peso una vez al día para ver la evolución.",
     weightTrackerMeta: "Tracker de peso",
@@ -1029,7 +1090,26 @@ const STATIC_TEXT = {
     weightTargetSaveBtn: "Guardar objetivo",
     weightTargetEmpty: "Aún no hay peso objetivo.",
     weightTargetMeta: "Falta para objetivo",
+    sleepTrackerTitle: "Tracker de sueño",
+    sleepTrackerHint: "Por la noche guarda solo la hora de dormir. El despertar lo puedes añadir después.",
+    sleepBedLabel: "Hora de dormir",
+    sleepWakeLabel: "Hora de despertar (opcional)",
+    sleepSaveBedBtn: "Guardar hora de dormir",
+    sleepSaveWakeBtn: "Guardar despertar",
+    sleepNowBtn: "Ahora",
+    sleepAvg7Label: "Duración media (7d)",
+    sleepConsistencyLabel: "Consistencia",
+    sleepStatusLabel: "Estado",
+    sleepPendingLabel: "Noche abierta",
+    sleepDurationLabel: "Duración",
+    sleepChartTitle: "Tendencia de sueño",
+    sleepChartEmpty: "Aún no hay noches completas.",
+    sleepStatusOpen: "despertar pendiente",
+    sleepStatusDone: "completo",
     toastWeightTargetSaved: "Peso objetivo guardado",
+    toastSleepBedSaved: "Hora de dormir guardada",
+    toastSleepWakeSaved: "Hora de despertar guardada",
+    toastSleepInvalid: "Introduce una hora válida",
     updateApplied: "Actualización instalada. La app está al día.",
     backupStatusNever: "Aún no se exportó ninguna copia.",
     backupStatusToday: "Copia exportada hoy",
@@ -1175,6 +1255,7 @@ const STATIC_TEXT = {
     todayTitle: "Aujourd'hui",
     trackerChecklist: "Checklist",
     trackerWeight: "Poids",
+    trackerSleep: "Sommeil",
     weightTrackerTitle: "Suivi du poids",
     weightTrackerHint: "Saisis ton poids une fois par jour pour voir l'évolution.",
     weightTrackerMeta: "Suivi du poids",
@@ -1192,7 +1273,26 @@ const STATIC_TEXT = {
     weightTargetSaveBtn: "Enregistrer l'objectif",
     weightTargetEmpty: "Pas encore de poids cible.",
     weightTargetMeta: "Reste jusqu'à l'objectif",
+    sleepTrackerTitle: "Suivi du sommeil",
+    sleepTrackerHint: "Le soir, saisis seulement l'heure de coucher. Le réveil peut être ajouté plus tard.",
+    sleepBedLabel: "Heure de coucher",
+    sleepWakeLabel: "Heure de réveil (optionnel)",
+    sleepSaveBedBtn: "Enregistrer coucher",
+    sleepSaveWakeBtn: "Enregistrer réveil",
+    sleepNowBtn: "Maintenant",
+    sleepAvg7Label: "Durée moy. (7j)",
+    sleepConsistencyLabel: "Régularité",
+    sleepStatusLabel: "Statut",
+    sleepPendingLabel: "Nuit ouverte",
+    sleepDurationLabel: "Durée",
+    sleepChartTitle: "Tendance du sommeil",
+    sleepChartEmpty: "Pas encore de nuits complètes.",
+    sleepStatusOpen: "réveil en attente",
+    sleepStatusDone: "complet",
     toastWeightTargetSaved: "Poids cible enregistré",
+    toastSleepBedSaved: "Heure de coucher enregistrée",
+    toastSleepWakeSaved: "Heure de réveil enregistrée",
+    toastSleepInvalid: "Entre une heure valide",
     updateApplied: "Mise à jour installée. L'app est à jour.",
     backupStatusNever: "Aucune sauvegarde exportée pour le moment.",
     backupStatusToday: "Sauvegarde exportée aujourd'hui",
@@ -1447,6 +1547,10 @@ const openDayDetails = (state, iso) => {
   const entries = state.dayTaskHistory?.[iso] || [];
   const hasWeightEntry = Number.isFinite(Number(state.weightEntries?.[iso]));
   const weightValue = Number(state.weightEntries?.[iso]);
+  const sleepEntry = state.sleepEntries?.[iso] || null;
+  const hasSleepBed = typeof sleepEntry?.bed === "string" && isClockTime(sleepEntry.bed);
+  const hasSleepWake = typeof sleepEntry?.wake === "string" && isClockTime(sleepEntry.wake);
+  const sleepMinutes = sleepEntry ? getSleepDurationMinutes(iso, sleepEntry) : null;
   if (hasWeightEntry) {
     const weightLi = document.createElement("li");
     weightLi.className = "day-detail-item done";
@@ -1459,7 +1563,23 @@ const openDayDetails = (state, iso) => {
     weightLi.appendChild(weightStatus);
     dayDetailList.appendChild(weightLi);
   }
-  if (!entries.length && !hasWeightEntry) {
+  if (hasSleepBed) {
+    const sleepLi = document.createElement("li");
+    sleepLi.className = "day-detail-item";
+    if (hasSleepWake && Number.isFinite(sleepMinutes)) sleepLi.classList.add("done");
+    const sleepText = document.createElement("span");
+    const durationLabel = Number.isFinite(sleepMinutes)
+      ? ` (${formatSleepDuration(sleepMinutes)})`
+      : "";
+    sleepText.textContent = `${(STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).trackerSleep}: ${sleepEntry.bed} -> ${hasSleepWake ? sleepEntry.wake : "--"}${durationLabel}`;
+    const sleepStatus = document.createElement("span");
+    sleepStatus.className = "day-detail-status";
+    sleepStatus.textContent = hasSleepWake ? s.dayDetailDone : s.dayDetailOpen;
+    sleepLi.appendChild(sleepText);
+    sleepLi.appendChild(sleepStatus);
+    dayDetailList.appendChild(sleepLi);
+  }
+  if (!entries.length && !hasWeightEntry && !hasSleepBed) {
     const summary = state.daySummary?.[iso];
     const li = document.createElement("li");
     li.className = "day-detail-item";
@@ -1513,6 +1633,7 @@ const defaultState = () => ({
   daySummary: {},
   dayTaskHistory: {},
   weightEntries: {},
+  sleepEntries: {},
   weightTargetKg: null,
   weeklyPlans: {},
   tutorialStep: 1,
@@ -1558,6 +1679,10 @@ const loadState = () => {
       normalized.weightEntries && typeof normalized.weightEntries === "object"
         ? normalized.weightEntries
         : {};
+    normalized.sleepEntries =
+      normalized.sleepEntries && typeof normalized.sleepEntries === "object"
+        ? normalized.sleepEntries
+        : {};
     normalized.weightTargetKg =
       Number.isFinite(Number(normalized.weightTargetKg)) ? Number(normalized.weightTargetKg) : null;
     normalized.weeklyPlans = normalized.weeklyPlans || {};
@@ -1583,7 +1708,9 @@ const loadState = () => {
     }
     normalized.proEnabled = normalized.proEnabled || false;
     normalized.templatesOpenedOnce = normalized.templatesOpenedOnce || false;
-    normalized.todayTracker = normalized.todayTracker === "weight" ? "weight" : "checklist";
+    normalized.todayTracker = ["checklist", "weight", "sleep"].includes(normalized.todayTracker)
+      ? normalized.todayTracker
+      : "checklist";
     return normalized;
   } catch (err) {
     console.warn("State konnte nicht geladen werden, zurücksetzen.", err);
@@ -1610,7 +1737,9 @@ const sideQuestForm = document.getElementById("side-quest-form");
 const sideQuestSelect = document.getElementById("side-quest-select");
 const trackerChecklistBtn = document.getElementById("tracker-checklist-btn");
 const trackerWeightBtn = document.getElementById("tracker-weight-btn");
+const trackerSleepBtn = document.getElementById("tracker-sleep-btn");
 const weightTrackerPanel = document.getElementById("weight-tracker-panel");
+const sleepTrackerPanel = document.getElementById("sleep-tracker-panel");
 const weightForm = document.getElementById("weight-form");
 const weightInput = document.getElementById("weight-input");
 const weightSaveBtn = document.getElementById("weight-save-btn");
@@ -1626,6 +1755,25 @@ const weightTargetInput = document.getElementById("weight-target-input");
 const weightTargetLabel = document.getElementById("weight-target-label");
 const weightTargetSaveBtn = document.getElementById("weight-target-save-btn");
 const weightTargetMeta = document.getElementById("weight-target-meta");
+const sleepBedForm = document.getElementById("sleep-bed-form");
+const sleepWakeForm = document.getElementById("sleep-wake-form");
+const sleepBedInput = document.getElementById("sleep-bed-input");
+const sleepWakeInput = document.getElementById("sleep-wake-input");
+const sleepBedLabel = document.getElementById("sleep-bed-label");
+const sleepWakeLabel = document.getElementById("sleep-wake-label");
+const sleepBedSaveBtn = document.getElementById("sleep-bed-save-btn");
+const sleepWakeSaveBtn = document.getElementById("sleep-wake-save-btn");
+const sleepNowBtn = document.getElementById("sleep-now-btn");
+const sleepTrackerTitleEl = document.getElementById("sleep-tracker-title");
+const sleepTrackerHintEl = document.getElementById("sleep-tracker-hint");
+const sleepKpiAvg7El = document.getElementById("sleep-kpi-avg7");
+const sleepKpiConsistencyEl = document.getElementById("sleep-kpi-consistency");
+const sleepKpiStatusEl = document.getElementById("sleep-kpi-status");
+const sleepPendingMetaEl = document.getElementById("sleep-pending-meta");
+const sleepDurationMetaEl = document.getElementById("sleep-duration-meta");
+const sleepChartTitleEl = document.getElementById("sleep-chart-title");
+const sleepChartSvg = document.getElementById("sleep-chart");
+const sleepChartEmptyEl = document.getElementById("sleep-chart-empty");
 const todaySmartPlanEl = document.getElementById("today-smart-plan");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
@@ -2156,6 +2304,7 @@ const mergeStates = (current, incoming) => {
   merged.daySummary = { ...(current.daySummary || {}), ...(incoming.daySummary || {}) };
   merged.dayTaskHistory = { ...(current.dayTaskHistory || {}), ...(incoming.dayTaskHistory || {}) };
   merged.weightEntries = { ...(current.weightEntries || {}), ...(incoming.weightEntries || {}) };
+  merged.sleepEntries = { ...(current.sleepEntries || {}), ...(incoming.sleepEntries || {}) };
   merged.weightTargetKg = Number.isFinite(Number(incoming.weightTargetKg))
     ? Number(incoming.weightTargetKg)
     : (Number.isFinite(Number(current.weightTargetKg)) ? Number(current.weightTargetKg) : null);
@@ -2254,6 +2403,7 @@ const applyStaticTranslations = () => {
   setText("today-title", s.todayTitle);
   setText("tracker-checklist-btn", s.trackerChecklist);
   setText("tracker-weight-btn", s.trackerWeight);
+  setText("tracker-sleep-btn", s.trackerSleep);
   setText("weight-tracker-title", s.weightTrackerTitle);
   setText("weight-tracker-hint", s.weightTrackerHint);
   if (weightInputLabel) weightInputLabel.textContent = s.weightInputLabel;
@@ -2266,6 +2416,20 @@ const applyStaticTranslations = () => {
   if (weightKpi30d) weightKpi30d.textContent = `${s.weightKpi30d}: --`;
   if (weightKpiDelta) weightKpiDelta.textContent = `${s.weightKpiDelta}: --`;
   if (weightTargetMeta) weightTargetMeta.textContent = s.weightTargetEmpty;
+  if (sleepTrackerTitleEl) sleepTrackerTitleEl.textContent = s.sleepTrackerTitle;
+  if (sleepTrackerHintEl) sleepTrackerHintEl.textContent = s.sleepTrackerHint;
+  if (sleepBedLabel) sleepBedLabel.textContent = s.sleepBedLabel;
+  if (sleepWakeLabel) sleepWakeLabel.textContent = s.sleepWakeLabel;
+  if (sleepBedSaveBtn) sleepBedSaveBtn.textContent = s.sleepSaveBedBtn;
+  if (sleepWakeSaveBtn) sleepWakeSaveBtn.textContent = s.sleepSaveWakeBtn;
+  if (sleepNowBtn) sleepNowBtn.textContent = s.sleepNowBtn;
+  if (sleepKpiAvg7El) sleepKpiAvg7El.textContent = `${s.sleepAvg7Label}: --`;
+  if (sleepKpiConsistencyEl) sleepKpiConsistencyEl.textContent = `${s.sleepConsistencyLabel}: --`;
+  if (sleepKpiStatusEl) sleepKpiStatusEl.textContent = `${s.sleepStatusLabel}: --`;
+  if (sleepPendingMetaEl) sleepPendingMetaEl.textContent = `${s.sleepPendingLabel}: --`;
+  if (sleepDurationMetaEl) sleepDurationMetaEl.textContent = `${s.sleepDurationLabel}: --`;
+  if (sleepChartTitleEl) sleepChartTitleEl.textContent = s.sleepChartTitle;
+  if (sleepChartEmptyEl) sleepChartEmptyEl.textContent = s.sleepChartEmpty;
   setText("weight-chart-title", s.weightChartTitle);
   setText("weight-chart-empty", s.weightChartEmpty);
   setText("goals-title", s.goalsTitle);
@@ -2590,6 +2754,199 @@ const parseWeightValue = (raw) => {
   return Math.round(value * 10) / 10;
 };
 
+const parseClockTime = (raw) => {
+  const value = String(raw || "").trim();
+  if (!/^\d{2}:\d{2}$/.test(value)) return null;
+  const [hour, minute] = value.split(":").map(Number);
+  if (!Number.isInteger(hour) || !Number.isInteger(minute)) return null;
+  if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
+  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+};
+
+const getSleepDurationMinutes = (bedIso, entry) => {
+  if (!entry) return null;
+  const bed = parseClockTime(entry.bed);
+  const wake = parseClockTime(entry.wake);
+  if (!bed || !wake) return null;
+  const [bedHour, bedMinute] = bed.split(":").map(Number);
+  const [wakeHour, wakeMinute] = wake.split(":").map(Number);
+  const bedMinutes = (bedHour * 60) + bedMinute;
+  const wakeMinutes = (wakeHour * 60) + wakeMinute;
+  const wakeIso = typeof entry.wakeDate === "string" ? entry.wakeDate : bedIso;
+  const dayDelta = Math.max(0, daysBetween(bedIso, wakeIso));
+  let total = (dayDelta * 24 * 60) + (wakeMinutes - bedMinutes);
+  if (total <= 0) total += 24 * 60;
+  if (total < 120 || total > 16 * 60) return null;
+  return total;
+};
+
+const formatSleepDuration = (minutes) => {
+  if (!Number.isFinite(minutes) || minutes <= 0) return "--";
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return `${h}h ${String(m).padStart(2, "0")}m`;
+};
+
+const getSleepEntriesSorted = (state) =>
+  Object.entries(state.sleepEntries || {})
+    .map(([iso, entry]) => ({ iso, entry }))
+    .filter(({ entry }) => entry && (entry.bed || entry.wake))
+    .sort((a, b) => a.iso.localeCompare(b.iso));
+
+const getLatestOpenSleepEntry = (state) => {
+  const entries = getSleepEntriesSorted(state).reverse();
+  return entries.find(({ entry }) => parseClockTime(entry.bed) && !parseClockTime(entry.wake)) || null;
+};
+
+const renderSleepChart = (entries) => {
+  if (!sleepChartSvg || !sleepChartEmptyEl) return;
+  if (!entries.length) {
+    sleepChartSvg.innerHTML = "";
+    sleepChartEmptyEl.hidden = false;
+    return;
+  }
+  const recent = entries.slice(-21);
+  const values = recent.map((entry) => entry.hours);
+  let minValue = Math.min(...values);
+  let maxValue = Math.max(...values);
+  if (minValue === maxValue) {
+    minValue -= 0.5;
+    maxValue += 0.5;
+  }
+  const width = 640;
+  const height = 220;
+  const padLeft = 34;
+  const padRight = 16;
+  const padTop = 14;
+  const padBottom = 28;
+  const plotWidth = width - padLeft - padRight;
+  const plotHeight = height - padTop - padBottom;
+  const denominator = recent.length > 1 ? recent.length - 1 : 1;
+  const range = maxValue - minValue;
+  const points = recent.map((entry, index) => {
+    const x = padLeft + ((index / denominator) * plotWidth);
+    const y = padTop + (((maxValue - entry.hours) / range) * plotHeight);
+    return { ...entry, x, y };
+  });
+  const polyline = points.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const circles = points
+    .map((p) => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.2" />`)
+    .join("");
+  const firstDate = formatISODate(recent[0].iso);
+  const lastDate = formatISODate(recent[recent.length - 1].iso);
+  sleepChartSvg.innerHTML = `
+    <line class="weight-grid-line" x1="${padLeft}" y1="${padTop}" x2="${width - padRight}" y2="${padTop}" />
+    <line class="weight-grid-line" x1="${padLeft}" y1="${padTop + (plotHeight / 2)}" x2="${width - padRight}" y2="${padTop + (plotHeight / 2)}" />
+    <line class="weight-grid-line" x1="${padLeft}" y1="${height - padBottom}" x2="${width - padRight}" y2="${height - padBottom}" />
+    <polyline class="weight-line" points="${polyline}" />
+    <g class="weight-dots">${circles}</g>
+    <text class="weight-axis-label" x="${padLeft}" y="${height - 6}">${firstDate}</text>
+    <text class="weight-axis-label weight-axis-label-end" x="${width - padRight}" y="${height - 6}">${lastDate}</text>
+    <text class="weight-value-label" x="${padLeft}" y="${padTop - 2}">${maxValue.toFixed(1)} h</text>
+    <text class="weight-value-label" x="${padLeft}" y="${height - padBottom + 14}">${minValue.toFixed(1)} h</text>
+  `;
+  sleepChartEmptyEl.hidden = true;
+};
+
+const renderSleepTracker = (state) => {
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+  const today = todayISO(state.simulationOffsetDays);
+  const todayEntry = state.sleepEntries?.[today] || {};
+  const openEntry = getLatestOpenSleepEntry(state);
+  const openIso = openEntry?.iso || null;
+
+  if (sleepBedInput) sleepBedInput.value = parseClockTime(todayEntry.bed) || "";
+  if (sleepWakeInput) sleepWakeInput.value = openEntry ? "" : (parseClockTime(todayEntry.wake) || "");
+
+  const completeEntries = getSleepEntriesSorted(state)
+    .map(({ iso, entry }) => {
+      const minutes = getSleepDurationMinutes(iso, entry);
+      if (!Number.isFinite(minutes)) return null;
+      return { iso, minutes, hours: Math.round((minutes / 60) * 10) / 10, entry };
+    })
+    .filter(Boolean);
+  const recent7 = completeEntries.slice(-7);
+  const avgMinutes = recent7.length
+    ? Math.round(recent7.reduce((sum, item) => sum + item.minutes, 0) / recent7.length)
+    : null;
+  const consistency = recent7.length
+    ? Math.round((recent7.filter((item) => {
+      const bed = parseClockTime(item.entry.bed);
+      if (!bed) return false;
+      const [h, m] = bed.split(":").map(Number);
+      const bedtimeMinutes = (h * 60) + m;
+      const firstBed = parseClockTime(recent7[0].entry.bed);
+      if (!firstBed) return false;
+      const [fh, fm] = firstBed.split(":").map(Number);
+      const firstMinutes = (fh * 60) + fm;
+      return Math.abs(bedtimeMinutes - firstMinutes) <= 60;
+    }).length / recent7.length) * 100)
+    : null;
+
+  if (sleepKpiAvg7El) {
+    sleepKpiAvg7El.textContent = `${s.sleepAvg7Label}: ${avgMinutes === null ? "--" : formatSleepDuration(avgMinutes)}`;
+  }
+  if (sleepKpiConsistencyEl) {
+    sleepKpiConsistencyEl.textContent = `${s.sleepConsistencyLabel}: ${consistency === null ? "--" : `${consistency}%`}`;
+  }
+  if (sleepKpiStatusEl) {
+    sleepKpiStatusEl.textContent = `${s.sleepStatusLabel}: ${openIso ? s.sleepStatusOpen : s.sleepStatusDone}`;
+  }
+  if (sleepPendingMetaEl) {
+    sleepPendingMetaEl.textContent = `${s.sleepPendingLabel}: ${openIso ? formatISODate(openIso) : "--"}`;
+  }
+  if (sleepDurationMetaEl) {
+    const latestDuration = completeEntries[completeEntries.length - 1]?.minutes ?? null;
+    sleepDurationMetaEl.textContent = `${s.sleepDurationLabel}: ${latestDuration === null ? "--" : formatSleepDuration(latestDuration)}`;
+  }
+  renderSleepChart(completeEntries);
+};
+
+const saveSleepBedtime = (rawValue) => {
+  const parsed = parseClockTime(rawValue);
+  if (!parsed) {
+    showToast(t("toastSleepInvalid"));
+    return;
+  }
+  const state = loadState();
+  const today = todayISO(state.simulationOffsetDays);
+  state.sleepEntries = state.sleepEntries || {};
+  const current = state.sleepEntries[today] || {};
+  state.sleepEntries[today] = {
+    ...current,
+    bed: parsed,
+  };
+  saveState(state);
+  renderAll(state);
+  showToast(t("toastSleepBedSaved"));
+};
+
+const saveSleepWakeTime = (rawValue) => {
+  const parsed = parseClockTime(rawValue);
+  if (!parsed) {
+    showToast(t("toastSleepInvalid"));
+    return;
+  }
+  const state = loadState();
+  const today = todayISO(state.simulationOffsetDays);
+  state.sleepEntries = state.sleepEntries || {};
+  const open = getLatestOpenSleepEntry(state);
+  const targetIso = open?.iso || today;
+  const current = state.sleepEntries[targetIso] || {};
+  if (!parseClockTime(current.bed)) {
+    showToast(t("toastSleepInvalid"));
+    return;
+  }
+  state.sleepEntries[targetIso] = {
+    ...current,
+    wake: parsed,
+    wakeDate: today,
+  };
+  saveState(state);
+  renderAll(state);
+  showToast(t("toastSleepWakeSaved"));
+};
+
 const renderWeightChart = (entries) => {
   if (!weightChartSvg || !weightChartEmpty) return;
   if (!entries.length) {
@@ -2729,7 +3086,9 @@ const saveWeightTarget = (rawValue) => {
 
 const renderToday = (state) => {
   const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
-  const activeTracker = state.todayTracker === "weight" ? "weight" : "checklist";
+  const activeTracker = ["checklist", "weight", "sleep"].includes(state.todayTracker)
+    ? state.todayTracker
+    : "checklist";
   if (trackerChecklistBtn) {
     trackerChecklistBtn.classList.toggle("is-active", activeTracker === "checklist");
     trackerChecklistBtn.setAttribute("aria-selected", activeTracker === "checklist" ? "true" : "false");
@@ -2738,11 +3097,16 @@ const renderToday = (state) => {
     trackerWeightBtn.classList.toggle("is-active", activeTracker === "weight");
     trackerWeightBtn.setAttribute("aria-selected", activeTracker === "weight" ? "true" : "false");
   }
+  if (trackerSleepBtn) {
+    trackerSleepBtn.classList.toggle("is-active", activeTracker === "sleep");
+    trackerSleepBtn.setAttribute("aria-selected", activeTracker === "sleep" ? "true" : "false");
+  }
   if (quickTaskForm) quickTaskForm.hidden = activeTracker !== "checklist";
   if (unlockControls) unlockControls.hidden = activeTracker !== "checklist";
   if (todayList) todayList.hidden = activeTracker !== "checklist";
   if (sideQuestForm) sideQuestForm.hidden = activeTracker !== "checklist";
   if (weightTrackerPanel) weightTrackerPanel.hidden = activeTracker !== "weight";
+  if (sleepTrackerPanel) sleepTrackerPanel.hidden = activeTracker !== "sleep";
 
   if (activeTracker === "weight") {
     if (todayCount) todayCount.textContent = s.weightTrackerMeta;
@@ -2750,6 +3114,14 @@ const renderToday = (state) => {
       todaySmartPlanEl.textContent = `${s.todaySmartPlanPrefix}: ${s.identityRecommendationMid}`;
     }
     renderWeightTracker(state);
+    return;
+  }
+  if (activeTracker === "sleep") {
+    if (todayCount) todayCount.textContent = s.sleepTrackerTitle;
+    if (todaySmartPlanEl) {
+      todaySmartPlanEl.textContent = `${s.todaySmartPlanPrefix}: ${s.sleepTrackerHint}`;
+    }
+    renderSleepTracker(state);
     return;
   }
   todayList.innerHTML = "";
@@ -4467,6 +4839,26 @@ const init = () => {
         saveWeightTarget(weightTargetInput?.value || "");
       });
     }
+    if (sleepBedForm) {
+      sleepBedForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        saveSleepBedtime(sleepBedInput?.value || "");
+      });
+    }
+    if (sleepWakeForm) {
+      sleepWakeForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        saveSleepWakeTime(sleepWakeInput?.value || "");
+      });
+    }
+    if (sleepNowBtn) {
+      sleepNowBtn.addEventListener("click", () => {
+        const now = new Date();
+        const time = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+        if (sleepWakeInput) sleepWakeInput.value = time;
+        saveSleepWakeTime(time);
+      });
+    }
     if (trackerChecklistBtn) {
       trackerChecklistBtn.addEventListener("click", () => {
         const stateNow = loadState();
@@ -4481,6 +4873,15 @@ const init = () => {
         const stateNow = loadState();
         if (stateNow.todayTracker === "weight") return;
         stateNow.todayTracker = "weight";
+        saveState(stateNow);
+        renderAll(stateNow);
+      });
+    }
+    if (trackerSleepBtn) {
+      trackerSleepBtn.addEventListener("click", () => {
+        const stateNow = loadState();
+        if (stateNow.todayTracker === "sleep") return;
+        stateNow.todayTracker = "sleep";
         saveState(stateNow);
         renderAll(stateNow);
       });

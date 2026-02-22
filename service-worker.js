@@ -1,19 +1,17 @@
-const CACHE_NAME = "onestep-cache-v1736";
-const SW_APP_VERSION = "1.7.36";
+const CACHE_NAME = "onestep-cache-v1737";
+const SW_APP_VERSION = "1.7.37";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./privacy.html",
   "./impressum.html",
   "./css/style.css",
-  "./css/style.css?v=1736",
+  "./css/style.css?v=1737",
   "./js/app.js",
-  "./js/app.js?v=1736",
+  "./js/app.js?v=1737",
   "./site.webmanifest",
-  "./site.webmanifest?v=1736",
+  "./site.webmanifest?v=1737",
   "./assets/onestep-logo-user.png",
-  "./icons/icon-192.webp",
-  "./icons/icon-512.webp",
 ];
 
 self.addEventListener("install", (event) => {

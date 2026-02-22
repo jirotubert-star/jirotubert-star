@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.39";
+const APP_VERSION = "1.7.40";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -551,6 +551,14 @@ const STATIC_TEXT = {
     identityRecommendationHigh: "Tempo halten und einen Side-Quest mitnehmen.",
     identityRecommendationMid: "Fokus auf Hauptaufgaben und einen sauberen Abschluss.",
     identityRecommendationLow: "Nur die wichtigste Aufgabe erledigen und Rhythmus sichern.",
+    todaySmartPlanPrefix: "Heute",
+    outcomeTitle: "Outcome Qualität",
+    goalHitRateLabel: "Goal-Hit-Rate (30d)",
+    completionTrendLabel: "Trend",
+    completionTrendUp: "steigend",
+    completionTrendDown: "fallend",
+    completionTrendStable: "stabil",
+    retentionLabel: "Retention (D1/D7)",
     introText2A: "OneStep zeigt dir täglich, was jetzt wichtig ist, damit du konstant dranbleibst.",
     introText2B: "Kein Motivations-Hype: Du bekommst klare Schritte, die du wirklich wiederholen kannst.",
     goalsTitle: "Ziele",
@@ -706,6 +714,14 @@ const STATIC_TEXT = {
     identityRecommendationHigh: "Keep the pace and add one side quest.",
     identityRecommendationMid: "Focus on main tasks and a clean finish.",
     identityRecommendationLow: "Do only your most important task and protect your rhythm.",
+    todaySmartPlanPrefix: "Today",
+    outcomeTitle: "Outcome quality",
+    goalHitRateLabel: "Goal hit rate (30d)",
+    completionTrendLabel: "Trend",
+    completionTrendUp: "up",
+    completionTrendDown: "down",
+    completionTrendStable: "stable",
+    retentionLabel: "Retention (D1/D7)",
     introText2A: "OneStep shows what matters now, so you can stay consistent.",
     introText2B: "No motivation hype: you get clear steps you can actually repeat.",
     goalsTitle: "Цели",
@@ -861,6 +877,14 @@ const STATIC_TEXT = {
     identityRecommendationHigh: "Держи темп и добавь одну побочную задачу.",
     identityRecommendationMid: "Фокус на основных задачах и чистом завершении дня.",
     identityRecommendationLow: "Сделай одну ключевую задачу и сохрани ритм.",
+    todaySmartPlanPrefix: "Сегодня",
+    outcomeTitle: "Качество результата",
+    goalHitRateLabel: "Goal-hit rate (30д)",
+    completionTrendLabel: "Тренд",
+    completionTrendUp: "рост",
+    completionTrendDown: "снижение",
+    completionTrendStable: "стабильный",
+    retentionLabel: "Retention (D1/D7)",
     introText2A: "OneStep показывает, что важно сейчас, чтобы ты держал стабильный ритм.",
     introText2B: "Без мотивационного шума: только чёткие шаги, которые можно повторять каждый день.",
     goalsTitle: "Metas",
@@ -1016,6 +1040,14 @@ const STATIC_TEXT = {
     identityRecommendationHigh: "Mantén el ritmo y añade una tarea secundaria.",
     identityRecommendationMid: "Foco en tareas principales y cierre limpio del día.",
     identityRecommendationLow: "Haz solo tu tarea más importante y protege el ritmo.",
+    todaySmartPlanPrefix: "Hoy",
+    outcomeTitle: "Calidad de resultado",
+    goalHitRateLabel: "Goal-hit-rate (30d)",
+    completionTrendLabel: "Tendencia",
+    completionTrendUp: "subiendo",
+    completionTrendDown: "bajando",
+    completionTrendStable: "estable",
+    retentionLabel: "Retention (D1/D7)",
     introText2A: "OneStep te muestra que hacer ahora para mantener constancia.",
     introText2B: "Sin hype motivacional: pasos claros que puedes repetir de verdad.",
     goalsTitle: "Objectifs",
@@ -1171,6 +1203,14 @@ const STATIC_TEXT = {
     identityRecommendationHigh: "Garde le rythme et ajoute une quête secondaire.",
     identityRecommendationMid: "Focus sur les tâches principales et une fin de journée propre.",
     identityRecommendationLow: "Fais seulement la tâche la plus importante et protège ton rythme.",
+    todaySmartPlanPrefix: "Aujourd'hui",
+    outcomeTitle: "Qualité de résultat",
+    goalHitRateLabel: "Goal-hit-rate (30j)",
+    completionTrendLabel: "Tendance",
+    completionTrendUp: "hausse",
+    completionTrendDown: "baisse",
+    completionTrendStable: "stable",
+    retentionLabel: "Retention (D1/D7)",
     introText2A: "OneStep te montre quoi faire maintenant pour rester regulier.",
     introText2B: "Pas de hype motivationnelle : des étapes claires que tu peux vraiment répéter.",
     goalsTitle: "Objectifs",
@@ -1586,6 +1626,7 @@ const weightTargetInput = document.getElementById("weight-target-input");
 const weightTargetLabel = document.getElementById("weight-target-label");
 const weightTargetSaveBtn = document.getElementById("weight-target-save-btn");
 const weightTargetMeta = document.getElementById("weight-target-meta");
+const todaySmartPlanEl = document.getElementById("today-smart-plan");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
 const goalTimeInput = document.getElementById("goal-time-input");
@@ -1666,6 +1707,10 @@ const identityScoreTitleEl = document.getElementById("identity-score-title");
 const identityScoreValueEl = document.getElementById("identity-score-value");
 const identityScoreMetaEl = document.getElementById("identity-score-meta");
 const identityRecommendationEl = document.getElementById("identity-recommendation");
+const outcomeTitleEl = document.getElementById("outcome-title");
+const goalHitRateEl = document.getElementById("goal-hit-rate");
+const completionTrendEl = document.getElementById("completion-trend");
+const retentionSnapshotEl = document.getElementById("retention-snapshot");
 const annualGoalTitleEl = document.getElementById("annual-goal-title");
 const annualGoalValueEl = document.getElementById("annual-goal-value");
 const annualGoalMetaEl = document.getElementById("annual-goal-meta");
@@ -1688,6 +1733,7 @@ let draggingGoalId = null;
 let introStepIndex = 0;
 let introGoalDraft = "";
 let runtimeAppVersion = APP_VERSION;
+let lastStaticLanguageApplied = "";
 let templatesRenderLangCache = "";
 let pickerHour = 12;
 let pickerMinute = 0;
@@ -1853,6 +1899,7 @@ const syncRuntimeVersionWithActiveSW = async () => {
 const setLanguage = (lang) => {
   if (!SUPPORTED_LANGS.includes(lang)) return;
   currentLanguage = lang;
+  lastStaticLanguageApplied = "";
   localStorage.setItem(LANGUAGE_KEY, lang);
   MOTIVATION = [...t("motivation")];
   applyStaticTranslations();
@@ -2246,6 +2293,7 @@ const applyStaticTranslations = () => {
   setText("annual-goal-title", s.annualGoalTitle);
   setText("identity-score-title", s.identityScoreTitle);
   setText("identity-score-meta", s.identityScoreMeta);
+  setText("outcome-title", s.outcomeTitle);
   setText("day-offset-label", s.dayOffsetLabel);
   setText("templates-summary", s.templateSummary);
   setText("weekly-plan-title", s.weeklyPlanTitle);
@@ -2278,6 +2326,9 @@ const applyStaticTranslations = () => {
   if (progressWeekRateEl) progressWeekRateEl.textContent = `${s.progressWeekRate}: 0%`;
   if (progressMonthRateEl) progressMonthRateEl.textContent = `${s.progressMonthRate}: 0%`;
   if (progressBestDayEl) progressBestDayEl.textContent = `${s.progressBestDay}: -`;
+  if (goalHitRateEl) goalHitRateEl.textContent = `${s.goalHitRateLabel}: 0%`;
+  if (completionTrendEl) completionTrendEl.textContent = `${s.completionTrendLabel}: ${s.completionTrendStable}`;
+  if (retentionSnapshotEl) retentionSnapshotEl.textContent = `${s.retentionLabel}: -- / --`;
   if (annualGoalValueEl) annualGoalValueEl.textContent = s.annualGoalEmpty;
   if (annualGoalMetaEl) annualGoalMetaEl.textContent = "";
   if (annualGoalStatsEl) {
@@ -2695,6 +2746,9 @@ const renderToday = (state) => {
 
   if (activeTracker === "weight") {
     if (todayCount) todayCount.textContent = s.weightTrackerMeta;
+    if (todaySmartPlanEl) {
+      todaySmartPlanEl.textContent = `${s.todaySmartPlanPrefix}: ${s.identityRecommendationMid}`;
+    }
     renderWeightTracker(state);
     return;
   }
@@ -2705,6 +2759,16 @@ const renderToday = (state) => {
   const sideQuestEntries = state.sideQuests || [];
   const sideQuestFeatureEnabled = getFeatureAccess(state).sideQuest;
   const today = todayISO(state.simulationOffsetDays);
+  const nextTask = [...state.todayTasks]
+    .filter((task) => task.date === today && !task.done)
+    .sort((a, b) => timeToMinutes(a.difficulty) - timeToMinutes(b.difficulty))[0];
+  if (todaySmartPlanEl) {
+    if (nextTask) {
+      todaySmartPlanEl.textContent = `${s.todaySmartPlanPrefix}: ${nextTask.label} (${difficultyLabel(nextTask.difficulty)})`;
+    } else {
+      todaySmartPlanEl.textContent = `${s.todaySmartPlanPrefix}: ${s.identityRecommendationHigh}`;
+    }
+  }
   const actionableMainTasks = state.todayTasks.filter(
     (t) => t.date === today && !isRestDayForTask(state, t, today) && !t.isRestDay
   );
@@ -3260,8 +3324,52 @@ const renderProgress = (state) => {
     else if (identityScore < 45) rec = s.identityRecommendationLow;
     identityRecommendationEl.textContent = `${s.identityRecommendationPrefix}: ${rec}`;
   }
-  if (identityRecommendationEl) {
-    identityRecommendationEl.textContent = `${s.identityRecommendationPrefix}: ${s.identityRecommendationMid}`;
+  const recent30 = Object.entries(state.daySummary || {})
+    .filter(([iso]) => {
+      const diff = daysBetween(iso, currentISO);
+      return diff >= 0 && diff < 30;
+    })
+    .map(([, summary]) => summary)
+    .filter((summary) => summary && summary.total > 0);
+  const recent15 = Object.entries(state.daySummary || {})
+    .filter(([iso]) => {
+      const diff = daysBetween(iso, currentISO);
+      return diff >= 0 && diff < 15;
+    })
+    .map(([, summary]) => summary)
+    .filter((summary) => summary && summary.total > 0);
+  const prev15 = Object.entries(state.daySummary || {})
+    .filter(([iso]) => {
+      const diff = daysBetween(iso, currentISO);
+      return diff >= 15 && diff < 30;
+    })
+    .map(([, summary]) => summary)
+    .filter((summary) => summary && summary.total > 0);
+  const calcRate = (arr) => {
+    if (!arr.length) return 0;
+    const done = arr.reduce((sum, summary) => sum + Number(summary.done || 0), 0);
+    const total = arr.reduce((sum, summary) => sum + Number(summary.total || 0), 0);
+    if (!total) return 0;
+    return Math.round((done / total) * 100);
+  };
+  const hitRate30 = calcRate(recent30);
+  const current15Rate = calcRate(recent15);
+  const previous15Rate = calcRate(prev15);
+  let trendLabel = s.completionTrendStable;
+  if (current15Rate - previous15Rate >= 4) trendLabel = s.completionTrendUp;
+  if (previous15Rate - current15Rate >= 4) trendLabel = s.completionTrendDown;
+  if (goalHitRateEl) goalHitRateEl.textContent = `${s.goalHitRateLabel}: ${hitRate30}%`;
+  if (completionTrendEl) completionTrendEl.textContent = `${s.completionTrendLabel}: ${trendLabel}`;
+  const startIso = state.onboardingStartDate || currentISO;
+  const d1Iso = isoDateFromLocalDate(new Date(new Date(`${startIso}T00:00:00`).getTime() + (1 * 86400000)));
+  const d7Iso = isoDateFromLocalDate(new Date(new Date(`${startIso}T00:00:00`).getTime() + (7 * 86400000)));
+  const d1Done = Number(state.daySummary?.[d1Iso]?.done || 0) > 0;
+  const d7Done = Number(state.daySummary?.[d7Iso]?.done || 0) > 0;
+  if (retentionSnapshotEl) {
+    retentionSnapshotEl.textContent = `${s.retentionLabel}: ${d1Done ? "1" : "0"} / ${d7Done ? "1" : "0"}`;
+  }
+  if (todaySmartPlanEl) {
+    todaySmartPlanEl.textContent = `${s.todaySmartPlanPrefix}: ${s.identityRecommendationMid}`;
   }
 
   const currentYear = new Date(`${currentISO}T00:00:00`).getFullYear();
@@ -3437,7 +3545,11 @@ const applyMode = (state) => {
 };
 
 const renderAll = (state) => {
-  applyStaticTranslations();
+  if (lastStaticLanguageApplied !== currentLanguage) {
+    applyStaticTranslations();
+    lastStaticLanguageApplied = currentLanguage;
+  }
+  renderBackupStatus();
   renderWelcome(state);
   renderUnlock(state);
   renderToday(state);
@@ -4290,6 +4402,7 @@ const init = () => {
       localStorage.removeItem(INTRO_VARIANT_KEY);
       localStorage.removeItem(LAST_BACKUP_KEY);
       currentLanguage = "";
+      lastStaticLanguageApplied = "";
       const fresh = defaultState();
       saveState(fresh);
       goalInput.value = "";

@@ -1200,6 +1200,14 @@ summary:focus-visible {
   border-color: #d8e5de;
 }
 
+.today-smart-plan {
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #d7e5dd;
+  background: rgba(248, 252, 249, 0.9);
+}
+
 .identity-score-card {
   border: 1px solid #d7e5dd;
   border-radius: 12px;

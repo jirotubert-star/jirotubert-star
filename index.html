@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-rounded.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-rounded.png" />
-    <link rel="manifest" href="site.webmanifest?v=1739" />
-    <link rel="stylesheet" href="css/style.css?v=1739" />
+    <link rel="manifest" href="site.webmanifest?v=1740" />
+    <link rel="stylesheet" href="css/style.css?v=1740" />
   </head>
   <body>
     <div id="language-modal" class="language-modal" hidden>
@@ -88,6 +88,7 @@
             <button id="tracker-weight-btn" class="tracker-btn" type="button" role="tab" aria-selected="false">Weight</button>
           </div>
         </div>
+        <div id="today-smart-plan" class="soft-note today-smart-plan">Heute: Starte mit der frühesten Aufgabe und schließe den Tag sauber ab.</div>
         <form id="quick-task-form" class="quick-task" autocomplete="off">
           <label class="sr-only" for="quick-task-input">Einmalige Aufgabe</label>
           <input id="quick-task-input" type="text" placeholder="Einmalige Aufgabe (z. B. Einkaufen)" />
@@ -238,6 +239,12 @@
             <div class="soft-note" id="annual-goal-meta"></div>
             <div class="soft-note" id="annual-goal-stats"></div>
           </div>
+          <div class="annual-goal-card">
+            <div class="soft-note" id="outcome-title">Outcome Qualität</div>
+            <div class="soft-note" id="goal-hit-rate">Goal-Hit-Rate (30d): 0%</div>
+            <div class="soft-note" id="completion-trend">Trend: stabil</div>
+            <div class="soft-note" id="retention-snapshot">Retention (D1/D7): -- / --</div>
+          </div>
           <div class="soft-note" id="progress-week-rate">Wochenquote: 0%</div>
           <div class="soft-note" id="progress-month-rate">Monatsquote: 0%</div>
           <div class="soft-note" id="progress-best-day">Stärkster Wochentag: -</div>
@@ -338,7 +345,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.7.39</span>
+      <span class="soft-note" id="version">Version 1.7.40</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">
@@ -399,6 +406,6 @@
         scriptSrc: "https://plausible.io/js/pa-Yo5rD-tnsB9Pz60fVTI3i.js"
       };
     </script>
-    <script src="js/app.js?v=1739"></script>
+    <script src="js/app.js?v=1740"></script>
   </body>
 </html>

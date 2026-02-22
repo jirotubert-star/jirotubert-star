@@ -8,6 +8,7 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 - `css/style.css`: Styling und Animationen
 - `site.webmanifest`: PWA-Metadaten
 - `service-worker.js`: Offline-Cache fuer Home-Screen/PWA-Nutzung
+- `RELEASE_QA.md`: Release- und Device-QA-Checkliste
 - `scripts/build.mjs`: erzeugt ein deploybares `dist/`-Verzeichnis
 - `package.json`: Build-Skript fuer Web/Container-Pipeline
 
@@ -37,9 +38,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.7.38`
+- Aktuell: `1.7.39`
 
 ## Aenderungsprotokoll
+- `1.7.39` (2026-02-22): Produkt-Paket umgesetzt: Fast-Onboarding deaktiviert (zurueck auf normales 3-Tage-Freischalten), Gewichts-Tracker mit 7/30-Tage-Mittelwerten + Start-Delta + Zielgewicht erweitert, Tagesdetails um Gewichtseintrag ergaenzt, Identity-Score um Tagesempfehlung erweitert, Backup-Status mit 7-Tage-Erinnerung ergänzt, Intro-A/B-Variante fuer Erststart hinzugefuegt (inkl. Analytics-Events) und Update-Feedback nach Reload verbessert; zusaetzlich `RELEASE_QA.md` fuer Store-Vorbereitung hinzugefuegt.
 - `1.7.38` (2026-02-22): Start-Logo als echtes App-Icon abgerundet: neues Asset `assets/onestep-logo-rounded.png` erzeugt und fuer Manifest/Favicon/Apple-Touch-Icon eingebunden.
 - `1.7.37` (2026-02-22): Startscreen-Logo auf Mobile bereinigt: Manifest-Icons von generierten `webp`-Maskable-Assets auf das originale `assets/onestep-logo-user.png` umgestellt, damit keine schwarze, abgerundete Hintergrundkachel mehr um das Logo erscheint.
 - `1.7.36` (2026-02-22): Mobile-Update-Fix fuer den neuen Tracker: harte Cache-Buster fuer `css/style.css` und `js/app.js` eingefuehrt (`?v=1736`) und Service-Worker-App-Shell erweitert; zusaetzlich Today-Tracker-Switch auf kleinen Screens vollbreit und besser tappbar gemacht.

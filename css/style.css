@@ -630,6 +630,22 @@ p {
   margin-top: 8px;
 }
 
+.weight-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.weight-kpi {
+  background: #ffffff;
+  border: 1px solid #e1ebe5;
+  border-radius: 10px;
+  padding: 8px;
+  font-size: 0.78rem;
+  color: #4c6358;
+}
+
 .weight-form label {
   font-size: 0.86rem;
   color: var(--muted);
@@ -649,6 +665,17 @@ p {
   background: #fff;
   font: inherit;
   font-size: 0.95rem;
+}
+
+.weight-target-form {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.weight-target-form label {
+  font-size: 0.86rem;
+  color: var(--muted);
 }
 
 .weight-chart-wrap {
@@ -1180,6 +1207,11 @@ summary:focus-visible {
   background: rgba(242, 251, 246, 0.9);
 }
 
+#identity-recommendation {
+  margin-top: 8px;
+  color: #355d4d;
+}
+
 .identity-score-value {
   font-size: 1.35rem;
   font-weight: 700;
@@ -1649,6 +1681,10 @@ summary:focus-visible {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+#backup-status {
+  margin-top: 8px;
 }
 
 .footer {
@@ -2135,6 +2171,9 @@ summary:focus-visible {
   }
   .weight-form-row .btn {
     width: 100%;
+  }
+  .weight-kpis {
+    grid-template-columns: 1fr;
   }
   .checklist li {
     flex-direction: column;

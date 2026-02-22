@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-rounded.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-rounded.png" />
-    <link rel="manifest" href="site.webmanifest?v=1738" />
-    <link rel="stylesheet" href="css/style.css?v=1738" />
+    <link rel="manifest" href="site.webmanifest?v=1739" />
+    <link rel="stylesheet" href="css/style.css?v=1739" />
   </head>
   <body>
     <div id="language-modal" class="language-modal" hidden>
@@ -106,6 +106,11 @@
         <div id="weight-tracker-panel" class="weight-tracker-panel" hidden>
           <h3 id="weight-tracker-title">Gewichts-Tracker</h3>
           <p id="weight-tracker-hint" class="soft-note">Trage dein Gewicht einmal täglich ein, um den Verlauf zu sehen.</p>
+          <div class="weight-kpis">
+            <div id="weight-kpi-7d" class="weight-kpi">7d Ø: --</div>
+            <div id="weight-kpi-30d" class="weight-kpi">30d Ø: --</div>
+            <div id="weight-kpi-delta" class="weight-kpi">Start -> heute: --</div>
+          </div>
           <form id="weight-form" class="weight-form" autocomplete="off">
             <label id="weight-input-label" for="weight-input">Gewicht (kg)</label>
             <div class="weight-form-row">
@@ -113,6 +118,14 @@
               <button id="weight-save-btn" class="btn" type="submit">Speichern</button>
             </div>
             <div id="weight-date-info" class="soft-note">Heute: --</div>
+          </form>
+          <form id="weight-target-form" class="weight-target-form" autocomplete="off">
+            <label id="weight-target-label" for="weight-target-input">Zielgewicht (optional)</label>
+            <div class="weight-form-row">
+              <input id="weight-target-input" type="number" min="20" max="400" step="0.1" placeholder="z. B. 68.0" />
+              <button id="weight-target-save-btn" class="btn ghost" type="submit">Ziel speichern</button>
+            </div>
+            <div id="weight-target-meta" class="soft-note">Noch kein Zielgewicht.</div>
           </form>
           <div class="weight-chart-wrap">
             <div id="weight-chart-title" class="soft-note">Gewichtsverlauf</div>
@@ -217,6 +230,7 @@
             <div class="soft-note" id="identity-score-title">Identity Score</div>
             <div class="identity-score-value" id="identity-score-value">0/100</div>
             <div class="soft-note" id="identity-score-meta">Konsistenz der letzten 14 Tage</div>
+            <div class="soft-note" id="identity-recommendation">Heute: Fokus auf Hauptaufgaben und einen sauberen Abschluss.</div>
           </div>
           <div class="annual-goal-card">
             <div class="soft-note" id="annual-goal-title">Jahresvorsatz</div>
@@ -315,6 +329,7 @@
             <button id="export-data" class="btn ghost" type="button">Daten exportieren</button>
             <button id="import-data" class="btn ghost" type="button">Daten importieren</button>
           </div>
+          <div id="backup-status" class="soft-note">Noch kein Backup exportiert.</div>
           <input id="import-file" type="file" accept="application/json" hidden />
         </div>
       </section>
@@ -323,7 +338,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.7.38</span>
+      <span class="soft-note" id="version">Version 1.7.39</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">
@@ -384,6 +399,6 @@
         scriptSrc: "https://plausible.io/js/pa-Yo5rD-tnsB9Pz60fVTI3i.js"
       };
     </script>
-    <script src="js/app.js?v=1738"></script>
+    <script src="js/app.js?v=1739"></script>
   </body>
 </html>

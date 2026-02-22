@@ -20,13 +20,15 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.38";
+const APP_VERSION = "1.7.39";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
 const SUPPORTED_LANGS = ["de", "en", "ru", "es", "fr"];
-const FAST_ONBOARDING_ENABLED = true;
-const FAST_ONBOARDING_TOTAL_DAYS = 6;
+const FAST_ONBOARDING_ENABLED = false;
+const FAST_ONBOARDING_TOTAL_DAYS = 12;
+const INTRO_VARIANT_KEY = "onestep_intro_variant_v1";
+const LAST_BACKUP_KEY = "onestep_last_backup_v1";
 let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "";
 
 const I18N = {
@@ -524,12 +526,33 @@ const STATIC_TEXT = {
     weightTrackerTitle: "Gewichts-Tracker",
     weightTrackerHint: "Trage dein Gewicht einmal täglich ein, um den Verlauf zu sehen.",
     weightTrackerMeta: "Gewichts-Tracker",
+    weightKpi7d: "7d Ø",
+    weightKpi30d: "30d Ø",
+    weightKpiDelta: "Start -> heute",
     weightInputLabel: "Gewicht (kg)",
     weightInputPlaceholder: "z. B. 72.4",
     weightSaveBtn: "Speichern",
     weightDatePrefix: "Heute",
     weightChartTitle: "Gewichtsverlauf",
     weightChartEmpty: "Noch keine Einträge.",
+    weightTargetLabel: "Zielgewicht (optional)",
+    weightTargetPlaceholder: "z. B. 68.0",
+    weightTargetSaveBtn: "Ziel speichern",
+    weightTargetEmpty: "Noch kein Zielgewicht.",
+    weightTargetMeta: "Noch bis Ziel",
+    toastWeightTargetSaved: "Zielgewicht gespeichert",
+    updateApplied: "Update installiert. App ist jetzt aktuell.",
+    backupStatusNever: "Noch kein Backup exportiert.",
+    backupStatusToday: "Backup heute exportiert",
+    backupStatusDays: "Letztes Backup vor",
+    backupStatusSuffix: "Tagen",
+    backupReminder: "Bitte Backup aktualisieren",
+    identityRecommendationPrefix: "Heute",
+    identityRecommendationHigh: "Tempo halten und einen Side-Quest mitnehmen.",
+    identityRecommendationMid: "Fokus auf Hauptaufgaben und einen sauberen Abschluss.",
+    identityRecommendationLow: "Nur die wichtigste Aufgabe erledigen und Rhythmus sichern.",
+    introText2A: "OneStep zeigt dir täglich, was jetzt wichtig ist, damit du konstant dranbleibst.",
+    introText2B: "Kein Motivations-Hype: Du bekommst klare Schritte, die du wirklich wiederholen kannst.",
     goalsTitle: "Ziele",
     progressTitle: "Fortschritt",
     infoTitle: "Einstellungen",
@@ -658,12 +681,33 @@ const STATIC_TEXT = {
     weightTrackerTitle: "Weight tracker",
     weightTrackerHint: "Enter your weight once per day to see the trend.",
     weightTrackerMeta: "Weight tracker",
+    weightKpi7d: "7d avg",
+    weightKpi30d: "30d avg",
+    weightKpiDelta: "Start -> today",
     weightInputLabel: "Weight (kg)",
     weightInputPlaceholder: "e.g. 72.4",
     weightSaveBtn: "Save",
     weightDatePrefix: "Today",
     weightChartTitle: "Weight trend",
     weightChartEmpty: "No entries yet.",
+    weightTargetLabel: "Target weight (optional)",
+    weightTargetPlaceholder: "e.g. 68.0",
+    weightTargetSaveBtn: "Save target",
+    weightTargetEmpty: "No target weight yet.",
+    weightTargetMeta: "Left to target",
+    toastWeightTargetSaved: "Target weight saved",
+    updateApplied: "Update installed. App is now current.",
+    backupStatusNever: "No backup exported yet.",
+    backupStatusToday: "Backup exported today",
+    backupStatusDays: "Last backup",
+    backupStatusSuffix: "days ago",
+    backupReminder: "Please refresh your backup",
+    identityRecommendationPrefix: "Today",
+    identityRecommendationHigh: "Keep the pace and add one side quest.",
+    identityRecommendationMid: "Focus on main tasks and a clean finish.",
+    identityRecommendationLow: "Do only your most important task and protect your rhythm.",
+    introText2A: "OneStep shows what matters now, so you can stay consistent.",
+    introText2B: "No motivation hype: you get clear steps you can actually repeat.",
     goalsTitle: "Цели",
     progressTitle: "Прогресс",
     infoTitle: "Settings",
@@ -792,12 +836,33 @@ const STATIC_TEXT = {
     weightTrackerTitle: "Трекер веса",
     weightTrackerHint: "Вводи вес один раз в день, чтобы видеть динамику.",
     weightTrackerMeta: "Трекер веса",
+    weightKpi7d: "7д ср.",
+    weightKpi30d: "30д ср.",
+    weightKpiDelta: "Старт -> сегодня",
     weightInputLabel: "Вес (кг)",
     weightInputPlaceholder: "например: 72.4",
     weightSaveBtn: "Сохранить",
     weightDatePrefix: "Сегодня",
     weightChartTitle: "Динамика веса",
     weightChartEmpty: "Пока нет записей.",
+    weightTargetLabel: "Целевой вес (опционально)",
+    weightTargetPlaceholder: "например: 68.0",
+    weightTargetSaveBtn: "Сохранить цель",
+    weightTargetEmpty: "Цель по весу не задана.",
+    weightTargetMeta: "Осталось до цели",
+    toastWeightTargetSaved: "Целевой вес сохранён",
+    updateApplied: "Обновление установлено. Приложение актуально.",
+    backupStatusNever: "Резервная копия ещё не экспортирована.",
+    backupStatusToday: "Резервная копия экспортирована сегодня",
+    backupStatusDays: "Последняя копия",
+    backupStatusSuffix: "дн. назад",
+    backupReminder: "Обнови резервную копию",
+    identityRecommendationPrefix: "Сегодня",
+    identityRecommendationHigh: "Держи темп и добавь одну побочную задачу.",
+    identityRecommendationMid: "Фокус на основных задачах и чистом завершении дня.",
+    identityRecommendationLow: "Сделай одну ключевую задачу и сохрани ритм.",
+    introText2A: "OneStep показывает, что важно сейчас, чтобы ты держал стабильный ритм.",
+    introText2B: "Без мотивационного шума: только чёткие шаги, которые можно повторять каждый день.",
     goalsTitle: "Metas",
     progressTitle: "Progreso",
     infoTitle: "Настройки",
@@ -926,12 +991,33 @@ const STATIC_TEXT = {
     weightTrackerTitle: "Tracker de peso",
     weightTrackerHint: "Registra tu peso una vez al día para ver la evolución.",
     weightTrackerMeta: "Tracker de peso",
+    weightKpi7d: "Prom. 7d",
+    weightKpi30d: "Prom. 30d",
+    weightKpiDelta: "Inicio -> hoy",
     weightInputLabel: "Peso (kg)",
     weightInputPlaceholder: "ej.: 72.4",
     weightSaveBtn: "Guardar",
     weightDatePrefix: "Hoy",
     weightChartTitle: "Evolución del peso",
     weightChartEmpty: "Aún no hay registros.",
+    weightTargetLabel: "Peso objetivo (opcional)",
+    weightTargetPlaceholder: "ej.: 68.0",
+    weightTargetSaveBtn: "Guardar objetivo",
+    weightTargetEmpty: "Aún no hay peso objetivo.",
+    weightTargetMeta: "Falta para objetivo",
+    toastWeightTargetSaved: "Peso objetivo guardado",
+    updateApplied: "Actualización instalada. La app está al día.",
+    backupStatusNever: "Aún no se exportó ninguna copia.",
+    backupStatusToday: "Copia exportada hoy",
+    backupStatusDays: "Última copia hace",
+    backupStatusSuffix: "días",
+    backupReminder: "Actualiza tu copia de seguridad",
+    identityRecommendationPrefix: "Hoy",
+    identityRecommendationHigh: "Mantén el ritmo y añade una tarea secundaria.",
+    identityRecommendationMid: "Foco en tareas principales y cierre limpio del día.",
+    identityRecommendationLow: "Haz solo tu tarea más importante y protege el ritmo.",
+    introText2A: "OneStep te muestra que hacer ahora para mantener constancia.",
+    introText2B: "Sin hype motivacional: pasos claros que puedes repetir de verdad.",
     goalsTitle: "Objectifs",
     progressTitle: "Progrès",
     infoTitle: "Ajustes",
@@ -1060,12 +1146,33 @@ const STATIC_TEXT = {
     weightTrackerTitle: "Suivi du poids",
     weightTrackerHint: "Saisis ton poids une fois par jour pour voir l'évolution.",
     weightTrackerMeta: "Suivi du poids",
+    weightKpi7d: "Moy. 7j",
+    weightKpi30d: "Moy. 30j",
+    weightKpiDelta: "Départ -> aujourd'hui",
     weightInputLabel: "Poids (kg)",
     weightInputPlaceholder: "ex. : 72.4",
     weightSaveBtn: "Enregistrer",
     weightDatePrefix: "Aujourd'hui",
     weightChartTitle: "Évolution du poids",
     weightChartEmpty: "Pas encore de saisies.",
+    weightTargetLabel: "Poids cible (optionnel)",
+    weightTargetPlaceholder: "ex. : 68.0",
+    weightTargetSaveBtn: "Enregistrer l'objectif",
+    weightTargetEmpty: "Pas encore de poids cible.",
+    weightTargetMeta: "Reste jusqu'à l'objectif",
+    toastWeightTargetSaved: "Poids cible enregistré",
+    updateApplied: "Mise à jour installée. L'app est à jour.",
+    backupStatusNever: "Aucune sauvegarde exportée pour le moment.",
+    backupStatusToday: "Sauvegarde exportée aujourd'hui",
+    backupStatusDays: "Dernière sauvegarde il y a",
+    backupStatusSuffix: "jours",
+    backupReminder: "Pense à mettre à jour ta sauvegarde",
+    identityRecommendationPrefix: "Aujourd'hui",
+    identityRecommendationHigh: "Garde le rythme et ajoute une quête secondaire.",
+    identityRecommendationMid: "Focus sur les tâches principales et une fin de journée propre.",
+    identityRecommendationLow: "Fais seulement la tâche la plus importante et protège ton rythme.",
+    introText2A: "OneStep te montre quoi faire maintenant pour rester regulier.",
+    introText2B: "Pas de hype motivationnelle : des étapes claires que tu peux vraiment répéter.",
     goalsTitle: "Objectifs",
     progressTitle: "Progrès",
     infoTitle: "Réglages",
@@ -1298,7 +1405,21 @@ const openDayDetails = (state, iso) => {
   if (dayDetailDate) dayDetailDate.textContent = formatISODate(iso);
   dayDetailList.innerHTML = "";
   const entries = state.dayTaskHistory?.[iso] || [];
-  if (!entries.length) {
+  const hasWeightEntry = Number.isFinite(Number(state.weightEntries?.[iso]));
+  const weightValue = Number(state.weightEntries?.[iso]);
+  if (hasWeightEntry) {
+    const weightLi = document.createElement("li");
+    weightLi.className = "day-detail-item done";
+    const weightText = document.createElement("span");
+    weightText.textContent = `${(STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).weightInputLabel}: ${weightValue.toFixed(1)} kg`;
+    const weightStatus = document.createElement("span");
+    weightStatus.className = "day-detail-status";
+    weightStatus.textContent = "✓";
+    weightLi.appendChild(weightText);
+    weightLi.appendChild(weightStatus);
+    dayDetailList.appendChild(weightLi);
+  }
+  if (!entries.length && !hasWeightEntry) {
     const summary = state.daySummary?.[iso];
     const li = document.createElement("li");
     li.className = "day-detail-item";
@@ -1352,6 +1473,7 @@ const defaultState = () => ({
   daySummary: {},
   dayTaskHistory: {},
   weightEntries: {},
+  weightTargetKg: null,
   weeklyPlans: {},
   tutorialStep: 1,
   tutorialCompleted: false,
@@ -1359,6 +1481,7 @@ const defaultState = () => ({
   annualGoal: "",
   annualGoalUpdatedAt: null,
   onboardingStartDate: null,
+  introVariant: "",
   proEnabled: false,
   templatesOpenedOnce: false,
   todayTracker: "checklist",
@@ -1395,6 +1518,8 @@ const loadState = () => {
       normalized.weightEntries && typeof normalized.weightEntries === "object"
         ? normalized.weightEntries
         : {};
+    normalized.weightTargetKg =
+      Number.isFinite(Number(normalized.weightTargetKg)) ? Number(normalized.weightTargetKg) : null;
     normalized.weeklyPlans = normalized.weeklyPlans || {};
     normalized.tutorialStep = normalized.tutorialStep || 1;
     normalized.tutorialCompleted = normalized.tutorialCompleted || false;
@@ -1404,6 +1529,10 @@ const loadState = () => {
       : "";
     normalized.annualGoalUpdatedAt = normalized.annualGoalUpdatedAt || null;
     normalized.onboardingStartDate = normalized.onboardingStartDate || null;
+    normalized.introVariant =
+      normalized.introVariant === "B" || normalized.introVariant === "A"
+        ? normalized.introVariant
+        : "";
     if (!normalized.onboardingStartDate && normalized.goals.length > 0) {
       const datedGoals = normalized.goals
         .map((g) => g.createdAt)
@@ -1449,6 +1578,14 @@ const weightInputLabel = document.getElementById("weight-input-label");
 const weightDateInfo = document.getElementById("weight-date-info");
 const weightChartSvg = document.getElementById("weight-chart");
 const weightChartEmpty = document.getElementById("weight-chart-empty");
+const weightKpi7d = document.getElementById("weight-kpi-7d");
+const weightKpi30d = document.getElementById("weight-kpi-30d");
+const weightKpiDelta = document.getElementById("weight-kpi-delta");
+const weightTargetForm = document.getElementById("weight-target-form");
+const weightTargetInput = document.getElementById("weight-target-input");
+const weightTargetLabel = document.getElementById("weight-target-label");
+const weightTargetSaveBtn = document.getElementById("weight-target-save-btn");
+const weightTargetMeta = document.getElementById("weight-target-meta");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
 const goalTimeInput = document.getElementById("goal-time-input");
@@ -1521,12 +1658,14 @@ const dayDetailClose = document.getElementById("day-detail-close");
 const exportDataBtn = document.getElementById("export-data");
 const importDataBtn = document.getElementById("import-data");
 const importFileInput = document.getElementById("import-file");
+const backupStatusEl = document.getElementById("backup-status");
 const progressWeekRateEl = document.getElementById("progress-week-rate");
 const progressMonthRateEl = document.getElementById("progress-month-rate");
 const progressBestDayEl = document.getElementById("progress-best-day");
 const identityScoreTitleEl = document.getElementById("identity-score-title");
 const identityScoreValueEl = document.getElementById("identity-score-value");
 const identityScoreMetaEl = document.getElementById("identity-score-meta");
+const identityRecommendationEl = document.getElementById("identity-recommendation");
 const annualGoalTitleEl = document.getElementById("annual-goal-title");
 const annualGoalValueEl = document.getElementById("annual-goal-value");
 const annualGoalMetaEl = document.getElementById("annual-goal-meta");
@@ -1549,6 +1688,7 @@ let draggingGoalId = null;
 let introStepIndex = 0;
 let introGoalDraft = "";
 let runtimeAppVersion = APP_VERSION;
+let templatesRenderLangCache = "";
 let pickerHour = 12;
 let pickerMinute = 0;
 let editingGoalTimeId = null;
@@ -1730,8 +1870,45 @@ const showLanguageModalIfNeeded = () => {
   if (needsLanguage && introModal) introModal.hidden = true;
 };
 
+const getOrCreateIntroVariant = (state = null) => {
+  const fromStorage = localStorage.getItem(INTRO_VARIANT_KEY);
+  if (fromStorage === "A" || fromStorage === "B") return fromStorage;
+  const existing = state?.introVariant;
+  if (existing === "A" || existing === "B") {
+    localStorage.setItem(INTRO_VARIANT_KEY, existing);
+    return existing;
+  }
+  const variant = Math.random() < 0.5 ? "A" : "B";
+  localStorage.setItem(INTRO_VARIANT_KEY, variant);
+  trackEvent("intro_variant_assigned", { variant });
+  return variant;
+};
+
+const renderBackupStatus = () => {
+  if (!backupStatusEl) return;
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+  const lastBackupISO = localStorage.getItem(LAST_BACKUP_KEY);
+  if (!lastBackupISO) {
+    backupStatusEl.textContent = s.backupStatusNever;
+    return;
+  }
+  const diff = daysBetween(lastBackupISO, todayISO());
+  if (diff <= 0) {
+    backupStatusEl.textContent = s.backupStatusToday;
+    return;
+  }
+  const reminder = diff >= 7 ? ` · ${s.backupReminder}` : "";
+  backupStatusEl.textContent = `${s.backupStatusDays} ${diff} ${s.backupStatusSuffix}${reminder}`;
+};
+
 const getIntroSlides = () => {
   const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+  const state = loadState();
+  const variant = getOrCreateIntroVariant(state);
+  if (state.introVariant !== variant) {
+    state.introVariant = variant;
+    saveState(state);
+  }
   return [
     {
       title: s.introTitle1,
@@ -1742,7 +1919,7 @@ const getIntroSlides = () => {
     },
     {
       title: s.introTitle2,
-      text: s.introText2,
+      text: variant === "B" ? (s.introText2B || s.introText2) : (s.introText2A || s.introText2),
       action: s.introNextBtn,
       aria: s.introNextAria,
       examples: [],
@@ -1832,6 +2009,9 @@ const handleIntroNext = () => {
   saveState(state);
   if (introModal) introModal.hidden = true;
   renderAll(state);
+  trackEvent("intro_completed", {
+    variant: state.introVariant || localStorage.getItem(INTRO_VARIANT_KEY) || "A",
+  });
   setActiveTab("goals");
 };
 
@@ -1858,6 +2038,11 @@ const hideUpdateBanner = () => {
 
 const requestServiceWorkerUpdate = () => {
   if (!waitingServiceWorker) return;
+  try {
+    sessionStorage.setItem("onestep_update_applied", "1");
+  } catch (_err) {
+    // Ignore storage edge-cases.
+  }
   hideUpdateBanner();
   waitingServiceWorker.postMessage({ type: "SKIP_WAITING" });
 };
@@ -1923,12 +2108,17 @@ const mergeStates = (current, incoming) => {
   merged.completedDays = { ...(current.completedDays || {}), ...(incoming.completedDays || {}) };
   merged.daySummary = { ...(current.daySummary || {}), ...(incoming.daySummary || {}) };
   merged.dayTaskHistory = { ...(current.dayTaskHistory || {}), ...(incoming.dayTaskHistory || {}) };
+  merged.weightEntries = { ...(current.weightEntries || {}), ...(incoming.weightEntries || {}) };
+  merged.weightTargetKg = Number.isFinite(Number(incoming.weightTargetKg))
+    ? Number(incoming.weightTargetKg)
+    : (Number.isFinite(Number(current.weightTargetKg)) ? Number(current.weightTargetKg) : null);
   merged.streak = Math.max(Number(current.streak || 0), Number(incoming.streak || 0));
   merged.totalDone = Math.max(Number(current.totalDone || 0), Number(incoming.totalDone || 0));
   return merged;
 };
 
 const exportBackup = () => {
+  const exportISO = todayISO();
   const payload = {
     schemaVersion: BACKUP_SCHEMA_VERSION,
     version: APP_VERSION,
@@ -1946,6 +2136,8 @@ const exportBackup = () => {
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
+  localStorage.setItem(LAST_BACKUP_KEY, exportISO);
+  renderBackupStatus();
   showToast((STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).toastExportSuccess);
 };
 
@@ -1974,6 +2166,7 @@ const importBackup = async (file) => {
     if (Array.isArray(parsed?.errorLog)) {
       localStorage.setItem(ERROR_LOG_KEY, JSON.stringify(parsed.errorLog.slice(0, 20)));
     }
+    localStorage.setItem(LAST_BACKUP_KEY, todayISO());
 
     applyStaticTranslations();
     renderAll(loadState());
@@ -2019,6 +2212,13 @@ const applyStaticTranslations = () => {
   if (weightInputLabel) weightInputLabel.textContent = s.weightInputLabel;
   if (weightInput) weightInput.placeholder = s.weightInputPlaceholder;
   if (weightSaveBtn) weightSaveBtn.textContent = s.weightSaveBtn;
+  if (weightTargetLabel) weightTargetLabel.textContent = s.weightTargetLabel;
+  if (weightTargetInput) weightTargetInput.placeholder = s.weightTargetPlaceholder;
+  if (weightTargetSaveBtn) weightTargetSaveBtn.textContent = s.weightTargetSaveBtn;
+  if (weightKpi7d) weightKpi7d.textContent = `${s.weightKpi7d}: --`;
+  if (weightKpi30d) weightKpi30d.textContent = `${s.weightKpi30d}: --`;
+  if (weightKpiDelta) weightKpiDelta.textContent = `${s.weightKpiDelta}: --`;
+  if (weightTargetMeta) weightTargetMeta.textContent = s.weightTargetEmpty;
   setText("weight-chart-title", s.weightChartTitle);
   setText("weight-chart-empty", s.weightChartEmpty);
   setText("goals-title", s.goalsTitle);
@@ -2073,6 +2273,7 @@ const applyStaticTranslations = () => {
   if (resetBtn) resetBtn.textContent = s.resetBtn;
   if (exportDataBtn) exportDataBtn.textContent = s.exportData;
   if (importDataBtn) importDataBtn.textContent = s.importData;
+  renderBackupStatus();
   if (simulatedDateEl) simulatedDateEl.textContent = `${s.simPrefix}: --`;
   if (progressWeekRateEl) progressWeekRateEl.textContent = `${s.progressWeekRate}: 0%`;
   if (progressMonthRateEl) progressMonthRateEl.textContent = `${s.progressMonthRate}: 0%`;
@@ -2408,6 +2609,38 @@ const renderWeightTracker = (state) => {
     .map(([iso, value]) => ({ iso, value: Number(value) }))
     .filter((entry) => Number.isFinite(entry.value))
     .sort((a, b) => a.iso.localeCompare(b.iso));
+  const avg = (subset) => {
+    if (!subset.length) return null;
+    const sum = subset.reduce((total, entry) => total + entry.value, 0);
+    return Math.round((sum / subset.length) * 10) / 10;
+  };
+  const avg7 = avg(entries.slice(-7));
+  const avg30 = avg(entries.slice(-30));
+  const first = entries[0]?.value ?? null;
+  const current = entries[entries.length - 1]?.value ?? null;
+  const delta = first === null || current === null ? null : Math.round((current - first) * 10) / 10;
+  if (weightKpi7d) {
+    weightKpi7d.textContent = `${s.weightKpi7d}: ${avg7 === null ? "--" : `${avg7.toFixed(1)} kg`}`;
+  }
+  if (weightKpi30d) {
+    weightKpi30d.textContent = `${s.weightKpi30d}: ${avg30 === null ? "--" : `${avg30.toFixed(1)} kg`}`;
+  }
+  if (weightKpiDelta) {
+    weightKpiDelta.textContent = `${s.weightKpiDelta}: ${delta === null ? "--" : `${delta > 0 ? "+" : ""}${delta.toFixed(1)} kg`}`;
+  }
+  if (weightTargetInput) {
+    weightTargetInput.value = Number.isFinite(state.weightTargetKg) ? Number(state.weightTargetKg).toFixed(1) : "";
+  }
+  if (weightTargetMeta) {
+    if (!Number.isFinite(state.weightTargetKg)) {
+      weightTargetMeta.textContent = s.weightTargetEmpty;
+    } else if (!Number.isFinite(current)) {
+      weightTargetMeta.textContent = `${s.weightTargetMeta}: --`;
+    } else {
+      const remaining = Math.round((current - Number(state.weightTargetKg)) * 10) / 10;
+      weightTargetMeta.textContent = `${s.weightTargetMeta}: ${remaining > 0 ? "+" : ""}${remaining.toFixed(1)} kg`;
+    }
+  }
   renderWeightChart(entries);
 };
 
@@ -2424,6 +2657,23 @@ const saveTodayWeight = (rawValue) => {
   saveState(state);
   renderAll(state);
   showToast(t("toastWeightSaved"));
+};
+
+const saveWeightTarget = (rawValue) => {
+  const normalized = String(rawValue || "").replace(",", ".").trim();
+  let parsed = null;
+  if (normalized) {
+    parsed = parseWeightValue(normalized);
+    if (parsed === null) {
+      showToast(t("toastWeightInvalid"));
+      return;
+    }
+  }
+  const state = loadState();
+  state.weightTargetKg = parsed;
+  saveState(state);
+  renderAll(state);
+  showToast(t("toastWeightTargetSaved"));
 };
 
 const renderToday = (state) => {
@@ -3004,6 +3254,15 @@ const renderProgress = (state) => {
   if (identityScoreTitleEl) identityScoreTitleEl.textContent = s.identityScoreTitle;
   if (identityScoreValueEl) identityScoreValueEl.textContent = `${identityScore}/100`;
   if (identityScoreMetaEl) identityScoreMetaEl.textContent = s.identityScoreMeta;
+  if (identityRecommendationEl) {
+    let rec = s.identityRecommendationMid;
+    if (identityScore >= 75) rec = s.identityRecommendationHigh;
+    else if (identityScore < 45) rec = s.identityRecommendationLow;
+    identityRecommendationEl.textContent = `${s.identityRecommendationPrefix}: ${rec}`;
+  }
+  if (identityRecommendationEl) {
+    identityRecommendationEl.textContent = `${s.identityRecommendationPrefix}: ${s.identityRecommendationMid}`;
+  }
 
   const currentYear = new Date(`${currentISO}T00:00:00`).getFullYear();
   let yearDone = 0;
@@ -3867,6 +4126,7 @@ const renderWeeklyPlan = (state) => {
 
 const renderTemplates = () => {
   if (!templateCategories) return;
+  if (templatesRenderLangCache === currentLanguage && templateCategories.children.length > 0) return;
   templateCategories.innerHTML = "";
 
   getTemplateCategories().forEach((category, index) => {
@@ -3897,6 +4157,7 @@ const renderTemplates = () => {
     wrapper.appendChild(items);
     templateCategories.appendChild(wrapper);
   });
+  templatesRenderLangCache = currentLanguage;
 };
 
 // ---------------------------
@@ -3950,6 +4211,14 @@ const init = () => {
   updateStreak(state);
   saveState(state);
   renderAll(state);
+  try {
+    if (sessionStorage.getItem("onestep_update_applied") === "1") {
+      sessionStorage.removeItem("onestep_update_applied");
+      showToast((STATIC_TEXT[currentLanguage] || STATIC_TEXT.de).updateApplied);
+    }
+  } catch (_err) {
+    // Ignore storage edge-cases.
+  }
   syncRuntimeVersionWithActiveSW();
   // Keep templates collapsed on every page load/start.
   if (templatesSection) {
@@ -4018,6 +4287,8 @@ const init = () => {
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(LANGUAGE_KEY);
       localStorage.removeItem(ERROR_LOG_KEY);
+      localStorage.removeItem(INTRO_VARIANT_KEY);
+      localStorage.removeItem(LAST_BACKUP_KEY);
       currentLanguage = "";
       const fresh = defaultState();
       saveState(fresh);
@@ -4075,6 +4346,12 @@ const init = () => {
       weightForm.addEventListener("submit", (event) => {
         event.preventDefault();
         saveTodayWeight(weightInput?.value || "");
+      });
+    }
+    if (weightTargetForm) {
+      weightTargetForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        saveWeightTarget(weightTargetInput?.value || "");
       });
     }
     if (trackerChecklistBtn) {

@@ -15,6 +15,7 @@ const requiredItems = [
   "service-worker.js",
   "css",
   "js",
+  "data",
   "assets",
 ];
 const optionalItems = ["icons"];

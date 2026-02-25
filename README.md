@@ -14,6 +14,7 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
 
 ## Build
 - `npm run build`: erstellt `dist/` mit `index.html`, `site.webmanifest`, `css/`, `js/`, `assets/`
+- `npm test`: Unit-Tests fuer Vokabel-Logik
 - `npm run assets:generate`: generiert native Icon-/Splash-Assets aus `assets/logo.png`
 - `npm run sync`: baut Web-Assets und synchronisiert sie in `android/` und `ios/`
 - `npm run android:open`: oeffnet das Android-Projekt in Android Studio
@@ -38,9 +39,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.7.41`
+- Aktuell: `1.7.42`
 
 ## Aenderungsprotokoll
+- `1.7.42` (2026-02-25): Neuer temporaerer Today-Tracker `Vokabeln (Französisch)` hinzugefuegt: 10 A2-Themes (FR/DE) mit Seed-JSON, Trainingsmodi Flashcards/Quick Test/Write, Tagesziel+Streak+Theme-Fortschritt, Session-Summary, lokale Persistenz, Offline-Cache fuer Seed-Daten und Unit-Tests fuer Scoring/Progress-Logik.
 - `1.7.41` (2026-02-22): Sleep-Tracker als dritter Today-Tracker eingefuehrt: Abendlicher Bedtime-Eintrag + optionaler Wake-up (inkl. "Jetzt"), offene Nacht-Logik ueber Mitternacht, KPI-Anzeige (7d-Durchschnitt/Konsistenz/Status), Schlafdauer-Chart und Tagesdetails um Schlafdaten erweitert.
 - `1.7.40` (2026-02-22): 10/10-Iteration erweitert: Progress um Outcome-Kennzahlen (30d Goal-Hit-Rate, Trend, D1/D7-Snapshot) ergänzt, Today um smarte Tagesempfehlung erweitert, Gewichts-Tracker um Zielgewicht-/KPI-Visuals verfeinert, Render-Performance über reduzierte Static-Translation-Reapply optimiert und Update-/Backup-UX weiter geschärft.
 - `1.7.39` (2026-02-22): Produkt-Paket umgesetzt: Fast-Onboarding deaktiviert (zurueck auf normales 3-Tage-Freischalten), Gewichts-Tracker mit 7/30-Tage-Mittelwerten + Start-Delta + Zielgewicht erweitert, Tagesdetails um Gewichtseintrag ergaenzt, Identity-Score um Tagesempfehlung erweitert, Backup-Status mit 7-Tage-Erinnerung ergänzt, Intro-A/B-Variante fuer Erststart hinzugefuegt (inkl. Analytics-Events) und Update-Feedback nach Reload verbessert; zusaetzlich `RELEASE_QA.md` fuer Store-Vorbereitung hinzugefuegt.

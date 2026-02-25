@@ -1,0 +1,1067 @@
+{
+  "version": "1",
+  "languagePair": "fr-de",
+  "level": "A2",
+  "themes": [
+    {
+      "id": "familie",
+      "title": "Familie",
+      "items": [
+        {
+          "id": "familie-001",
+          "fr": "la mère",
+          "de": "die Mutter"
+        },
+        {
+          "id": "familie-002",
+          "fr": "le père",
+          "de": "der Vater"
+        },
+        {
+          "id": "familie-003",
+          "fr": "la sœur",
+          "de": "die Schwester"
+        },
+        {
+          "id": "familie-004",
+          "fr": "le frère",
+          "de": "der Bruder"
+        },
+        {
+          "id": "familie-005",
+          "fr": "les parents",
+          "de": "die Eltern"
+        },
+        {
+          "id": "familie-006",
+          "fr": "les enfants",
+          "de": "die Kinder"
+        },
+        {
+          "id": "familie-007",
+          "fr": "la grand-mère",
+          "de": "die Großmutter"
+        },
+        {
+          "id": "familie-008",
+          "fr": "le grand-père",
+          "de": "der Großvater"
+        },
+        {
+          "id": "familie-009",
+          "fr": "la tante",
+          "de": "die Tante"
+        },
+        {
+          "id": "familie-010",
+          "fr": "l’oncle",
+          "de": "der Onkel"
+        },
+        {
+          "id": "familie-011",
+          "fr": "la cousine",
+          "de": "die Cousine"
+        },
+        {
+          "id": "familie-012",
+          "fr": "le cousin",
+          "de": "der Cousin"
+        },
+        {
+          "id": "familie-013",
+          "fr": "la famille",
+          "de": "die Familie"
+        },
+        {
+          "id": "familie-014",
+          "fr": "être marié",
+          "de": "verheiratet sein"
+        },
+        {
+          "id": "familie-015",
+          "fr": "être célibataire",
+          "de": "ledig sein"
+        },
+        {
+          "id": "familie-016",
+          "fr": "avoir un enfant",
+          "de": "ein Kind haben"
+        },
+        {
+          "id": "familie-017",
+          "fr": "la naissance",
+          "de": "die Geburt"
+        },
+        {
+          "id": "familie-018",
+          "fr": "le mariage",
+          "de": "die Hochzeit"
+        },
+        {
+          "id": "familie-019",
+          "fr": "habiter avec",
+          "de": "mit ... wohnen"
+        },
+        {
+          "id": "familie-020",
+          "fr": "rendre visite",
+          "de": "besuchen"
+        }
+      ]
+    },
+    {
+      "id": "schule",
+      "title": "Schule",
+      "items": [
+        {
+          "id": "schule-001",
+          "fr": "l’école",
+          "de": "die Schule"
+        },
+        {
+          "id": "schule-002",
+          "fr": "la classe",
+          "de": "die Klasse"
+        },
+        {
+          "id": "schule-003",
+          "fr": "le professeur",
+          "de": "der Lehrer"
+        },
+        {
+          "id": "schule-004",
+          "fr": "l’élève",
+          "de": "der Schüler"
+        },
+        {
+          "id": "schule-005",
+          "fr": "le devoir",
+          "de": "die Hausaufgabe"
+        },
+        {
+          "id": "schule-006",
+          "fr": "apprendre",
+          "de": "lernen"
+        },
+        {
+          "id": "schule-007",
+          "fr": "comprendre",
+          "de": "verstehen"
+        },
+        {
+          "id": "schule-008",
+          "fr": "la matière",
+          "de": "das Fach"
+        },
+        {
+          "id": "schule-009",
+          "fr": "l’examen",
+          "de": "die Prüfung"
+        },
+        {
+          "id": "schule-010",
+          "fr": "la note",
+          "de": "die Note"
+        },
+        {
+          "id": "schule-011",
+          "fr": "l’emploi du temps",
+          "de": "der Stundenplan"
+        },
+        {
+          "id": "schule-012",
+          "fr": "la récréation",
+          "de": "die Pause"
+        },
+        {
+          "id": "schule-013",
+          "fr": "la question",
+          "de": "die Frage"
+        },
+        {
+          "id": "schule-014",
+          "fr": "la réponse",
+          "de": "die Antwort"
+        },
+        {
+          "id": "schule-015",
+          "fr": "écrire",
+          "de": "schreiben"
+        },
+        {
+          "id": "schule-016",
+          "fr": "lire",
+          "de": "lesen"
+        },
+        {
+          "id": "schule-017",
+          "fr": "écouter",
+          "de": "zuhören"
+        },
+        {
+          "id": "schule-018",
+          "fr": "parler",
+          "de": "sprechen"
+        },
+        {
+          "id": "schule-019",
+          "fr": "réviser",
+          "de": "wiederholen"
+        },
+        {
+          "id": "schule-020",
+          "fr": "réussir",
+          "de": "bestehen"
+        }
+      ]
+    },
+    {
+      "id": "freizeit",
+      "title": "Freizeit",
+      "items": [
+        {
+          "id": "freizeit-001",
+          "fr": "le hobby",
+          "de": "das Hobby"
+        },
+        {
+          "id": "freizeit-002",
+          "fr": "le sport",
+          "de": "der Sport"
+        },
+        {
+          "id": "freizeit-003",
+          "fr": "jouer",
+          "de": "spielen"
+        },
+        {
+          "id": "freizeit-004",
+          "fr": "regarder un film",
+          "de": "einen Film schauen"
+        },
+        {
+          "id": "freizeit-005",
+          "fr": "écouter de la musique",
+          "de": "Musik hören"
+        },
+        {
+          "id": "freizeit-006",
+          "fr": "sortir",
+          "de": "ausgehen"
+        },
+        {
+          "id": "freizeit-007",
+          "fr": "se promener",
+          "de": "spazieren gehen"
+        },
+        {
+          "id": "freizeit-008",
+          "fr": "l’amie",
+          "de": "die Freundin"
+        },
+        {
+          "id": "freizeit-009",
+          "fr": "l’ami",
+          "de": "der Freund"
+        },
+        {
+          "id": "freizeit-010",
+          "fr": "la fête",
+          "de": "die Party"
+        },
+        {
+          "id": "freizeit-011",
+          "fr": "le week-end",
+          "de": "das Wochenende"
+        },
+        {
+          "id": "freizeit-012",
+          "fr": "faire du vélo",
+          "de": "Fahrrad fahren"
+        },
+        {
+          "id": "freizeit-013",
+          "fr": "nager",
+          "de": "schwimmen"
+        },
+        {
+          "id": "freizeit-014",
+          "fr": "courir",
+          "de": "laufen"
+        },
+        {
+          "id": "freizeit-015",
+          "fr": "prendre des photos",
+          "de": "Fotos machen"
+        },
+        {
+          "id": "freizeit-016",
+          "fr": "se reposer",
+          "de": "sich ausruhen"
+        },
+        {
+          "id": "freizeit-017",
+          "fr": "le parc",
+          "de": "der Park"
+        },
+        {
+          "id": "freizeit-018",
+          "fr": "la piscine",
+          "de": "das Schwimmbad"
+        },
+        {
+          "id": "freizeit-019",
+          "fr": "le jeu",
+          "de": "das Spiel"
+        },
+        {
+          "id": "freizeit-020",
+          "fr": "s’amuser",
+          "de": "Spaß haben"
+        }
+      ]
+    },
+    {
+      "id": "reisen",
+      "title": "Reisen",
+      "items": [
+        {
+          "id": "reisen-001",
+          "fr": "voyager",
+          "de": "reisen"
+        },
+        {
+          "id": "reisen-002",
+          "fr": "le voyage",
+          "de": "die Reise"
+        },
+        {
+          "id": "reisen-003",
+          "fr": "le train",
+          "de": "der Zug"
+        },
+        {
+          "id": "reisen-004",
+          "fr": "l’avion",
+          "de": "das Flugzeug"
+        },
+        {
+          "id": "reisen-005",
+          "fr": "le billet",
+          "de": "das Ticket"
+        },
+        {
+          "id": "reisen-006",
+          "fr": "la valise",
+          "de": "der Koffer"
+        },
+        {
+          "id": "reisen-007",
+          "fr": "l’hôtel",
+          "de": "das Hotel"
+        },
+        {
+          "id": "reisen-008",
+          "fr": "réserver",
+          "de": "reservieren"
+        },
+        {
+          "id": "reisen-009",
+          "fr": "arriver",
+          "de": "ankommen"
+        },
+        {
+          "id": "reisen-010",
+          "fr": "partir",
+          "de": "abfahren"
+        },
+        {
+          "id": "reisen-011",
+          "fr": "la gare",
+          "de": "der Bahnhof"
+        },
+        {
+          "id": "reisen-012",
+          "fr": "l’aéroport",
+          "de": "der Flughafen"
+        },
+        {
+          "id": "reisen-013",
+          "fr": "la carte",
+          "de": "die Karte"
+        },
+        {
+          "id": "reisen-014",
+          "fr": "visiter",
+          "de": "besichtigen"
+        },
+        {
+          "id": "reisen-015",
+          "fr": "le passeport",
+          "de": "der Reisepass"
+        },
+        {
+          "id": "reisen-016",
+          "fr": "les vacances",
+          "de": "der Urlaub"
+        },
+        {
+          "id": "reisen-017",
+          "fr": "le bus",
+          "de": "der Bus"
+        },
+        {
+          "id": "reisen-018",
+          "fr": "demander son chemin",
+          "de": "nach dem Weg fragen"
+        },
+        {
+          "id": "reisen-019",
+          "fr": "la plage",
+          "de": "der Strand"
+        },
+        {
+          "id": "reisen-020",
+          "fr": "le musée",
+          "de": "das Museum"
+        }
+      ]
+    },
+    {
+      "id": "einkaufen",
+      "title": "Einkaufen",
+      "items": [
+        {
+          "id": "einkaufen-001",
+          "fr": "acheter",
+          "de": "kaufen"
+        },
+        {
+          "id": "einkaufen-002",
+          "fr": "vendre",
+          "de": "verkaufen"
+        },
+        {
+          "id": "einkaufen-003",
+          "fr": "le magasin",
+          "de": "das Geschäft"
+        },
+        {
+          "id": "einkaufen-004",
+          "fr": "le supermarché",
+          "de": "der Supermarkt"
+        },
+        {
+          "id": "einkaufen-005",
+          "fr": "le prix",
+          "de": "der Preis"
+        },
+        {
+          "id": "einkaufen-006",
+          "fr": "cher",
+          "de": "teuer"
+        },
+        {
+          "id": "einkaufen-007",
+          "fr": "bon marché",
+          "de": "günstig"
+        },
+        {
+          "id": "einkaufen-008",
+          "fr": "payer",
+          "de": "bezahlen"
+        },
+        {
+          "id": "einkaufen-009",
+          "fr": "la caisse",
+          "de": "die Kasse"
+        },
+        {
+          "id": "einkaufen-010",
+          "fr": "la monnaie",
+          "de": "das Wechselgeld"
+        },
+        {
+          "id": "einkaufen-011",
+          "fr": "la carte bancaire",
+          "de": "die Bankkarte"
+        },
+        {
+          "id": "einkaufen-012",
+          "fr": "le reçu",
+          "de": "der Kassenbon"
+        },
+        {
+          "id": "einkaufen-013",
+          "fr": "essayer",
+          "de": "anprobieren"
+        },
+        {
+          "id": "einkaufen-014",
+          "fr": "la taille",
+          "de": "die Größe"
+        },
+        {
+          "id": "einkaufen-015",
+          "fr": "ouvrir",
+          "de": "öffnen"
+        },
+        {
+          "id": "einkaufen-016",
+          "fr": "fermé",
+          "de": "geschlossen"
+        },
+        {
+          "id": "einkaufen-017",
+          "fr": "la réduction",
+          "de": "der Rabatt"
+        },
+        {
+          "id": "einkaufen-018",
+          "fr": "faire les courses",
+          "de": "einkaufen gehen"
+        },
+        {
+          "id": "einkaufen-019",
+          "fr": "combien ça coûte ?",
+          "de": "wie viel kostet das?"
+        },
+        {
+          "id": "einkaufen-020",
+          "fr": "je prends",
+          "de": "ich nehme das"
+        }
+      ]
+    },
+    {
+      "id": "essen",
+      "title": "Essen",
+      "items": [
+        {
+          "id": "essen-001",
+          "fr": "manger",
+          "de": "essen"
+        },
+        {
+          "id": "essen-002",
+          "fr": "boire",
+          "de": "trinken"
+        },
+        {
+          "id": "essen-003",
+          "fr": "le petit-déjeuner",
+          "de": "das Frühstück"
+        },
+        {
+          "id": "essen-004",
+          "fr": "le déjeuner",
+          "de": "das Mittagessen"
+        },
+        {
+          "id": "essen-005",
+          "fr": "le dîner",
+          "de": "das Abendessen"
+        },
+        {
+          "id": "essen-006",
+          "fr": "le pain",
+          "de": "das Brot"
+        },
+        {
+          "id": "essen-007",
+          "fr": "le fromage",
+          "de": "der Käse"
+        },
+        {
+          "id": "essen-008",
+          "fr": "la viande",
+          "de": "das Fleisch"
+        },
+        {
+          "id": "essen-009",
+          "fr": "le poisson",
+          "de": "der Fisch"
+        },
+        {
+          "id": "essen-010",
+          "fr": "les légumes",
+          "de": "das Gemüse"
+        },
+        {
+          "id": "essen-011",
+          "fr": "les fruits",
+          "de": "das Obst"
+        },
+        {
+          "id": "essen-012",
+          "fr": "la soupe",
+          "de": "die Suppe"
+        },
+        {
+          "id": "essen-013",
+          "fr": "la salade",
+          "de": "der Salat"
+        },
+        {
+          "id": "essen-014",
+          "fr": "la faim",
+          "de": "der Hunger"
+        },
+        {
+          "id": "essen-015",
+          "fr": "la soif",
+          "de": "der Durst"
+        },
+        {
+          "id": "essen-016",
+          "fr": "la recette",
+          "de": "das Rezept"
+        },
+        {
+          "id": "essen-017",
+          "fr": "cuisiner",
+          "de": "kochen"
+        },
+        {
+          "id": "essen-018",
+          "fr": "le restaurant",
+          "de": "das Restaurant"
+        },
+        {
+          "id": "essen-019",
+          "fr": "commander",
+          "de": "bestellen"
+        },
+        {
+          "id": "essen-020",
+          "fr": "l’addition",
+          "de": "die Rechnung"
+        }
+      ]
+    },
+    {
+      "id": "alltag",
+      "title": "Alltag",
+      "items": [
+        {
+          "id": "alltag-001",
+          "fr": "se lever",
+          "de": "aufstehen"
+        },
+        {
+          "id": "alltag-002",
+          "fr": "se coucher",
+          "de": "schlafen gehen"
+        },
+        {
+          "id": "alltag-003",
+          "fr": "travailler",
+          "de": "arbeiten"
+        },
+        {
+          "id": "alltag-004",
+          "fr": "faire le ménage",
+          "de": "putzen"
+        },
+        {
+          "id": "alltag-005",
+          "fr": "téléphoner",
+          "de": "telefonieren"
+        },
+        {
+          "id": "alltag-006",
+          "fr": "envoyer un message",
+          "de": "eine Nachricht senden"
+        },
+        {
+          "id": "alltag-007",
+          "fr": "attendre",
+          "de": "warten"
+        },
+        {
+          "id": "alltag-008",
+          "fr": "être en retard",
+          "de": "zu spät sein"
+        },
+        {
+          "id": "alltag-009",
+          "fr": "être à l’heure",
+          "de": "pünktlich sein"
+        },
+        {
+          "id": "alltag-010",
+          "fr": "prendre une douche",
+          "de": "duschen"
+        },
+        {
+          "id": "alltag-011",
+          "fr": "s’habiller",
+          "de": "sich anziehen"
+        },
+        {
+          "id": "alltag-012",
+          "fr": "se brosser les dents",
+          "de": "Zähne putzen"
+        },
+        {
+          "id": "alltag-013",
+          "fr": "préparer",
+          "de": "vorbereiten"
+        },
+        {
+          "id": "alltag-014",
+          "fr": "finir",
+          "de": "beenden"
+        },
+        {
+          "id": "alltag-015",
+          "fr": "commencer",
+          "de": "anfangen"
+        },
+        {
+          "id": "alltag-016",
+          "fr": "se dépêcher",
+          "de": "sich beeilen"
+        },
+        {
+          "id": "alltag-017",
+          "fr": "faire une pause",
+          "de": "eine Pause machen"
+        },
+        {
+          "id": "alltag-018",
+          "fr": "ranger",
+          "de": "aufräumen"
+        },
+        {
+          "id": "alltag-019",
+          "fr": "utiliser",
+          "de": "benutzen"
+        },
+        {
+          "id": "alltag-020",
+          "fr": "aider",
+          "de": "helfen"
+        }
+      ]
+    },
+    {
+      "id": "termine",
+      "title": "Termine",
+      "items": [
+        {
+          "id": "termine-001",
+          "fr": "le rendez-vous",
+          "de": "der Termin"
+        },
+        {
+          "id": "termine-002",
+          "fr": "prendre rendez-vous",
+          "de": "einen Termin machen"
+        },
+        {
+          "id": "termine-003",
+          "fr": "annuler",
+          "de": "absagen"
+        },
+        {
+          "id": "termine-004",
+          "fr": "reporter",
+          "de": "verschieben"
+        },
+        {
+          "id": "termine-005",
+          "fr": "la date",
+          "de": "das Datum"
+        },
+        {
+          "id": "termine-006",
+          "fr": "l’heure",
+          "de": "die Uhrzeit"
+        },
+        {
+          "id": "termine-007",
+          "fr": "le matin",
+          "de": "der Morgen"
+        },
+        {
+          "id": "termine-008",
+          "fr": "l’après-midi",
+          "de": "der Nachmittag"
+        },
+        {
+          "id": "termine-009",
+          "fr": "le soir",
+          "de": "der Abend"
+        },
+        {
+          "id": "termine-010",
+          "fr": "lundi",
+          "de": "Montag"
+        },
+        {
+          "id": "termine-011",
+          "fr": "mardi",
+          "de": "Dienstag"
+        },
+        {
+          "id": "termine-012",
+          "fr": "mercredi",
+          "de": "Mittwoch"
+        },
+        {
+          "id": "termine-013",
+          "fr": "jeudi",
+          "de": "Donnerstag"
+        },
+        {
+          "id": "termine-014",
+          "fr": "vendredi",
+          "de": "Freitag"
+        },
+        {
+          "id": "termine-015",
+          "fr": "samedi",
+          "de": "Samstag"
+        },
+        {
+          "id": "termine-016",
+          "fr": "dimanche",
+          "de": "Sonntag"
+        },
+        {
+          "id": "termine-017",
+          "fr": "le calendrier",
+          "de": "der Kalender"
+        },
+        {
+          "id": "termine-018",
+          "fr": "être libre",
+          "de": "frei sein"
+        },
+        {
+          "id": "termine-019",
+          "fr": "être occupé",
+          "de": "beschäftigt sein"
+        },
+        {
+          "id": "termine-020",
+          "fr": "confirmer",
+          "de": "bestätigen"
+        }
+      ]
+    },
+    {
+      "id": "wetter",
+      "title": "Wetter",
+      "items": [
+        {
+          "id": "wetter-001",
+          "fr": "le temps",
+          "de": "das Wetter"
+        },
+        {
+          "id": "wetter-002",
+          "fr": "il fait beau",
+          "de": "es ist schön"
+        },
+        {
+          "id": "wetter-003",
+          "fr": "il pleut",
+          "de": "es regnet"
+        },
+        {
+          "id": "wetter-004",
+          "fr": "il neige",
+          "de": "es schneit"
+        },
+        {
+          "id": "wetter-005",
+          "fr": "il y a du vent",
+          "de": "es ist windig"
+        },
+        {
+          "id": "wetter-006",
+          "fr": "il fait chaud",
+          "de": "es ist warm"
+        },
+        {
+          "id": "wetter-007",
+          "fr": "il fait froid",
+          "de": "es ist kalt"
+        },
+        {
+          "id": "wetter-008",
+          "fr": "le soleil",
+          "de": "die Sonne"
+        },
+        {
+          "id": "wetter-009",
+          "fr": "le nuage",
+          "de": "die Wolke"
+        },
+        {
+          "id": "wetter-010",
+          "fr": "l’orage",
+          "de": "das Gewitter"
+        },
+        {
+          "id": "wetter-011",
+          "fr": "la météo",
+          "de": "der Wetterbericht"
+        },
+        {
+          "id": "wetter-012",
+          "fr": "la température",
+          "de": "die Temperatur"
+        },
+        {
+          "id": "wetter-013",
+          "fr": "degrés",
+          "de": "Grad"
+        },
+        {
+          "id": "wetter-014",
+          "fr": "aujourd’hui",
+          "de": "heute"
+        },
+        {
+          "id": "wetter-015",
+          "fr": "demain",
+          "de": "morgen"
+        },
+        {
+          "id": "wetter-016",
+          "fr": "hier",
+          "de": "gestern"
+        },
+        {
+          "id": "wetter-017",
+          "fr": "le printemps",
+          "de": "der Frühling"
+        },
+        {
+          "id": "wetter-018",
+          "fr": "l’été",
+          "de": "der Sommer"
+        },
+        {
+          "id": "wetter-019",
+          "fr": "l’automne",
+          "de": "der Herbst"
+        },
+        {
+          "id": "wetter-020",
+          "fr": "l’hiver",
+          "de": "der Winter"
+        }
+      ]
+    },
+    {
+      "id": "stadt",
+      "title": "Stadt",
+      "items": [
+        {
+          "id": "stadt-001",
+          "fr": "la ville",
+          "de": "die Stadt"
+        },
+        {
+          "id": "stadt-002",
+          "fr": "la rue",
+          "de": "die Straße"
+        },
+        {
+          "id": "stadt-003",
+          "fr": "la place",
+          "de": "der Platz"
+        },
+        {
+          "id": "stadt-004",
+          "fr": "le bâtiment",
+          "de": "das Gebäude"
+        },
+        {
+          "id": "stadt-005",
+          "fr": "la mairie",
+          "de": "das Rathaus"
+        },
+        {
+          "id": "stadt-006",
+          "fr": "la pharmacie",
+          "de": "die Apotheke"
+        },
+        {
+          "id": "stadt-007",
+          "fr": "l’hôpital",
+          "de": "das Krankenhaus"
+        },
+        {
+          "id": "stadt-008",
+          "fr": "la banque",
+          "de": "die Bank"
+        },
+        {
+          "id": "stadt-009",
+          "fr": "la poste",
+          "de": "die Post"
+        },
+        {
+          "id": "stadt-010",
+          "fr": "la bibliothèque",
+          "de": "die Bibliothek"
+        },
+        {
+          "id": "stadt-011",
+          "fr": "le marché",
+          "de": "der Markt"
+        },
+        {
+          "id": "stadt-012",
+          "fr": "le centre-ville",
+          "de": "die Innenstadt"
+        },
+        {
+          "id": "stadt-013",
+          "fr": "tourner à gauche",
+          "de": "links abbiegen"
+        },
+        {
+          "id": "stadt-014",
+          "fr": "tourner à droite",
+          "de": "rechts abbiegen"
+        },
+        {
+          "id": "stadt-015",
+          "fr": "tout droit",
+          "de": "geradeaus"
+        },
+        {
+          "id": "stadt-016",
+          "fr": "près de",
+          "de": "in der Nähe von"
+        },
+        {
+          "id": "stadt-017",
+          "fr": "loin de",
+          "de": "weit von"
+        },
+        {
+          "id": "stadt-018",
+          "fr": "le feu rouge",
+          "de": "die Ampel"
+        },
+        {
+          "id": "stadt-019",
+          "fr": "le trottoir",
+          "de": "der Gehweg"
+        },
+        {
+          "id": "stadt-020",
+          "fr": "traverser",
+          "de": "überqueren"
+        }
+      ]
+    }
+  ]
+}

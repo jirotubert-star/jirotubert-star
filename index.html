@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-rounded.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-rounded.png" />
-    <link rel="manifest" href="site.webmanifest?v=1741" />
-    <link rel="stylesheet" href="css/style.css?v=1741" />
+    <link rel="manifest" href="site.webmanifest?v=1742" />
+    <link rel="stylesheet" href="css/style.css?v=1742" />
   </head>
   <body>
     <div id="language-modal" class="language-modal" hidden>
@@ -87,6 +87,7 @@
             <button id="tracker-checklist-btn" class="tracker-btn is-active" type="button" role="tab" aria-selected="true">Checklist</button>
             <button id="tracker-weight-btn" class="tracker-btn" type="button" role="tab" aria-selected="false">Weight</button>
             <button id="tracker-sleep-btn" class="tracker-btn" type="button" role="tab" aria-selected="false">Sleep</button>
+            <button id="tracker-vocab-btn" class="tracker-btn" type="button" role="tab" aria-selected="false">Vokabeln</button>
           </div>
         </div>
         <div id="today-smart-plan" class="soft-note today-smart-plan">Heute: Starte mit der frühesten Aufgabe und schließe den Tag sauber ab.</div>
@@ -165,6 +166,61 @@
             <svg id="sleep-chart" class="weight-chart" viewBox="0 0 640 220" role="img" aria-label="Schlafdauer Diagramm"></svg>
             <div id="sleep-chart-empty" class="soft-note">Noch keine vollständigen Schlafdaten.</div>
           </div>
+        </div>
+        <div id="vocab-tracker-panel" class="weight-tracker-panel vocab-tracker-panel" hidden>
+          <h3 id="vocab-tracker-title">Vokabeln (Französisch)</h3>
+          <p id="vocab-tracker-hint" class="soft-note">Schnell lernen: Thema wählen, Modus starten, 10 Karten abschließen.</p>
+          <div class="weight-kpis">
+            <div id="vocab-kpi-daily" class="weight-kpi">Heute: 0 / 10</div>
+            <div id="vocab-kpi-streak" class="weight-kpi">Streak: 0</div>
+            <div id="vocab-kpi-theme" class="weight-kpi">Thema: --</div>
+          </div>
+          <div class="vocab-control-grid">
+            <label for="vocab-theme-select">Thema</label>
+            <select id="vocab-theme-select"></select>
+            <label for="vocab-mode-select">Modus</label>
+            <select id="vocab-mode-select">
+              <option value="flashcard">Flashcards</option>
+              <option value="quicktest">Quick Test (4 Optionen)</option>
+              <option value="write">Write it</option>
+            </select>
+          </div>
+          <div id="vocab-session-status" class="soft-note">Noch keine Session gestartet.</div>
+          <div id="vocab-train-area" class="vocab-card">
+            <div id="vocab-question" class="vocab-question">Wähle Thema und Modus, dann starte.</div>
+            <div id="vocab-answer" class="vocab-answer" hidden></div>
+            <div id="vocab-options" class="vocab-options" hidden></div>
+            <div id="vocab-write-wrap" class="vocab-write-wrap" hidden>
+              <input id="vocab-write-input" type="text" placeholder="Französisches Wort eingeben" />
+            </div>
+          </div>
+          <div class="vocab-action-row">
+            <button id="vocab-start-btn" class="btn" type="button">Start</button>
+            <button id="vocab-reveal-btn" class="btn ghost" type="button" hidden>Aufdecken</button>
+            <button id="vocab-correct-btn" class="btn ghost" type="button" hidden>Richtig</button>
+            <button id="vocab-wrong-btn" class="btn ghost" type="button" hidden>Falsch</button>
+            <button id="vocab-submit-btn" class="btn ghost" type="button" hidden>Prüfen</button>
+            <button id="vocab-next-btn" class="btn ghost" type="button" hidden>Nächste Karte</button>
+          </div>
+          <div id="vocab-summary" class="vocab-summary soft-note" hidden></div>
+          <div class="vocab-settings">
+            <h4>Vokabel-Einstellungen</h4>
+            <div class="vocab-settings-grid">
+              <label for="vocab-daily-goal-input">Tagesziel (korrekt)</label>
+              <input id="vocab-daily-goal-input" type="number" min="1" max="200" step="1" value="10" />
+              <label for="vocab-direction-select">Richtung</label>
+              <select id="vocab-direction-select">
+                <option value="fr-de">Französisch -> Deutsch</option>
+                <option value="de-fr">Deutsch -> Französisch</option>
+              </select>
+              <label for="vocab-write-enable">
+                <input id="vocab-write-enable" type="checkbox" />
+                Write Mode erlauben
+              </label>
+              <button id="vocab-settings-save" class="btn ghost" type="button">Einstellungen speichern</button>
+            </div>
+          </div>
+          <div id="vocab-theme-progress" class="vocab-theme-progress soft-note"></div>
         </div>
       </section>
 
@@ -377,7 +433,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.7.41</span>
+      <span class="soft-note" id="version">Version 1.7.42</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">
@@ -438,6 +494,7 @@
         scriptSrc: "https://plausible.io/js/pa-Yo5rD-tnsB9Pz60fVTI3i.js"
       };
     </script>
-    <script src="js/app.js?v=1741"></script>
+    <script src="js/vocab-logic.js?v=1742"></script>
+    <script src="js/app.js?v=1742"></script>
   </body>
 </html>

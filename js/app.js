@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.41";
+const APP_VERSION = "1.7.42";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -30,6 +30,8 @@ const FAST_ONBOARDING_TOTAL_DAYS = 12;
 const INTRO_VARIANT_KEY = "onestep_intro_variant_v1";
 const LAST_BACKUP_KEY = "onestep_last_backup_v1";
 let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || "";
+const VOCAB_SEED_URL = "./data/vocab.fr-de.a2.json";
+const VocabLogic = (typeof window !== "undefined" && window.VocabLogic) ? window.VocabLogic : null;
 
 const I18N = {
   de: {
@@ -514,6 +516,10 @@ I18N.fr.templates = [
 
 const langPack = () => I18N[currentLanguage] || I18N.de;
 const t = (key) => langPack()[key] || I18N.de[key] || key;
+const st = (key) => {
+  const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
+  return s?.[key] ?? STATIC_TEXT.de?.[key] ?? key;
+};
 
 const STATIC_TEXT = {
   de: {
@@ -524,6 +530,49 @@ const STATIC_TEXT = {
     trackerChecklist: "Checkliste",
     trackerWeight: "Gewicht",
     trackerSleep: "Schlaf",
+    trackerVocab: "Vokabeln",
+    vocabTrackerTitle: "Vokabeln (Französisch)",
+    vocabTrackerHint: "Schnell lernen: Thema wählen, Modus starten, 10 Karten abschließen.",
+    vocabKpiDaily: "Heute",
+    vocabKpiStreak: "Streak",
+    vocabKpiTheme: "Thema",
+    vocabSessionIdle: "Noch keine Session gestartet.",
+    vocabSessionReady: "Bereit: Starte dein Training.",
+    vocabSessionActive: "Session läuft",
+    vocabThemeLabel: "Thema",
+    vocabModeLabel: "Modus",
+    vocabModeFlashcard: "Flashcards",
+    vocabModeQuicktest: "Quick Test (4 Optionen)",
+    vocabModeWrite: "Write it",
+    vocabDirectionLabel: "Richtung",
+    vocabDirectionFrDe: "Französisch -> Deutsch",
+    vocabDirectionDeFr: "Deutsch -> Französisch",
+    vocabWriteEnable: "Write Mode erlauben",
+    vocabDailyGoalLabel: "Tagesziel (korrekt)",
+    vocabStartBtn: "Start",
+    vocabRevealBtn: "Aufdecken",
+    vocabCorrectBtn: "Richtig",
+    vocabWrongBtn: "Falsch",
+    vocabSubmitBtn: "Prüfen",
+    vocabNextBtn: "Nächste Karte",
+    vocabSaveSettings: "Einstellungen speichern",
+    vocabQuestionIdle: "Wähle Thema und Modus, dann starte.",
+    vocabWritePlaceholder: "Französisches Wort eingeben",
+    vocabSummaryPrefix: "Session",
+    vocabSummaryCorrect: "Korrekt",
+    vocabSummaryWrong: "Falsch",
+    vocabSummaryTime: "Zeit",
+    vocabSummaryStreak: "Streak",
+    vocabDoneToday: "Heute erledigt",
+    vocabNotDoneToday: "Heute offen",
+    vocabProgressLabel: "Fortschritt",
+    vocabLastTrained: "Zuletzt trainiert",
+    vocabNoTheme: "Kein Thema verfügbar",
+    vocabSeedLoading: "Vokabeln werden geladen...",
+    vocabSeedError: "Vokabel-Daten konnten nicht geladen werden",
+    toastVocabSettingsSaved: "Vokabel-Einstellungen gespeichert",
+    toastVocabSeedLoaded: "Vokabelpaket geladen",
+    toastVocabModeWriteDisabled: "Write Mode ist in den Einstellungen deaktiviert",
     weightTrackerTitle: "Gewichts-Tracker",
     weightTrackerHint: "Trage dein Gewicht einmal täglich ein, um den Verlauf zu sehen.",
     weightTrackerMeta: "Gewichts-Tracker",
@@ -1634,6 +1683,26 @@ const defaultState = () => ({
   dayTaskHistory: {},
   weightEntries: {},
   sleepEntries: {},
+  vocabDecks: [],
+  vocabSeedVersion: "",
+  vocabSettings: {
+    dailyGoalCorrect: 10,
+    direction: "fr-de",
+    writeModeEnabled: false,
+    fuzzyTolerance: 1,
+  },
+  vocabProgress: {
+    byTheme: {},
+    daily: {},
+    streak: 0,
+    lastGoalHitDate: null,
+  },
+  vocabRuntime: {
+    activeThemeId: "",
+    activeMode: "flashcard",
+    session: null,
+    lastSummary: null,
+  },
   weightTargetKg: null,
   weeklyPlans: {},
   tutorialStep: 1,
@@ -1683,6 +1752,42 @@ const loadState = () => {
       normalized.sleepEntries && typeof normalized.sleepEntries === "object"
         ? normalized.sleepEntries
         : {};
+    normalized.vocabDecks = Array.isArray(normalized.vocabDecks) ? normalized.vocabDecks : [];
+    normalized.vocabSeedVersion = typeof normalized.vocabSeedVersion === "string"
+      ? normalized.vocabSeedVersion
+      : "";
+    normalized.vocabSettings = {
+      dailyGoalCorrect: Number.isFinite(Number(normalized.vocabSettings?.dailyGoalCorrect))
+        ? Math.max(1, Math.round(Number(normalized.vocabSettings.dailyGoalCorrect)))
+        : 10,
+      direction: normalized.vocabSettings?.direction === "de-fr" ? "de-fr" : "fr-de",
+      writeModeEnabled: Boolean(normalized.vocabSettings?.writeModeEnabled),
+      fuzzyTolerance: Number.isFinite(Number(normalized.vocabSettings?.fuzzyTolerance))
+        ? Math.max(0, Math.round(Number(normalized.vocabSettings.fuzzyTolerance)))
+        : 1,
+    };
+    normalized.vocabProgress = {
+      byTheme: normalized.vocabProgress?.byTheme && typeof normalized.vocabProgress.byTheme === "object"
+        ? normalized.vocabProgress.byTheme
+        : {},
+      daily: normalized.vocabProgress?.daily && typeof normalized.vocabProgress.daily === "object"
+        ? normalized.vocabProgress.daily
+        : {},
+      streak: Number.isFinite(Number(normalized.vocabProgress?.streak))
+        ? Math.max(0, Math.round(Number(normalized.vocabProgress.streak)))
+        : 0,
+      lastGoalHitDate: normalized.vocabProgress?.lastGoalHitDate || null,
+    };
+    normalized.vocabRuntime = {
+      activeThemeId: typeof normalized.vocabRuntime?.activeThemeId === "string"
+        ? normalized.vocabRuntime.activeThemeId
+        : "",
+      activeMode: ["flashcard", "quicktest", "write"].includes(normalized.vocabRuntime?.activeMode)
+        ? normalized.vocabRuntime.activeMode
+        : "flashcard",
+      session: normalized.vocabRuntime?.session || null,
+      lastSummary: normalized.vocabRuntime?.lastSummary || null,
+    };
     normalized.weightTargetKg =
       Number.isFinite(Number(normalized.weightTargetKg)) ? Number(normalized.weightTargetKg) : null;
     normalized.weeklyPlans = normalized.weeklyPlans || {};
@@ -1708,7 +1813,7 @@ const loadState = () => {
     }
     normalized.proEnabled = normalized.proEnabled || false;
     normalized.templatesOpenedOnce = normalized.templatesOpenedOnce || false;
-    normalized.todayTracker = ["checklist", "weight", "sleep"].includes(normalized.todayTracker)
+    normalized.todayTracker = ["checklist", "weight", "sleep", "vocab"].includes(normalized.todayTracker)
       ? normalized.todayTracker
       : "checklist";
     return normalized;
@@ -1738,8 +1843,10 @@ const sideQuestSelect = document.getElementById("side-quest-select");
 const trackerChecklistBtn = document.getElementById("tracker-checklist-btn");
 const trackerWeightBtn = document.getElementById("tracker-weight-btn");
 const trackerSleepBtn = document.getElementById("tracker-sleep-btn");
+const trackerVocabBtn = document.getElementById("tracker-vocab-btn");
 const weightTrackerPanel = document.getElementById("weight-tracker-panel");
 const sleepTrackerPanel = document.getElementById("sleep-tracker-panel");
+const vocabTrackerPanel = document.getElementById("vocab-tracker-panel");
 const weightForm = document.getElementById("weight-form");
 const weightInput = document.getElementById("weight-input");
 const weightSaveBtn = document.getElementById("weight-save-btn");
@@ -1774,6 +1881,31 @@ const sleepDurationMetaEl = document.getElementById("sleep-duration-meta");
 const sleepChartTitleEl = document.getElementById("sleep-chart-title");
 const sleepChartSvg = document.getElementById("sleep-chart");
 const sleepChartEmptyEl = document.getElementById("sleep-chart-empty");
+const vocabTrackerTitleEl = document.getElementById("vocab-tracker-title");
+const vocabTrackerHintEl = document.getElementById("vocab-tracker-hint");
+const vocabKpiDailyEl = document.getElementById("vocab-kpi-daily");
+const vocabKpiStreakEl = document.getElementById("vocab-kpi-streak");
+const vocabKpiThemeEl = document.getElementById("vocab-kpi-theme");
+const vocabThemeSelect = document.getElementById("vocab-theme-select");
+const vocabModeSelect = document.getElementById("vocab-mode-select");
+const vocabSessionStatusEl = document.getElementById("vocab-session-status");
+const vocabQuestionEl = document.getElementById("vocab-question");
+const vocabAnswerEl = document.getElementById("vocab-answer");
+const vocabOptionsEl = document.getElementById("vocab-options");
+const vocabWriteWrapEl = document.getElementById("vocab-write-wrap");
+const vocabWriteInput = document.getElementById("vocab-write-input");
+const vocabStartBtn = document.getElementById("vocab-start-btn");
+const vocabRevealBtn = document.getElementById("vocab-reveal-btn");
+const vocabCorrectBtn = document.getElementById("vocab-correct-btn");
+const vocabWrongBtn = document.getElementById("vocab-wrong-btn");
+const vocabSubmitBtn = document.getElementById("vocab-submit-btn");
+const vocabNextBtn = document.getElementById("vocab-next-btn");
+const vocabSummaryEl = document.getElementById("vocab-summary");
+const vocabDailyGoalInput = document.getElementById("vocab-daily-goal-input");
+const vocabDirectionSelect = document.getElementById("vocab-direction-select");
+const vocabWriteEnableInput = document.getElementById("vocab-write-enable");
+const vocabSettingsSaveBtn = document.getElementById("vocab-settings-save");
+const vocabThemeProgressEl = document.getElementById("vocab-theme-progress");
 const todaySmartPlanEl = document.getElementById("today-smart-plan");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
@@ -2305,6 +2437,18 @@ const mergeStates = (current, incoming) => {
   merged.dayTaskHistory = { ...(current.dayTaskHistory || {}), ...(incoming.dayTaskHistory || {}) };
   merged.weightEntries = { ...(current.weightEntries || {}), ...(incoming.weightEntries || {}) };
   merged.sleepEntries = { ...(current.sleepEntries || {}), ...(incoming.sleepEntries || {}) };
+  merged.vocabDecks = Array.isArray(incoming.vocabDecks) && incoming.vocabDecks.length
+    ? incoming.vocabDecks
+    : (Array.isArray(current.vocabDecks) ? current.vocabDecks : []);
+  merged.vocabSeedVersion = incoming.vocabSeedVersion || current.vocabSeedVersion || "";
+  merged.vocabSettings = { ...(current.vocabSettings || {}), ...(incoming.vocabSettings || {}) };
+  merged.vocabProgress = {
+    byTheme: { ...(current.vocabProgress?.byTheme || {}), ...(incoming.vocabProgress?.byTheme || {}) },
+    daily: { ...(current.vocabProgress?.daily || {}), ...(incoming.vocabProgress?.daily || {}) },
+    streak: Math.max(Number(current.vocabProgress?.streak || 0), Number(incoming.vocabProgress?.streak || 0)),
+    lastGoalHitDate: incoming.vocabProgress?.lastGoalHitDate || current.vocabProgress?.lastGoalHitDate || null,
+  };
+  merged.vocabRuntime = { ...(current.vocabRuntime || {}), ...(incoming.vocabRuntime || {}) };
   merged.weightTargetKg = Number.isFinite(Number(incoming.weightTargetKg))
     ? Number(incoming.weightTargetKg)
     : (Number.isFinite(Number(current.weightTargetKg)) ? Number(current.weightTargetKg) : null);
@@ -2404,6 +2548,7 @@ const applyStaticTranslations = () => {
   setText("tracker-checklist-btn", s.trackerChecklist);
   setText("tracker-weight-btn", s.trackerWeight);
   setText("tracker-sleep-btn", s.trackerSleep);
+  setText("tracker-vocab-btn", st("trackerVocab"));
   setText("weight-tracker-title", s.weightTrackerTitle);
   setText("weight-tracker-hint", s.weightTrackerHint);
   if (weightInputLabel) weightInputLabel.textContent = s.weightInputLabel;
@@ -2430,6 +2575,23 @@ const applyStaticTranslations = () => {
   if (sleepDurationMetaEl) sleepDurationMetaEl.textContent = `${s.sleepDurationLabel}: --`;
   if (sleepChartTitleEl) sleepChartTitleEl.textContent = s.sleepChartTitle;
   if (sleepChartEmptyEl) sleepChartEmptyEl.textContent = s.sleepChartEmpty;
+  if (vocabTrackerTitleEl) vocabTrackerTitleEl.textContent = st("vocabTrackerTitle");
+  if (vocabTrackerHintEl) vocabTrackerHintEl.textContent = st("vocabTrackerHint");
+  if (vocabSessionStatusEl) vocabSessionStatusEl.textContent = st("vocabSessionIdle");
+  if (vocabQuestionEl) vocabQuestionEl.textContent = st("vocabQuestionIdle");
+  if (vocabWriteInput) vocabWriteInput.placeholder = st("vocabWritePlaceholder");
+  if (vocabStartBtn) vocabStartBtn.textContent = st("vocabStartBtn");
+  if (vocabRevealBtn) vocabRevealBtn.textContent = st("vocabRevealBtn");
+  if (vocabCorrectBtn) vocabCorrectBtn.textContent = st("vocabCorrectBtn");
+  if (vocabWrongBtn) vocabWrongBtn.textContent = st("vocabWrongBtn");
+  if (vocabSubmitBtn) vocabSubmitBtn.textContent = st("vocabSubmitBtn");
+  if (vocabNextBtn) vocabNextBtn.textContent = st("vocabNextBtn");
+  if (vocabSettingsSaveBtn) vocabSettingsSaveBtn.textContent = st("vocabSaveSettings");
+  if (vocabDirectionSelect?.options?.[0]) vocabDirectionSelect.options[0].textContent = st("vocabDirectionFrDe");
+  if (vocabDirectionSelect?.options?.[1]) vocabDirectionSelect.options[1].textContent = st("vocabDirectionDeFr");
+  if (vocabModeSelect?.options?.[0]) vocabModeSelect.options[0].textContent = st("vocabModeFlashcard");
+  if (vocabModeSelect?.options?.[1]) vocabModeSelect.options[1].textContent = st("vocabModeQuicktest");
+  if (vocabModeSelect?.options?.[2]) vocabModeSelect.options[2].textContent = st("vocabModeWrite");
   setText("weight-chart-title", s.weightChartTitle);
   setText("weight-chart-empty", s.weightChartEmpty);
   setText("goals-title", s.goalsTitle);
@@ -3084,9 +3246,385 @@ const saveWeightTarget = (rawValue) => {
   showToast(t("toastWeightTargetSaved"));
 };
 
+let vocabSeedLoading = false;
+
+const buildEmptyVocabProgress = () => ({
+  byTheme: {},
+  daily: {},
+  streak: 0,
+  lastGoalHitDate: null,
+});
+
+const pickRandomItems = (items, count) => {
+  const source = [...items];
+  const picked = [];
+  while (source.length > 0 && picked.length < count) {
+    const idx = Math.floor(Math.random() * source.length);
+    picked.push(source.splice(idx, 1)[0]);
+  }
+  return picked;
+};
+
+const getVocabThemeById = (state, themeId) =>
+  (state.vocabDecks || []).find((theme) => theme.id === themeId) || null;
+
+const ensureVocabSeedLoaded = (state) => {
+  if (state.vocabSeedVersion && Array.isArray(state.vocabDecks) && state.vocabDecks.length) return;
+  if (vocabSeedLoading) return;
+  vocabSeedLoading = true;
+  fetch(VOCAB_SEED_URL)
+    .then((res) => {
+      if (!res.ok) throw new Error(`seed-load-${res.status}`);
+      return res.json();
+    })
+    .then((seed) => {
+      const next = loadState();
+      next.vocabDecks = Array.isArray(seed?.themes) ? seed.themes : [];
+      next.vocabSeedVersion = String(seed?.version || "1");
+      next.vocabProgress = next.vocabProgress || buildEmptyVocabProgress();
+      if (!next.vocabRuntime?.activeThemeId && next.vocabDecks.length) {
+        next.vocabRuntime = next.vocabRuntime || {};
+        next.vocabRuntime.activeThemeId = next.vocabDecks[0].id;
+      }
+      saveState(next);
+      renderAll(next);
+      showToast(st("toastVocabSeedLoaded"));
+    })
+    .catch((error) => {
+      console.warn("Vokabel-Seed konnte nicht geladen werden", error);
+      showToast(st("vocabSeedError"));
+    })
+    .finally(() => {
+      vocabSeedLoading = false;
+    });
+};
+
+const getPromptAndAnswer = (item, direction) => {
+  if (direction === "de-fr") {
+    return { prompt: item.de, answer: item.fr };
+  }
+  return { prompt: item.fr, answer: item.de };
+};
+
+const completeVocabSession = (state) => {
+  const session = state.vocabRuntime?.session;
+  if (!session || session.completed) return;
+  session.completed = true;
+  const endTs = Date.now();
+  const durationSec = Math.max(1, Math.round((endTs - Number(session.startedAt || endTs)) / 1000));
+  session.durationSec = durationSec;
+  const today = todayISO(state.simulationOffsetDays);
+  const goal = Number(state.vocabSettings?.dailyGoalCorrect || 10);
+  state.vocabProgress.streak = VocabLogic?.computeVocabStreak
+    ? VocabLogic.computeVocabStreak(state.vocabProgress, today, goal)
+    : 0;
+  state.vocabProgress.lastGoalHitDate = Number(state.vocabProgress?.daily?.[today]?.correct || 0) >= goal
+    ? today
+    : state.vocabProgress.lastGoalHitDate;
+  state.vocabRuntime.lastSummary = {
+    correct: session.correct,
+    wrong: session.wrong,
+    durationSec,
+    streak: state.vocabProgress.streak,
+    dailyDone: Number(state.vocabProgress?.daily?.[today]?.correct || 0) >= goal,
+  };
+  state.vocabProgress.daily[today] = state.vocabProgress.daily[today] || { correct: 0, wrong: 0, sessions: 0 };
+  state.vocabProgress.daily[today].sessions += 1;
+};
+
+const updateVocabSessionByResult = (state, item, correct) => {
+  if (!VocabLogic) return;
+  const session = state.vocabRuntime?.session;
+  if (!session || session.completed) return;
+  const today = todayISO(state.simulationOffsetDays);
+  state.vocabProgress = VocabLogic.updateVocabProgress(state.vocabProgress, {
+    themeId: session.themeId,
+    dateISO: today,
+    itemId: item.id,
+    correct,
+  });
+  session.correct += correct ? 1 : 0;
+  session.wrong += correct ? 0 : 1;
+  session.asked += 1;
+  session.lastResult = correct ? "correct" : "wrong";
+  if (session.asked >= session.total || session.currentIndex >= session.queue.length - 1) {
+    completeVocabSession(state);
+  } else {
+    session.currentIndex += 1;
+    session.revealed = false;
+    session.lastResult = null;
+    session.mcqOptions = [];
+  }
+};
+
+const startVocabSession = () => {
+  const state = loadState();
+  const runtime = state.vocabRuntime || {};
+  const settings = state.vocabSettings || {};
+  const theme = getVocabThemeById(state, runtime.activeThemeId);
+  if (!theme || !Array.isArray(theme.items) || !theme.items.length || !VocabLogic) return;
+  const total = Math.min(Math.max(1, Number(settings.dailyGoalCorrect || 10)), theme.items.length);
+  const queue = pickRandomItems(theme.items, total);
+  const requestedMode = runtime.activeMode || "flashcard";
+  const sessionMode = requestedMode === "write" && !settings.writeModeEnabled ? "flashcard" : requestedMode;
+  state.vocabRuntime = {
+    ...runtime,
+    session: {
+      themeId: theme.id,
+      mode: sessionMode,
+      direction: settings.direction || "fr-de",
+      queue,
+      total,
+      currentIndex: 0,
+      asked: 0,
+      correct: 0,
+      wrong: 0,
+      startedAt: Date.now(),
+      durationSec: 0,
+      completed: false,
+      revealed: false,
+      mcqOptions: [],
+      lastResult: null,
+    },
+  };
+  saveState(state);
+  renderAll(state);
+};
+
+const submitVocabFlashcard = (isCorrect) => {
+  const state = loadState();
+  const session = state.vocabRuntime?.session;
+  if (!session || session.completed) return;
+  const item = session.queue[session.currentIndex];
+  if (!item) return;
+  updateVocabSessionByResult(state, item, Boolean(isCorrect));
+  saveState(state);
+  renderAll(state);
+};
+
+const submitVocabQuickTest = (selectedValue) => {
+  const state = loadState();
+  const session = state.vocabRuntime?.session;
+  if (!session || session.completed || !VocabLogic) return;
+  const item = session.queue[session.currentIndex];
+  if (!item) return;
+  const pair = getPromptAndAnswer(item, session.direction);
+  const result = VocabLogic.scoreAnswer("quicktest", {
+    selected: selectedValue,
+    expected: pair.answer,
+  });
+  updateVocabSessionByResult(state, item, result.correct);
+  saveState(state);
+  renderAll(state);
+};
+
+const submitVocabWrite = () => {
+  const state = loadState();
+  const session = state.vocabRuntime?.session;
+  if (!session || session.completed || !VocabLogic) return;
+  const item = session.queue[session.currentIndex];
+  if (!item) return;
+  const input = (vocabWriteInput?.value || "").trim();
+  const pair = getPromptAndAnswer(item, session.direction);
+  const result = VocabLogic.scoreAnswer("write", {
+    input,
+    expected: pair.answer,
+    tolerance: state.vocabSettings?.fuzzyTolerance || 1,
+  });
+  updateVocabSessionByResult(state, item, result.correct);
+  saveState(state);
+  renderAll(state);
+};
+
+const saveVocabSettings = () => {
+  const state = loadState();
+  const runtime = state.vocabRuntime || {};
+  const nextModeRaw = (vocabModeSelect?.value || "flashcard");
+  const nextMode = ["flashcard", "quicktest", "write"].includes(nextModeRaw) ? nextModeRaw : "flashcard";
+  const writeEnabled = Boolean(vocabWriteEnableInput?.checked);
+  if (nextMode === "write" && !writeEnabled) {
+    showToast(st("toastVocabModeWriteDisabled"));
+    if (vocabModeSelect) vocabModeSelect.value = "flashcard";
+    runtime.activeMode = "flashcard";
+  } else {
+    runtime.activeMode = nextMode;
+  }
+  runtime.activeThemeId = vocabThemeSelect?.value || runtime.activeThemeId || "";
+  state.vocabRuntime = runtime;
+  state.vocabSettings = {
+    dailyGoalCorrect: Math.max(1, Math.round(Number(vocabDailyGoalInput?.value || 10))),
+    direction: vocabDirectionSelect?.value === "de-fr" ? "de-fr" : "fr-de",
+    writeModeEnabled: writeEnabled,
+    fuzzyTolerance: 1,
+  };
+  saveState(state);
+  renderAll(state);
+  showToast(st("toastVocabSettingsSaved"));
+};
+
+const renderVocabTracker = (state) => {
+  if (!vocabTrackerPanel) return;
+  ensureVocabSeedLoaded(state);
+  const runtime = state.vocabRuntime || {};
+  const settings = state.vocabSettings || {};
+  const progress = state.vocabProgress || buildEmptyVocabProgress();
+  const today = todayISO(state.simulationOffsetDays);
+
+  if (!state.vocabSeedVersion || !(state.vocabDecks || []).length) {
+    if (vocabQuestionEl) vocabQuestionEl.textContent = st("vocabSeedLoading");
+    if (vocabSessionStatusEl) vocabSessionStatusEl.textContent = st("vocabSeedLoading");
+    return;
+  }
+
+  if (!runtime.activeThemeId && state.vocabDecks[0]?.id) {
+    runtime.activeThemeId = state.vocabDecks[0].id;
+    state.vocabRuntime = runtime;
+    saveState(state);
+  }
+
+  const theme = getVocabThemeById(state, runtime.activeThemeId) || state.vocabDecks[0];
+  const themeProgress = progress.byTheme?.[theme?.id] || { learnedIds: [], correctCount: 0, wrongCount: 0, lastTrainedDate: null };
+  const daily = progress.daily?.[today] || { correct: 0, wrong: 0, sessions: 0 };
+  const goal = Number(settings.dailyGoalCorrect || 10);
+  const doneToday = Number(daily.correct || 0) >= goal;
+  const streak = Number(progress.streak || 0);
+
+  if (vocabThemeSelect) {
+    const selected = vocabThemeSelect.value;
+    vocabThemeSelect.innerHTML = "";
+    (state.vocabDecks || []).forEach((deck) => {
+      const option = document.createElement("option");
+      option.value = deck.id;
+      option.textContent = deck.title;
+      vocabThemeSelect.appendChild(option);
+    });
+    vocabThemeSelect.value = runtime.activeThemeId || selected || state.vocabDecks[0]?.id || "";
+  }
+  if (vocabModeSelect) {
+    const selectedMode = runtime.activeMode || "flashcard";
+    vocabModeSelect.value = selectedMode;
+  }
+  if (vocabDailyGoalInput) vocabDailyGoalInput.value = String(goal);
+  if (vocabDirectionSelect) vocabDirectionSelect.value = settings.direction === "de-fr" ? "de-fr" : "fr-de";
+  if (vocabWriteEnableInput) vocabWriteEnableInput.checked = Boolean(settings.writeModeEnabled);
+
+  if (vocabKpiDailyEl) vocabKpiDailyEl.textContent = `${st("vocabKpiDaily")}: ${daily.correct} / ${goal} (${doneToday ? st("vocabDoneToday") : st("vocabNotDoneToday")})`;
+  if (vocabKpiStreakEl) vocabKpiStreakEl.textContent = `${st("vocabKpiStreak")}: ${streak}`;
+  if (vocabKpiThemeEl) vocabKpiThemeEl.textContent = `${st("vocabKpiTheme")}: ${theme?.title || st("vocabNoTheme")}`;
+
+  if (vocabThemeProgressEl) {
+    vocabThemeProgressEl.textContent = `${st("vocabProgressLabel")} ${theme?.title || "--"}: ${themeProgress.learnedIds.length} / ${theme?.items?.length || 0} · ${st("vocabLastTrained")}: ${themeProgress.lastTrainedDate ? formatISODate(themeProgress.lastTrainedDate) : "--"}`;
+  }
+
+  const session = runtime.session;
+  if (!session) {
+    if (vocabSessionStatusEl) vocabSessionStatusEl.textContent = st("vocabSessionReady");
+    if (vocabQuestionEl) vocabQuestionEl.textContent = st("vocabQuestionIdle");
+    if (vocabAnswerEl) {
+      vocabAnswerEl.hidden = true;
+      vocabAnswerEl.textContent = "";
+    }
+    if (vocabOptionsEl) {
+      vocabOptionsEl.hidden = true;
+      vocabOptionsEl.innerHTML = "";
+    }
+    if (vocabWriteWrapEl) vocabWriteWrapEl.hidden = true;
+    if (vocabSummaryEl) {
+      const summary = runtime.lastSummary;
+      if (summary) {
+        vocabSummaryEl.hidden = false;
+        vocabSummaryEl.textContent = `${st("vocabSummaryPrefix")}: ${st("vocabSummaryCorrect")} ${summary.correct}, ${st("vocabSummaryWrong")} ${summary.wrong}, ${st("vocabSummaryTime")} ${summary.durationSec}s, ${st("vocabSummaryStreak")} ${summary.streak} (${summary.dailyDone ? st("vocabDoneToday") : st("vocabNotDoneToday")})`;
+      } else {
+        vocabSummaryEl.hidden = true;
+      }
+    }
+    if (vocabStartBtn) vocabStartBtn.hidden = false;
+    if (vocabRevealBtn) vocabRevealBtn.hidden = true;
+    if (vocabCorrectBtn) vocabCorrectBtn.hidden = true;
+    if (vocabWrongBtn) vocabWrongBtn.hidden = true;
+    if (vocabSubmitBtn) vocabSubmitBtn.hidden = true;
+    if (vocabNextBtn) vocabNextBtn.hidden = true;
+    return;
+  }
+
+  if (vocabSummaryEl) vocabSummaryEl.hidden = true;
+  if (vocabStartBtn) vocabStartBtn.hidden = true;
+  const item = session.queue[session.currentIndex];
+  if (!item) return;
+  const pair = getPromptAndAnswer(item, session.direction);
+  if (vocabSessionStatusEl) {
+    vocabSessionStatusEl.textContent = `${st("vocabSessionActive")}: ${session.currentIndex + 1}/${session.total} · ${st("vocabSummaryCorrect")} ${session.correct} · ${st("vocabSummaryWrong")} ${session.wrong}`;
+  }
+  if (vocabQuestionEl) vocabQuestionEl.textContent = pair.prompt;
+
+  const mode = session.mode;
+  if (mode === "flashcard") {
+    if (vocabAnswerEl) {
+      vocabAnswerEl.hidden = !session.revealed;
+      vocabAnswerEl.textContent = pair.answer;
+    }
+    if (vocabOptionsEl) {
+      vocabOptionsEl.hidden = true;
+      vocabOptionsEl.innerHTML = "";
+    }
+    if (vocabWriteWrapEl) vocabWriteWrapEl.hidden = true;
+    if (vocabRevealBtn) vocabRevealBtn.hidden = session.revealed;
+    if (vocabCorrectBtn) vocabCorrectBtn.hidden = !session.revealed;
+    if (vocabWrongBtn) vocabWrongBtn.hidden = !session.revealed;
+    if (vocabSubmitBtn) vocabSubmitBtn.hidden = true;
+    if (vocabNextBtn) vocabNextBtn.hidden = true;
+    return;
+  }
+
+  if (mode === "quicktest") {
+    if (!Array.isArray(session.mcqOptions) || session.mcqOptions.length < 4) {
+      session.mcqOptions = VocabLogic?.buildMcqOptions ? VocabLogic.buildMcqOptions(item, session.queue, session.direction, 4) : [];
+      saveState(state);
+    }
+    if (vocabAnswerEl) {
+      vocabAnswerEl.hidden = true;
+      vocabAnswerEl.textContent = "";
+    }
+    if (vocabWriteWrapEl) vocabWriteWrapEl.hidden = true;
+    if (vocabOptionsEl) {
+      vocabOptionsEl.hidden = false;
+      vocabOptionsEl.innerHTML = "";
+      session.mcqOptions.forEach((option) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn ghost vocab-option-btn";
+        btn.textContent = option;
+        btn.addEventListener("click", () => submitVocabQuickTest(option));
+        vocabOptionsEl.appendChild(btn);
+      });
+    }
+    if (vocabRevealBtn) vocabRevealBtn.hidden = true;
+    if (vocabCorrectBtn) vocabCorrectBtn.hidden = true;
+    if (vocabWrongBtn) vocabWrongBtn.hidden = true;
+    if (vocabSubmitBtn) vocabSubmitBtn.hidden = true;
+    if (vocabNextBtn) vocabNextBtn.hidden = true;
+    return;
+  }
+
+  if (vocabAnswerEl) {
+    vocabAnswerEl.hidden = true;
+    vocabAnswerEl.textContent = "";
+  }
+  if (vocabOptionsEl) {
+    vocabOptionsEl.hidden = true;
+    vocabOptionsEl.innerHTML = "";
+  }
+  if (vocabWriteWrapEl) vocabWriteWrapEl.hidden = false;
+  if (vocabRevealBtn) vocabRevealBtn.hidden = true;
+  if (vocabCorrectBtn) vocabCorrectBtn.hidden = true;
+  if (vocabWrongBtn) vocabWrongBtn.hidden = true;
+  if (vocabSubmitBtn) vocabSubmitBtn.hidden = false;
+  if (vocabNextBtn) vocabNextBtn.hidden = true;
+};
+
 const renderToday = (state) => {
   const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
-  const activeTracker = ["checklist", "weight", "sleep"].includes(state.todayTracker)
+  const activeTracker = ["checklist", "weight", "sleep", "vocab"].includes(state.todayTracker)
     ? state.todayTracker
     : "checklist";
   if (trackerChecklistBtn) {
@@ -3101,12 +3639,17 @@ const renderToday = (state) => {
     trackerSleepBtn.classList.toggle("is-active", activeTracker === "sleep");
     trackerSleepBtn.setAttribute("aria-selected", activeTracker === "sleep" ? "true" : "false");
   }
+  if (trackerVocabBtn) {
+    trackerVocabBtn.classList.toggle("is-active", activeTracker === "vocab");
+    trackerVocabBtn.setAttribute("aria-selected", activeTracker === "vocab" ? "true" : "false");
+  }
   if (quickTaskForm) quickTaskForm.hidden = activeTracker !== "checklist";
   if (unlockControls) unlockControls.hidden = activeTracker !== "checklist";
   if (todayList) todayList.hidden = activeTracker !== "checklist";
   if (sideQuestForm) sideQuestForm.hidden = activeTracker !== "checklist";
   if (weightTrackerPanel) weightTrackerPanel.hidden = activeTracker !== "weight";
   if (sleepTrackerPanel) sleepTrackerPanel.hidden = activeTracker !== "sleep";
+  if (vocabTrackerPanel) vocabTrackerPanel.hidden = activeTracker !== "vocab";
 
   if (activeTracker === "weight") {
     if (todayCount) todayCount.textContent = s.weightTrackerMeta;
@@ -3122,6 +3665,14 @@ const renderToday = (state) => {
       todaySmartPlanEl.textContent = `${s.todaySmartPlanPrefix}: ${s.sleepTrackerHint}`;
     }
     renderSleepTracker(state);
+    return;
+  }
+  if (activeTracker === "vocab") {
+    if (todayCount) todayCount.textContent = st("vocabTrackerTitle");
+    if (todaySmartPlanEl) {
+      todaySmartPlanEl.textContent = `${s.todaySmartPlanPrefix}: ${st("vocabTrackerHint")}`;
+    }
+    renderVocabTracker(state);
     return;
   }
   todayList.innerHTML = "";
@@ -4859,6 +5410,51 @@ const init = () => {
         saveSleepWakeTime(time);
       });
     }
+    if (vocabStartBtn) {
+      vocabStartBtn.addEventListener("click", () => {
+        startVocabSession();
+      });
+    }
+    if (vocabRevealBtn) {
+      vocabRevealBtn.addEventListener("click", () => {
+        const stateNow = loadState();
+        const session = stateNow.vocabRuntime?.session;
+        if (!session) return;
+        session.revealed = true;
+        saveState(stateNow);
+        renderAll(stateNow);
+      });
+    }
+    if (vocabCorrectBtn) {
+      vocabCorrectBtn.addEventListener("click", () => submitVocabFlashcard(true));
+    }
+    if (vocabWrongBtn) {
+      vocabWrongBtn.addEventListener("click", () => submitVocabFlashcard(false));
+    }
+    if (vocabSubmitBtn) {
+      vocabSubmitBtn.addEventListener("click", () => submitVocabWrite());
+    }
+    if (vocabSettingsSaveBtn) {
+      vocabSettingsSaveBtn.addEventListener("click", () => saveVocabSettings());
+    }
+    if (vocabThemeSelect) {
+      vocabThemeSelect.addEventListener("change", () => {
+        const stateNow = loadState();
+        stateNow.vocabRuntime = stateNow.vocabRuntime || {};
+        stateNow.vocabRuntime.activeThemeId = vocabThemeSelect.value;
+        saveState(stateNow);
+        renderAll(stateNow);
+      });
+    }
+    if (vocabModeSelect) {
+      vocabModeSelect.addEventListener("change", () => {
+        const stateNow = loadState();
+        stateNow.vocabRuntime = stateNow.vocabRuntime || {};
+        stateNow.vocabRuntime.activeMode = vocabModeSelect.value;
+        saveState(stateNow);
+        renderAll(stateNow);
+      });
+    }
     if (trackerChecklistBtn) {
       trackerChecklistBtn.addEventListener("click", () => {
         const stateNow = loadState();
@@ -4882,6 +5478,15 @@ const init = () => {
         const stateNow = loadState();
         if (stateNow.todayTracker === "sleep") return;
         stateNow.todayTracker = "sleep";
+        saveState(stateNow);
+        renderAll(stateNow);
+      });
+    }
+    if (trackerVocabBtn) {
+      trackerVocabBtn.addEventListener("click", () => {
+        const stateNow = loadState();
+        if (stateNow.todayTracker === "vocab") return;
+        stateNow.todayTracker = "vocab";
         saveState(stateNow);
         renderAll(stateNow);
       });

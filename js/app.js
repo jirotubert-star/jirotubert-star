@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.42";
+const APP_VERSION = "1.7.43";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -547,6 +547,7 @@ const STATIC_TEXT = {
     vocabDirectionLabel: "Richtung",
     vocabDirectionFrDe: "Französisch -> Deutsch",
     vocabDirectionDeFr: "Deutsch -> Französisch",
+    vocabDirectionQuickLabel: "Richtung",
     vocabWriteEnable: "Write Mode erlauben",
     vocabDailyGoalLabel: "Tagesziel (korrekt)",
     vocabStartBtn: "Start",
@@ -567,6 +568,10 @@ const STATIC_TEXT = {
     vocabNotDoneToday: "Heute offen",
     vocabProgressLabel: "Fortschritt",
     vocabLastTrained: "Zuletzt trainiert",
+    vocabLibrarySummary: "Alle Vokabeln lernen",
+    vocabLibrarySearchPlaceholder: "Vokabel suchen...",
+    vocabLibraryMeta: "Einträge",
+    vocabLibraryEmpty: "Keine Vokabeln für diesen Filter",
     vocabNoTheme: "Kein Thema verfügbar",
     vocabSeedLoading: "Vokabeln werden geladen...",
     vocabSeedError: "Vokabel-Daten konnten nicht geladen werden",
@@ -1888,6 +1893,9 @@ const vocabKpiStreakEl = document.getElementById("vocab-kpi-streak");
 const vocabKpiThemeEl = document.getElementById("vocab-kpi-theme");
 const vocabThemeSelect = document.getElementById("vocab-theme-select");
 const vocabModeSelect = document.getElementById("vocab-mode-select");
+const vocabDirectionQuickLabelEl = document.getElementById("vocab-direction-quick-label");
+const vocabDirectionFrDeBtn = document.getElementById("vocab-direction-frde-btn");
+const vocabDirectionDeFrBtn = document.getElementById("vocab-direction-defr-btn");
 const vocabSessionStatusEl = document.getElementById("vocab-session-status");
 const vocabQuestionEl = document.getElementById("vocab-question");
 const vocabAnswerEl = document.getElementById("vocab-answer");
@@ -1906,6 +1914,10 @@ const vocabDirectionSelect = document.getElementById("vocab-direction-select");
 const vocabWriteEnableInput = document.getElementById("vocab-write-enable");
 const vocabSettingsSaveBtn = document.getElementById("vocab-settings-save");
 const vocabThemeProgressEl = document.getElementById("vocab-theme-progress");
+const vocabLibrarySummaryEl = document.getElementById("vocab-library-summary");
+const vocabLibrarySearchInput = document.getElementById("vocab-library-search");
+const vocabLibraryMetaEl = document.getElementById("vocab-library-meta");
+const vocabLibraryListEl = document.getElementById("vocab-library-list");
 const todaySmartPlanEl = document.getElementById("today-smart-plan");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
@@ -2587,6 +2599,12 @@ const applyStaticTranslations = () => {
   if (vocabSubmitBtn) vocabSubmitBtn.textContent = st("vocabSubmitBtn");
   if (vocabNextBtn) vocabNextBtn.textContent = st("vocabNextBtn");
   if (vocabSettingsSaveBtn) vocabSettingsSaveBtn.textContent = st("vocabSaveSettings");
+  if (vocabDirectionQuickLabelEl) vocabDirectionQuickLabelEl.textContent = st("vocabDirectionQuickLabel");
+  if (vocabDirectionFrDeBtn) vocabDirectionFrDeBtn.textContent = st("vocabDirectionFrDe");
+  if (vocabDirectionDeFrBtn) vocabDirectionDeFrBtn.textContent = st("vocabDirectionDeFr");
+  if (vocabLibrarySummaryEl) vocabLibrarySummaryEl.textContent = st("vocabLibrarySummary");
+  if (vocabLibrarySearchInput) vocabLibrarySearchInput.placeholder = st("vocabLibrarySearchPlaceholder");
+  if (vocabLibraryMetaEl) vocabLibraryMetaEl.textContent = `0 ${st("vocabLibraryMeta")}`;
   if (vocabDirectionSelect?.options?.[0]) vocabDirectionSelect.options[0].textContent = st("vocabDirectionFrDe");
   if (vocabDirectionSelect?.options?.[1]) vocabDirectionSelect.options[1].textContent = st("vocabDirectionDeFr");
   if (vocabModeSelect?.options?.[0]) vocabModeSelect.options[0].textContent = st("vocabModeFlashcard");
@@ -3306,6 +3324,56 @@ const getPromptAndAnswer = (item, direction) => {
   return { prompt: item.fr, answer: item.de };
 };
 
+const setVocabDirection = (direction) => {
+  const state = loadState();
+  state.vocabSettings = state.vocabSettings || {};
+  state.vocabSettings.direction = direction === "de-fr" ? "de-fr" : "fr-de";
+  saveState(state);
+  renderAll(state);
+};
+
+const renderVocabLibrary = (state, theme, direction) => {
+  if (!vocabLibraryListEl || !vocabLibraryMetaEl) return;
+  const query = (vocabLibrarySearchInput?.value || "").trim().toLowerCase();
+  const items = Array.isArray(theme?.items) ? theme.items : [];
+  const filtered = items.filter((item) => {
+    if (!query) return true;
+    return String(item.fr || "").toLowerCase().includes(query)
+      || String(item.de || "").toLowerCase().includes(query);
+  });
+
+  vocabLibraryListEl.innerHTML = "";
+  if (!filtered.length) {
+    const empty = document.createElement("div");
+    empty.className = "soft-note";
+    empty.textContent = st("vocabLibraryEmpty");
+    vocabLibraryListEl.appendChild(empty);
+    vocabLibraryMetaEl.textContent = `0 ${st("vocabLibraryMeta")}`;
+    return;
+  }
+
+  filtered.forEach((item) => {
+    const row = document.createElement("div");
+    row.className = "vocab-library-item";
+    const left = document.createElement("span");
+    const sep = document.createElement("span");
+    const right = document.createElement("span");
+    if (direction === "de-fr") {
+      left.textContent = item.de;
+      right.textContent = item.fr;
+    } else {
+      left.textContent = item.fr;
+      right.textContent = item.de;
+    }
+    sep.textContent = "->";
+    row.appendChild(left);
+    row.appendChild(sep);
+    row.appendChild(right);
+    vocabLibraryListEl.appendChild(row);
+  });
+  vocabLibraryMetaEl.textContent = `${filtered.length} ${st("vocabLibraryMeta")}`;
+};
+
 const completeVocabSession = (state) => {
   const session = state.vocabRuntime?.session;
   if (!session || session.completed) return;
@@ -3505,8 +3573,20 @@ const renderVocabTracker = (state) => {
     vocabModeSelect.value = selectedMode;
   }
   if (vocabDailyGoalInput) vocabDailyGoalInput.value = String(goal);
-  if (vocabDirectionSelect) vocabDirectionSelect.value = settings.direction === "de-fr" ? "de-fr" : "fr-de";
+  const activeDirection = settings.direction === "de-fr" ? "de-fr" : "fr-de";
+  if (vocabDirectionSelect) vocabDirectionSelect.value = activeDirection;
+  if (vocabDirectionFrDeBtn) {
+    const active = activeDirection === "fr-de";
+    vocabDirectionFrDeBtn.classList.toggle("is-active", active);
+    vocabDirectionFrDeBtn.setAttribute("aria-selected", active ? "true" : "false");
+  }
+  if (vocabDirectionDeFrBtn) {
+    const active = activeDirection === "de-fr";
+    vocabDirectionDeFrBtn.classList.toggle("is-active", active);
+    vocabDirectionDeFrBtn.setAttribute("aria-selected", active ? "true" : "false");
+  }
   if (vocabWriteEnableInput) vocabWriteEnableInput.checked = Boolean(settings.writeModeEnabled);
+  renderVocabLibrary(state, theme, activeDirection);
 
   if (vocabKpiDailyEl) vocabKpiDailyEl.textContent = `${st("vocabKpiDaily")}: ${daily.correct} / ${goal} (${doneToday ? st("vocabDoneToday") : st("vocabNotDoneToday")})`;
   if (vocabKpiStreakEl) vocabKpiStreakEl.textContent = `${st("vocabKpiStreak")}: ${streak}`;
@@ -5453,6 +5533,22 @@ const init = () => {
         stateNow.vocabRuntime.activeMode = vocabModeSelect.value;
         saveState(stateNow);
         renderAll(stateNow);
+      });
+    }
+    if (vocabDirectionFrDeBtn) {
+      vocabDirectionFrDeBtn.addEventListener("click", () => {
+        setVocabDirection("fr-de");
+      });
+    }
+    if (vocabDirectionDeFrBtn) {
+      vocabDirectionDeFrBtn.addEventListener("click", () => {
+        setVocabDirection("de-fr");
+      });
+    }
+    if (vocabLibrarySearchInput) {
+      vocabLibrarySearchInput.addEventListener("input", () => {
+        const stateNow = loadState();
+        renderVocabTracker(stateNow);
       });
     }
     if (trackerChecklistBtn) {

@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-rounded.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-rounded.png" />
-    <link rel="manifest" href="site.webmanifest?v=1742" />
-    <link rel="stylesheet" href="css/style.css?v=1742" />
+    <link rel="manifest" href="site.webmanifest?v=1743" />
+    <link rel="stylesheet" href="css/style.css?v=1743" />
   </head>
   <body>
     <div id="language-modal" class="language-modal" hidden>
@@ -185,6 +185,13 @@
               <option value="write">Write it</option>
             </select>
           </div>
+          <div class="vocab-direction-quick">
+            <span id="vocab-direction-quick-label" class="soft-note">Richtung</span>
+            <div class="today-tracker-switch vocab-direction-switch" role="tablist" aria-label="Vokabel-Richtung">
+              <button id="vocab-direction-frde-btn" class="tracker-btn is-active" type="button" role="tab" aria-selected="true">Französisch -> Deutsch</button>
+              <button id="vocab-direction-defr-btn" class="tracker-btn" type="button" role="tab" aria-selected="false">Deutsch -> Französisch</button>
+            </div>
+          </div>
           <div id="vocab-session-status" class="soft-note">Noch keine Session gestartet.</div>
           <div id="vocab-train-area" class="vocab-card">
             <div id="vocab-question" class="vocab-question">Wähle Thema und Modus, dann starte.</div>
@@ -221,6 +228,14 @@
             </div>
           </div>
           <div id="vocab-theme-progress" class="vocab-theme-progress soft-note"></div>
+          <details id="vocab-library-details" class="vocab-library">
+            <summary id="vocab-library-summary">Alle Vokabeln lernen</summary>
+            <div class="vocab-library-controls">
+              <input id="vocab-library-search" type="text" placeholder="Vokabel suchen..." />
+            </div>
+            <div id="vocab-library-meta" class="soft-note">0 Einträge</div>
+            <div id="vocab-library-list" class="vocab-library-list"></div>
+          </details>
         </div>
       </section>
 
@@ -433,7 +448,7 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version">Version 1.7.42</span>
+      <span class="soft-note" id="version">Version 1.7.43</span>
     </footer>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">
@@ -494,7 +509,7 @@
         scriptSrc: "https://plausible.io/js/pa-Yo5rD-tnsB9Pz60fVTI3i.js"
       };
     </script>
-    <script src="js/vocab-logic.js?v=1742"></script>
-    <script src="js/app.js?v=1742"></script>
+    <script src="js/vocab-logic.js?v=1743"></script>
+    <script src="js/app.js?v=1743"></script>
   </body>
 </html>

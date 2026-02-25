@@ -39,9 +39,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.7.42`
+- Aktuell: `1.7.43`
 
 ## Aenderungsprotokoll
+- `1.7.43` (2026-02-25): Vokabel-Tracker erweitert: neuer aufklappbarer Bereich mit kompletter Vokabelliste pro Thema (inkl. Suche) und direkter Richtungsumschaltung FR->DE / DE->FR direkt im Lernbereich.
 - `1.7.42` (2026-02-25): Neuer temporaerer Today-Tracker `Vokabeln (Französisch)` hinzugefuegt: 10 A2-Themes (FR/DE) mit Seed-JSON, Trainingsmodi Flashcards/Quick Test/Write, Tagesziel+Streak+Theme-Fortschritt, Session-Summary, lokale Persistenz, Offline-Cache fuer Seed-Daten und Unit-Tests fuer Scoring/Progress-Logik.
 - `1.7.41` (2026-02-22): Sleep-Tracker als dritter Today-Tracker eingefuehrt: Abendlicher Bedtime-Eintrag + optionaler Wake-up (inkl. "Jetzt"), offene Nacht-Logik ueber Mitternacht, KPI-Anzeige (7d-Durchschnitt/Konsistenz/Status), Schlafdauer-Chart und Tagesdetails um Schlafdaten erweitert.
 - `1.7.40` (2026-02-22): 10/10-Iteration erweitert: Progress um Outcome-Kennzahlen (30d Goal-Hit-Rate, Trend, D1/D7-Snapshot) ergänzt, Today um smarte Tagesempfehlung erweitert, Gewichts-Tracker um Zielgewicht-/KPI-Visuals verfeinert, Render-Performance über reduzierte Static-Translation-Reapply optimiert und Update-/Backup-UX weiter geschärft.

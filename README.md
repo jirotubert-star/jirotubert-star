@@ -39,9 +39,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.8.0`
+- Aktuell: `1.8.1`
 
 ## Aenderungsprotokoll
+- `1.8.1` (2026-02-27): Offline-Fix für vollständige Nutzung ohne Internet: Service Worker auf robustes App-Shell-Precache umgestellt, Cache-Matching ohne Query-Abhängigkeit (`ignoreSearch`) ergänzt, sichere Document-Fallbacks verstärkt und Update-Aktivierung (`skipWaiting`) gehärtet.
 - `1.8.0` (2026-02-27): Major-Version angehoben auf `1.8.0` (Release-Linie konsolidiert). Versionierung und Cache-Busting über App, Manifest, Service Worker und Paketstand vereinheitlicht (`v=1800`).
 - `1.7.46` (2026-02-27): Replit-UI bewusst enger imitiert: kompakter App-Header ohne große Tagline, flacher Screen-Aufbau, native-artige Bottom-Tabbar, klarere Inter-ähnliche Typo-Hierarchie, stärker kartenbasierte Inhaltsblöcke und dichteres Spacing für den mobilen App-Eindruck.
 - `1.7.45` (2026-02-27): Replit-Designtransfer fuer die Web-App: neues Green/Neutral-Theme, modernisierte Panel-/Button-/Tracker-Optik und verfeinerte Animationen. Weekly-Plan beim Ziel-Erstellen direkt integrierbar (inline Mo-So Eingaben im Goal-Formular, Speicherung beim Anlegen). Vokabel-Tracker aus aktiver Navigation entfernt und Service-Worker-Cache bereinigt.

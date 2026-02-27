@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.7.43";
+const APP_VERSION = "1.7.45";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -1818,7 +1818,7 @@ const loadState = () => {
     }
     normalized.proEnabled = normalized.proEnabled || false;
     normalized.templatesOpenedOnce = normalized.templatesOpenedOnce || false;
-    normalized.todayTracker = ["checklist", "weight", "sleep", "vocab"].includes(normalized.todayTracker)
+    normalized.todayTracker = ["checklist", "weight", "sleep"].includes(normalized.todayTracker)
       ? normalized.todayTracker
       : "checklist";
     return normalized;
@@ -1921,6 +1921,13 @@ const vocabLibraryListEl = document.getElementById("vocab-library-list");
 const todaySmartPlanEl = document.getElementById("today-smart-plan");
 const goalForm = document.getElementById("goal-form");
 const goalInput = document.getElementById("goal-input");
+const goalPlanMonInput = document.getElementById("goal-plan-mon");
+const goalPlanTueInput = document.getElementById("goal-plan-tue");
+const goalPlanWedInput = document.getElementById("goal-plan-wed");
+const goalPlanThuInput = document.getElementById("goal-plan-thu");
+const goalPlanFriInput = document.getElementById("goal-plan-fri");
+const goalPlanSatInput = document.getElementById("goal-plan-sat");
+const goalPlanSunInput = document.getElementById("goal-plan-sun");
 const goalTimeInput = document.getElementById("goal-time-input");
 const goalTimeToggle = document.getElementById("goal-time-toggle");
 const goalTimePicker = document.getElementById("goal-time-picker");
@@ -2560,7 +2567,6 @@ const applyStaticTranslations = () => {
   setText("tracker-checklist-btn", s.trackerChecklist);
   setText("tracker-weight-btn", s.trackerWeight);
   setText("tracker-sleep-btn", s.trackerSleep);
-  setText("tracker-vocab-btn", st("trackerVocab"));
   setText("weight-tracker-title", s.weightTrackerTitle);
   setText("weight-tracker-hint", s.weightTrackerHint);
   if (weightInputLabel) weightInputLabel.textContent = s.weightInputLabel;
@@ -3704,7 +3710,7 @@ const renderVocabTracker = (state) => {
 
 const renderToday = (state) => {
   const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
-  const activeTracker = ["checklist", "weight", "sleep", "vocab"].includes(state.todayTracker)
+  const activeTracker = ["checklist", "weight", "sleep"].includes(state.todayTracker)
     ? state.todayTracker
     : "checklist";
   if (trackerChecklistBtn) {
@@ -3719,17 +3725,12 @@ const renderToday = (state) => {
     trackerSleepBtn.classList.toggle("is-active", activeTracker === "sleep");
     trackerSleepBtn.setAttribute("aria-selected", activeTracker === "sleep" ? "true" : "false");
   }
-  if (trackerVocabBtn) {
-    trackerVocabBtn.classList.toggle("is-active", activeTracker === "vocab");
-    trackerVocabBtn.setAttribute("aria-selected", activeTracker === "vocab" ? "true" : "false");
-  }
   if (quickTaskForm) quickTaskForm.hidden = activeTracker !== "checklist";
   if (unlockControls) unlockControls.hidden = activeTracker !== "checklist";
   if (todayList) todayList.hidden = activeTracker !== "checklist";
   if (sideQuestForm) sideQuestForm.hidden = activeTracker !== "checklist";
   if (weightTrackerPanel) weightTrackerPanel.hidden = activeTracker !== "weight";
   if (sleepTrackerPanel) sleepTrackerPanel.hidden = activeTracker !== "sleep";
-  if (vocabTrackerPanel) vocabTrackerPanel.hidden = activeTracker !== "vocab";
 
   if (activeTracker === "weight") {
     if (todayCount) todayCount.textContent = s.weightTrackerMeta;
@@ -3745,14 +3746,6 @@ const renderToday = (state) => {
       todaySmartPlanEl.textContent = `${s.todaySmartPlanPrefix}: ${s.sleepTrackerHint}`;
     }
     renderSleepTracker(state);
-    return;
-  }
-  if (activeTracker === "vocab") {
-    if (todayCount) todayCount.textContent = st("vocabTrackerTitle");
-    if (todaySmartPlanEl) {
-      todaySmartPlanEl.textContent = `${s.todaySmartPlanPrefix}: ${st("vocabTrackerHint")}`;
-    }
-    renderVocabTracker(state);
     return;
   }
   todayList.innerHTML = "";
@@ -4573,21 +4566,59 @@ const renderAll = (state) => {
 // ---------------------------
 // Actions
 // ---------------------------
-const addGoal = (title, difficulty) => {
+const getInlineGoalWeeklyPlan = () => {
+  const raw = {
+    mon: goalPlanMonInput?.value || "",
+    tue: goalPlanTueInput?.value || "",
+    wed: goalPlanWedInput?.value || "",
+    thu: goalPlanThuInput?.value || "",
+    fri: goalPlanFriInput?.value || "",
+    sat: goalPlanSatInput?.value || "",
+    sun: goalPlanSunInput?.value || "",
+  };
+  const normalized = {};
+  Object.entries(raw).forEach(([key, value]) => {
+    const text = String(value || "").trim();
+    normalized[key] = { text };
+  });
+  const hasAny = Object.values(normalized).some((entry) => (entry?.text || "").trim().length > 0);
+  return hasAny ? normalized : null;
+};
+
+const clearInlineGoalWeeklyPlan = () => {
+  [
+    goalPlanMonInput,
+    goalPlanTueInput,
+    goalPlanWedInput,
+    goalPlanThuInput,
+    goalPlanFriInput,
+    goalPlanSatInput,
+    goalPlanSunInput,
+  ].forEach((input) => {
+    if (input) input.value = "";
+  });
+};
+
+const addGoal = (title, difficulty, weeklyPlan = null) => {
   const state = loadState();
   const today = todayISO(state.simulationOffsetDays);
   const hadNoGoals = state.goals.length === 0;
+  const goalId = crypto.randomUUID();
 
   if (!state.onboardingStartDate) {
     state.onboardingStartDate = today;
   }
 
   state.goals.push({
-    id: crypto.randomUUID(),
+    id: goalId,
     title,
     difficulty: normalizeGoalTime(difficulty),
     createdAt: today,
   });
+  if (weeklyPlan && typeof weeklyPlan === "object") {
+    state.weeklyPlans = state.weeklyPlans || {};
+    state.weeklyPlans[goalId] = weeklyPlan;
+  }
 
   ensureTodayTasks(state);
   updateStreak(state);
@@ -5263,7 +5294,7 @@ const renderTemplates = () => {
       chip.textContent = item;
       chip.addEventListener("click", () => {
         const timeOfDay = goalTimeInput ? goalTimeInput.value : "12:00";
-        addGoal(item, timeOfDay);
+        addGoal(item, timeOfDay, null);
       });
       items.appendChild(chip);
     });
@@ -5350,8 +5381,9 @@ const init = () => {
       const value = goalInput.value.trim();
       if (!value) return;
 
-      addGoal(value, goalTimeInput?.value || "12:00");
+      addGoal(value, goalTimeInput?.value || "12:00", getInlineGoalWeeklyPlan());
       goalInput.value = "";
+      clearInlineGoalWeeklyPlan();
     });
     if (goalTimeToggle) {
       goalTimeToggle.addEventListener("click", () => {
@@ -5578,16 +5610,6 @@ const init = () => {
         renderAll(stateNow);
       });
     }
-    if (trackerVocabBtn) {
-      trackerVocabBtn.addEventListener("click", () => {
-        const stateNow = loadState();
-        if (stateNow.todayTracker === "vocab") return;
-        stateNow.todayTracker = "vocab";
-        saveState(stateNow);
-        renderAll(stateNow);
-      });
-    }
-
     if (planGoalSelect) {
       planGoalSelect.addEventListener("change", () => {
         renderWeeklyPlan(loadState());

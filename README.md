@@ -39,9 +39,11 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.7.45`
+- Aktuell: `1.8.0`
 
 ## Aenderungsprotokoll
+- `1.8.0` (2026-02-27): Major-Version angehoben auf `1.8.0` (Release-Linie konsolidiert). Versionierung und Cache-Busting über App, Manifest, Service Worker und Paketstand vereinheitlicht (`v=1800`).
+- `1.7.46` (2026-02-27): Replit-UI bewusst enger imitiert: kompakter App-Header ohne große Tagline, flacher Screen-Aufbau, native-artige Bottom-Tabbar, klarere Inter-ähnliche Typo-Hierarchie, stärker kartenbasierte Inhaltsblöcke und dichteres Spacing für den mobilen App-Eindruck.
 - `1.7.45` (2026-02-27): Replit-Designtransfer fuer die Web-App: neues Green/Neutral-Theme, modernisierte Panel-/Button-/Tracker-Optik und verfeinerte Animationen. Weekly-Plan beim Ziel-Erstellen direkt integrierbar (inline Mo-So Eingaben im Goal-Formular, Speicherung beim Anlegen). Vokabel-Tracker aus aktiver Navigation entfernt und Service-Worker-Cache bereinigt.
 - `1.7.43` (2026-02-25): Vokabel-Tracker erweitert: neuer aufklappbarer Bereich mit kompletter Vokabelliste pro Thema (inkl. Suche) und direkter Richtungsumschaltung FR->DE / DE->FR direkt im Lernbereich.
 - `1.7.42` (2026-02-25): Neuer temporaerer Today-Tracker `Vokabeln (Französisch)` hinzugefuegt: 10 A2-Themes (FR/DE) mit Seed-JSON, Trainingsmodi Flashcards/Quick Test/Write, Tagesziel+Streak+Theme-Fortschritt, Session-Summary, lokale Persistenz, Offline-Cache fuer Seed-Daten und Unit-Tests fuer Scoring/Progress-Logik.

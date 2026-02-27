@@ -2766,3 +2766,142 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Replit imitation mode: structure + visual rhythm first */
+body {
+  background: #f5f7f6;
+}
+
+.top {
+  background: #f5f7f6;
+  border-bottom: none;
+  padding: calc(8px + var(--safe-top)) 16px 4px;
+}
+
+.brand {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+}
+
+.tagline {
+  display: none;
+}
+
+.layout {
+  max-width: 920px;
+  padding: 8px 14px 104px;
+  gap: 12px;
+}
+
+.panel {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.panel:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.panel-head {
+  margin: 0;
+  padding: 4px 2px 8px;
+}
+
+.panel-head h2 {
+  font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.today-tracker-switch {
+  border-radius: 14px;
+  border-color: #dbe5e0;
+  background: #eef3f1;
+  padding: 3px;
+}
+
+.tracker-btn {
+  min-height: 34px;
+  border-radius: 10px;
+  font-size: 0.77rem;
+}
+
+.tracker-btn.is-active {
+  background: #2d8b5e;
+  border-color: #2d8b5e;
+  box-shadow: 0 4px 12px rgba(45, 139, 94, 0.2);
+}
+
+.welcome,
+.tutorial,
+.checklist li,
+.goals li,
+.weekly-plan,
+.calendar,
+.stats .stat,
+.progress-insights .insight,
+.info-block,
+.time-picker-popover,
+.update-banner,
+.goal-weekly-inline,
+.weight-tracker-panel,
+.weight-chart-wrap,
+.day-detail-card {
+  border-radius: 16px;
+  border: 1px solid #e4eae7;
+  background: #ffffff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 8px 22px rgba(15, 23, 42, 0.06);
+}
+
+.goal-form,
+.quick-task {
+  margin: 8px 0 12px;
+}
+
+.footer {
+  display: none;
+}
+
+.bottom-nav {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 0;
+  border: none;
+  border-top: 1px solid #dfe6e2;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 -8px 20px rgba(15, 23, 42, 0.08);
+  padding: 8px 8px calc(10px + var(--safe-bottom));
+  gap: 2px;
+}
+
+.nav-item {
+  border-radius: 12px;
+  min-height: 52px;
+  padding: 8px 6px;
+}
+
+.nav-item.active {
+  background: #e8f5ee;
+  color: #2d8b5e;
+  box-shadow: none;
+}
+
+.nav-item.active::after {
+  display: none;
+}
+
+.nav-icon {
+  font-size: 1.05rem;
+}
+
+.nav-label {
+  font-size: 0.72rem;
+}

@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.8.6";
+const APP_VERSION = "1.8.7";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -2178,12 +2178,15 @@ const readWorkerVersion = (worker) =>
   });
 
 const setVersionLabel = (state) => {
-  const versionEl = document.getElementById("version");
-  if (!versionEl) return;
+  const versionEls = document.querySelectorAll("[data-version-label]");
+  if (!versionEls.length) return;
   const resolvedVersion = runtimeAppVersion || APP_VERSION;
-  versionEl.textContent = state?.proEnabled
+  const label = state?.proEnabled
     ? `Version ${resolvedVersion} Pro`
     : `Version ${resolvedVersion}`;
+  versionEls.forEach((el) => {
+    el.textContent = label;
+  });
 };
 
 const syncRuntimeVersionWithActiveSW = async () => {

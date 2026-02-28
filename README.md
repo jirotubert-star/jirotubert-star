@@ -39,9 +39,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.8.6`
+- Aktuell: `1.8.7`
 
 ## Aenderungsprotokoll
+- `1.8.7` (2026-02-27): Permanente Versionsanzeige ergänzt: Version wird jetzt als fixe Bottom-Badge global eingeblendet und über alle Screens synchron aktualisiert (`data-version-label`), zusätzlich zur bisherigen Footer-Anzeige.
 - `1.8.6` (2026-02-27): Motion/Performance-Pass: weichere Karten- und Listenanimationen (inkl. leichtem Stagger), sanftere Hover/Press-Transitions sowie frame-basierte Tab-/Tracker-UI-Updates via `requestAnimationFrame` für flüssigeres Bediengefühl.
 - `1.8.5` (2026-02-27): Sprach-Auswahl um Auswahlanimation erweitert: gewählter Sprach-Button füllt sich von links nach rechts grün; erst nach Ende der Animation wird die Sprache gesetzt und zum nächsten Screen gewechselt.
 - `1.8.4` (2026-02-27): Sprach-Auswahl weiter verfeinert: kompletter Dialog zentriert, `Select Language` auf den kleineren Hint-Stil angepasst und die Zusatzzeile `Bitte wähle eine Sprache` entfernt.

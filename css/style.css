@@ -1908,6 +1908,23 @@ summary:focus-visible {
   gap: 12px;
 }
 
+.version-fixed {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(74px + var(--safe-bottom));
+  z-index: 120;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid #dbe5e0;
+  background: rgba(255, 255, 255, 0.92);
+  color: #61736a;
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+  pointer-events: none;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
 .bottom-nav {
   position: fixed;
   left: 10px;
@@ -2558,6 +2575,10 @@ summary:focus-visible {
     gap: 6px;
     padding-bottom: calc(102px + var(--safe-bottom));
     text-align: center;
+  }
+  .version-fixed {
+    bottom: calc(88px + var(--safe-bottom));
+    font-size: 0.75rem;
   }
   .bottom-nav {
     left: 10px;

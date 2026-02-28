@@ -2276,6 +2276,9 @@ summary:focus-visible {
 }
 
 .language-grid .btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   width: 100%;
   justify-content: flex-start;
   text-align: left;
@@ -2288,6 +2291,34 @@ summary:focus-visible {
   box-shadow: none;
   font-weight: 600;
   letter-spacing: 0.01em;
+}
+
+.language-grid .btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #2d8b5e;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 460ms cubic-bezier(0.2, 0.85, 0.25, 1);
+  z-index: -1;
+}
+
+.language-grid .btn.is-selecting::before {
+  transform: scaleX(1);
+}
+
+.language-grid .btn.is-selecting {
+  color: #ffffff;
+  border-color: #2d8b5e;
+}
+
+.language-grid.is-locked .btn {
+  pointer-events: none;
+}
+
+.language-grid.is-locked .btn:not(.is-selecting) {
+  opacity: 0.68;
 }
 
 .language-grid .btn:hover {

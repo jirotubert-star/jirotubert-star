@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.8.4";
+const APP_VERSION = "1.8.5";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -1973,6 +1973,7 @@ const tutorialCtaBtn = document.getElementById("tutorial-cta");
 const toastEl = document.getElementById("toast");
 const languageModal = document.getElementById("language-modal");
 const languageButtons = document.querySelectorAll("[data-lang]");
+const languageGrid = document.querySelector(".language-grid");
 const introModal = document.getElementById("intro-modal");
 const introCardEl = document.querySelector(".intro-card");
 const introStepEl = document.getElementById("intro-step");
@@ -2037,7 +2038,9 @@ let templatesRenderLangCache = "";
 let pickerHour = 12;
 let pickerMinute = 0;
 let editingGoalTimeId = null;
+let languageSelectionInProgress = false;
 const WHEEL_ITEM_HEIGHT = 36;
+const LANGUAGE_SELECT_ANIMATION_MS = 460;
 const WHEEL_REPEAT = 7;
 const WHEEL_CENTER_REPEAT = Math.floor(WHEEL_REPEAT / 2);
 const HOUR_VALUES = Array.from({ length: 24 }, (_, i) => i);
@@ -2213,6 +2216,11 @@ const showLanguageModalIfNeeded = () => {
   if (!languageModal) return;
   const needsLanguage = !currentLanguage;
   languageModal.hidden = !needsLanguage;
+  if (needsLanguage) {
+    languageSelectionInProgress = false;
+    if (languageGrid) languageGrid.classList.remove("is-locked");
+    languageButtons.forEach((btn) => btn.classList.remove("is-selecting"));
+  }
   if (needsLanguage && introModal) introModal.hidden = true;
 };
 
@@ -5699,7 +5707,17 @@ const init = () => {
     }, { passive: true });
 
     languageButtons.forEach((btn) => {
-      btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
+      btn.addEventListener("click", () => {
+        const selectedLang = btn.dataset.lang;
+        if (!selectedLang || languageSelectionInProgress) return;
+        languageSelectionInProgress = true;
+        languageButtons.forEach((node) => node.classList.remove("is-selecting"));
+        btn.classList.add("is-selecting");
+        if (languageGrid) languageGrid.classList.add("is-locked");
+        window.setTimeout(() => {
+          setLanguage(selectedLang);
+        }, LANGUAGE_SELECT_ANIMATION_MS);
+      });
     });
     if (introNextBtn) {
       introNextBtn.addEventListener("click", handleIntroNext);

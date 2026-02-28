@@ -2238,15 +2238,17 @@ summary:focus-visible {
   box-shadow: none;
   padding: clamp(24px, 5vw, 54px) clamp(20px, 4vw, 30px);
   display: grid;
-  align-content: start;
-  gap: 10px;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+  gap: 8px;
 }
 
 .language-card h2 {
   margin: 0;
-  font-size: clamp(1.45rem, 2.3vw, 2rem);
-  color: #1a1a2e;
-  font-weight: 700;
+  font-size: clamp(0.96rem, 1.35vw, 1.05rem);
+  color: #6b7280;
+  font-weight: 500;
 }
 
 .language-brand {
@@ -2270,7 +2272,7 @@ summary:focus-visible {
   grid-template-columns: 1fr;
   gap: 10px;
   margin-top: 14px;
-  max-width: 460px;
+  width: min(100%, 440px);
 }
 
 .language-grid .btn {

@@ -2232,38 +2232,66 @@ summary:focus-visible {
 .language-card {
   width: 100vw;
   min-height: 100dvh;
-  background: linear-gradient(140deg, #f8f4ec, #edf7f1);
+  background: #f5f7f6;
   border: none;
   border-radius: 0;
   box-shadow: none;
-  padding: clamp(24px, 5vw, 54px);
+  padding: clamp(24px, 5vw, 54px) clamp(20px, 4vw, 30px);
   display: grid;
   align-content: start;
-  gap: 12px;
+  gap: 10px;
 }
 
 .language-card h2 {
   margin: 0;
-  font-size: clamp(1.4rem, 2.3vw, 2rem);
+  font-size: clamp(1.45rem, 2.3vw, 2rem);
+  color: #1a1a2e;
+  font-weight: 700;
 }
 
 .language-card p {
   margin: 0;
-  color: #33423f;
-  line-height: 1.7;
-  font-size: clamp(1.03rem, 1.5vw, 1.16rem);
-  max-width: 68ch;
+  color: #6b7280;
+  line-height: 1.55;
+  font-size: clamp(0.96rem, 1.35vw, 1.05rem);
+  max-width: 48ch;
 }
 
 .language-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 220px));
-  gap: 12px;
-  margin-top: 8px;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 14px;
+  max-width: 460px;
 }
 
-.language-grid .btn:last-child {
-  grid-column: 1 / -1;
+.language-grid .btn {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  min-height: 52px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1.5px solid #2d8b5e;
+  background: #ffffff;
+  color: #1f2937;
+  box-shadow: none;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.language-grid .btn:hover {
+  background: #f6fbf8;
+  transform: translateY(-1px);
+  filter: none;
+}
+
+.language-grid .btn:active {
+  transform: scale(0.99);
+}
+
+.language-grid .btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(45, 139, 94, 0.2);
 }
 
 @keyframes fadeUp {

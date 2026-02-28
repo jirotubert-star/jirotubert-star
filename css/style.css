@@ -2249,6 +2249,14 @@ summary:focus-visible {
   font-weight: 700;
 }
 
+.language-brand {
+  margin: 0;
+  font-size: clamp(1.9rem, 3.2vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #1a1a2e;
+}
+
 .language-card p {
   margin: 0;
   color: #6b7280;

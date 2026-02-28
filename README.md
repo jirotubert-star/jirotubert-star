@@ -39,9 +39,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.8.2`
+- Aktuell: `1.8.3`
 
 ## Aenderungsprotokoll
+- `1.8.3` (2026-02-27): Sprach-Auswahl-Header im Replit-Stil angeglichen: Branding `OneStep` ergänzt und Titel als feste englische Überschrift `Select Language` gesetzt.
 - `1.8.2` (2026-02-27): Sprach-Auswahl auf dem Startscreen im Replit-Stil überarbeitet: vertikale Anordnung aller Sprachen, weiße Auswahlkarten mit grünem Rand und kompaktere Typografie für einen klareren App-First-Eindruck.
 - `1.8.1` (2026-02-27): Offline-Fix für vollständige Nutzung ohne Internet: Service Worker auf robustes App-Shell-Precache umgestellt, Cache-Matching ohne Query-Abhängigkeit (`ignoreSearch`) ergänzt, sichere Document-Fallbacks verstärkt und Update-Aktivierung (`skipWaiting`) gehärtet.
 - `1.8.0` (2026-02-27): Major-Version angehoben auf `1.8.0` (Release-Linie konsolidiert). Versionierung und Cache-Busting über App, Manifest, Service Worker und Paketstand vereinheitlicht (`v=1800`).

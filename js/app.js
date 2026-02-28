@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.8.2";
+const APP_VERSION = "1.8.3";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -2552,7 +2552,7 @@ const applyStaticTranslations = () => {
     if (el) el.textContent = value;
   };
 
-  setText("language-modal-title", t("chooseLanguage"));
+  setText("language-modal-title", "Select Language");
   setText("language-modal-text", t("chooseLanguageText"));
   renderIntro();
   setText("tagline", t("tagline"));

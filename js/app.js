@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.8.5";
+const APP_VERSION = "1.8.6";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -2039,6 +2039,7 @@ let pickerHour = 12;
 let pickerMinute = 0;
 let editingGoalTimeId = null;
 let languageSelectionInProgress = false;
+let renderRafId = null;
 const WHEEL_ITEM_HEIGHT = 36;
 const LANGUAGE_SELECT_ANIMATION_MS = 460;
 const WHEEL_REPEAT = 7;
@@ -5333,13 +5334,20 @@ const setActiveTab = (target) => {
     section.hidden = !isActive;
     if (isActive) {
       section.classList.remove("section-enter");
-      void section.offsetHeight;
-      section.classList.add("section-enter");
+      requestAnimationFrame(() => section.classList.add("section-enter"));
     }
   });
   if (currentTab !== previousTab) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+};
+
+const renderAllSmooth = (state) => {
+  if (renderRafId) cancelAnimationFrame(renderRafId);
+  renderRafId = requestAnimationFrame(() => {
+    renderRafId = null;
+    renderAll(state);
+  });
 };
 
 const goToAdjacentTab = (direction) => {
@@ -5471,7 +5479,9 @@ const init = () => {
     }
 
     navItems.forEach((btn) => {
-      btn.addEventListener("click", () => setActiveTab(btn.dataset.target));
+      btn.addEventListener("click", () => {
+        requestAnimationFrame(() => setActiveTab(btn.dataset.target));
+      });
     });
 
     if (quickTaskForm) {
@@ -5597,7 +5607,7 @@ const init = () => {
         if (stateNow.todayTracker === "checklist") return;
         stateNow.todayTracker = "checklist";
         saveState(stateNow);
-        renderAll(stateNow);
+        renderAllSmooth(stateNow);
       });
     }
     if (trackerWeightBtn) {
@@ -5606,7 +5616,7 @@ const init = () => {
         if (stateNow.todayTracker === "weight") return;
         stateNow.todayTracker = "weight";
         saveState(stateNow);
-        renderAll(stateNow);
+        renderAllSmooth(stateNow);
       });
     }
     if (trackerSleepBtn) {
@@ -5615,7 +5625,7 @@ const init = () => {
         if (stateNow.todayTracker === "sleep") return;
         stateNow.todayTracker = "sleep";
         saveState(stateNow);
-        renderAll(stateNow);
+        renderAllSmooth(stateNow);
       });
     }
     if (planGoalSelect) {

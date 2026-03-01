@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.8.10";
+const APP_VERSION = "1.8.11";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -4540,23 +4540,16 @@ const applyTutorial = (state) => {
         }
       }
     } else if (access.onboardingActive) {
-      tutorialSection.style.display = "block";
       const unlock = unlockMessages[access.day];
-      tutorialSection.classList.toggle("unlock-highlight", !!unlock);
-      if (tutorialStepLabel) tutorialStepLabel.textContent = `${t("dayWord")} ${access.day}/${access.onboardingTotal}`;
       if (unlock) {
+        tutorialSection.style.display = "block";
+        tutorialSection.classList.add("unlock-highlight");
+        if (tutorialStepLabel) tutorialStepLabel.textContent = `${t("dayWord")} ${access.day}/${access.onboardingTotal}`;
         if (tutorialTitle) tutorialTitle.textContent = unlock.title;
         if (tutorialText) tutorialText.textContent = unlock.text;
       } else {
-        if (tutorialTitle) tutorialTitle.textContent = t("onboardingTitle");
-        if (tutorialText) {
-          let onboardingPhaseText = t("onboardingText");
-          if (access.day <= 3) onboardingPhaseText = t("onboardingTextEarly");
-          else if (access.day >= 4 && access.day <= 6) onboardingPhaseText = t("onboardingTextWeekPlan");
-          else if (access.day <= 8) onboardingPhaseText = t("onboardingTextMid");
-          else onboardingPhaseText = t("onboardingTextLate");
-          tutorialText.textContent = onboardingPhaseText;
-        }
+        tutorialSection.style.display = "none";
+        tutorialSection.classList.remove("unlock-highlight");
       }
       if (tutorialCtaBtn) tutorialCtaBtn.hidden = true;
     } else {

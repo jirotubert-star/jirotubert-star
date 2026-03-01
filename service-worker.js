@@ -1,13 +1,13 @@
-const CACHE_NAME = "onestep-cache-v1810";
-const SW_APP_VERSION = "1.8.10";
+const CACHE_NAME = "onestep-cache-v1811";
+const SW_APP_VERSION = "1.8.11";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./privacy.html",
   "./impressum.html",
-  "./css/style.css?v=1810",
-  "./js/app.js?v=1810",
-  "./site.webmanifest?v=1810",
+  "./css/style.css?v=1811",
+  "./js/app.js?v=1811",
+  "./site.webmanifest?v=1811",
   "./assets/onestep-logo-user.png",
   "./assets/onestep-logo-rounded.png",
 ];

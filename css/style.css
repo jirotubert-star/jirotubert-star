@@ -609,6 +609,75 @@ p {
   margin-bottom: 12px;
 }
 
+.goals-add-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid #2d8b5e;
+  background: linear-gradient(180deg, #2f935f, #2d8b5e);
+  color: #fff;
+  font-size: 1.45rem;
+  line-height: 1;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(45, 139, 94, 0.24);
+}
+
+.goal-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+}
+
+.goal-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(2px);
+}
+
+.goal-sheet-card {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border: 1px solid #dfe7e3;
+  border-bottom: 0;
+  padding: 14px 16px calc(20px + var(--safe-bottom));
+  box-shadow: 0 -12px 24px rgba(15, 23, 42, 0.18);
+  transform: translateY(104%);
+  transition: transform 220ms ease;
+}
+
+.goal-sheet.is-open .goal-sheet-card {
+  transform: translateY(0);
+}
+
+.goal-sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.goal-sheet-head h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.goal-sheet-card .goal-form {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.goal-sheet-card .goal-form .btn[type="submit"] {
+  width: 100%;
+}
+
 .quick-task {
   display: grid;
   grid-template-columns: 2fr 1fr;

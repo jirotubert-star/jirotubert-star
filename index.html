@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-rounded.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-rounded.png" />
-    <link rel="manifest" href="site.webmanifest?v=1807" />
-    <link rel="stylesheet" href="css/style.css?v=1807" />
+    <link rel="manifest" href="site.webmanifest?v=1808" />
+    <link rel="stylesheet" href="css/style.css?v=1808" />
   </head>
   <body>
     <div id="language-modal" class="language-modal" hidden>
@@ -172,65 +172,13 @@
       <section class="panel" aria-labelledby="goals-title" data-section="goals">
         <div class="panel-head">
           <h2 id="goals-title">Life Goals</h2>
-          <span class="soft-note">Dein Aufgaben‑Pool</span>
+          <button id="goals-add-btn" class="goals-add-btn" type="button" aria-label="Neues Ziel hinzufügen">+</button>
         </div>
-        <form id="goal-form" class="goal-form" autocomplete="off">
-          <label class="sr-only" for="goal-input">Neues Ziel</label>
-          <input id="goal-input" type="text" placeholder="z. B. 15 Minuten lesen" required />
-          <input id="goal-time-input" type="hidden" value="12:00" />
-          <div class="time-picker" id="goal-time-picker-wrap">
-            <button id="goal-time-toggle" type="button" class="time-picker-toggle" aria-haspopup="dialog" aria-expanded="false">
-              Zeit: 12:00
-            </button>
-            <div id="goal-time-picker" class="time-picker-popover" hidden>
-              <div class="time-picker-head">
-                <span id="time-picker-title">Uhrzeit auswählen</span>
-                <strong id="time-picker-value">12:00</strong>
-              </div>
-              <div class="time-picker-wheels">
-                <div class="time-wheel-wrap">
-                  <div class="time-dial-title" id="time-hour-title">Stunde</div>
-                  <div class="time-wheel" id="time-hour-wheel" aria-label="Stunde auswählen"></div>
-                </div>
-                <div class="time-wheel-wrap">
-                  <div class="time-dial-title" id="time-minute-title">Minute</div>
-                  <div class="time-wheel" id="time-minute-wheel" aria-label="Minute auswählen"></div>
-                </div>
-              </div>
-              <button id="goal-time-apply" type="button" class="btn">Übernehmen</button>
-            </div>
-          </div>
-          <details class="goal-weekly-inline" id="goal-weekly-inline">
-            <summary>Wochenplan direkt setzen (optional)</summary>
-            <div class="goal-weekly-grid">
-              <label>Mo <input id="goal-plan-mon" type="text" placeholder="z. B. Lauf" /></label>
-              <label>Di <input id="goal-plan-tue" type="text" placeholder="z. B. Lesen" /></label>
-              <label>Mi <input id="goal-plan-wed" type="text" placeholder="z. B. Lernen" /></label>
-              <label>Do <input id="goal-plan-thu" type="text" placeholder="z. B. Mobility" /></label>
-              <label>Fr <input id="goal-plan-fri" type="text" placeholder="z. B. Walk" /></label>
-              <label>Sa <input id="goal-plan-sat" type="text" placeholder="z. B. Erholung" /></label>
-              <label>So <input id="goal-plan-sun" type="text" placeholder="z. B. Review" /></label>
-            </div>
-          </details>
-          <button type="submit" class="btn">Hinzufügen</button>
-        </form>
         <ul id="goals-list" class="goals"></ul>
         <details class="info-block templates" id="templates-section" open>
           <summary id="templates-summary">Vorlagen (10 Kategorien)</summary>
           <div id="template-categories" class="template-grid"></div>
         </details>
-        <div class="weekly-plan">
-          <div class="panel-head">
-            <h3 id="weekly-plan-title">Wochenplan</h3>
-            <span class="soft-note" id="weekly-plan-note">Mindestens 4 Tage eintragen</span>
-          </div>
-          <div class="plan-controls">
-            <label id="plan-goal-label" for="plan-goal">Ziel</label>
-            <select id="plan-goal"></select>
-          </div>
-          <div id="plan-grid" class="plan-grid" aria-live="polite"></div>
-          <div id="plan-hint" class="soft-note plan-hint"></div>
-        </div>
       </section>
 
       <!-- Progress / Motivation -->
@@ -389,10 +337,10 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version" data-version-label>Version 1.8.7</span>
+      <span class="soft-note" id="version" data-version-label>Version 1.8.8</span>
     </footer>
 
-    <div id="version-fixed" class="version-fixed soft-note" data-version-label>Version 1.8.7</div>
+    <div id="version-fixed" class="version-fixed soft-note" data-version-label>Version 1.8.8</div>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">
       <button class="nav-item active" type="button" data-target="today">
@@ -432,6 +380,56 @@
         <ul id="day-detail-list" class="day-detail-list"></ul>
       </div>
     </div>
+    <div id="goal-sheet" class="goal-sheet" hidden>
+      <div id="goal-sheet-backdrop" class="goal-sheet-backdrop"></div>
+      <div class="goal-sheet-card">
+        <div class="goal-sheet-head">
+          <h3>Neues Ziel</h3>
+          <button id="goal-sheet-close" class="btn ghost" type="button">×</button>
+        </div>
+        <form id="goal-form" class="goal-form" autocomplete="off">
+          <label class="sr-only" for="goal-input">Neues Ziel</label>
+          <input id="goal-input" type="text" placeholder="z. B. 15 Minuten lesen" required />
+          <input id="goal-time-input" type="hidden" value="12:00" />
+          <div class="time-picker" id="goal-time-picker-wrap">
+            <button id="goal-time-toggle" type="button" class="time-picker-toggle" aria-haspopup="dialog" aria-expanded="false">
+              Zeit: 12:00
+            </button>
+            <div id="goal-time-picker" class="time-picker-popover" hidden>
+              <div class="time-picker-head">
+                <span id="time-picker-title">Uhrzeit auswählen</span>
+                <strong id="time-picker-value">12:00</strong>
+              </div>
+              <div class="time-picker-wheels">
+                <div class="time-wheel-wrap">
+                  <div class="time-dial-title" id="time-hour-title">Stunde</div>
+                  <div class="time-wheel" id="time-hour-wheel" aria-label="Stunde auswählen"></div>
+                </div>
+                <div class="time-wheel-wrap">
+                  <div class="time-dial-title" id="time-minute-title">Minute</div>
+                  <div class="time-wheel" id="time-minute-wheel" aria-label="Minute auswählen"></div>
+                </div>
+              </div>
+              <button id="goal-time-apply" type="button" class="btn">Übernehmen</button>
+            </div>
+          </div>
+          <div id="goal-weekly-unlock-note" class="soft-note">Wochenplan wird nach Freischaltung eingeblendet.</div>
+          <details class="goal-weekly-inline" id="goal-weekly-inline">
+            <summary>Wochenplan (optional)</summary>
+            <div class="goal-weekly-grid">
+              <label>Mo <input id="goal-plan-mon" type="text" placeholder="z. B. Lauf" /></label>
+              <label>Di <input id="goal-plan-tue" type="text" placeholder="z. B. Lesen" /></label>
+              <label>Mi <input id="goal-plan-wed" type="text" placeholder="z. B. Lernen" /></label>
+              <label>Do <input id="goal-plan-thu" type="text" placeholder="z. B. Mobility" /></label>
+              <label>Fr <input id="goal-plan-fri" type="text" placeholder="z. B. Walk" /></label>
+              <label>Sa <input id="goal-plan-sat" type="text" placeholder="z. B. Erholung" /></label>
+              <label>So <input id="goal-plan-sun" type="text" placeholder="z. B. Review" /></label>
+            </div>
+          </details>
+          <button type="submit" class="btn">Hinzufügen</button>
+        </form>
+      </div>
+    </div>
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
     <script async src="https://plausible.io/js/pa-Yo5rD-tnsB9Pz60fVTI3i.js"></script>
@@ -452,6 +450,6 @@
         scriptSrc: "https://plausible.io/js/pa-Yo5rD-tnsB9Pz60fVTI3i.js"
       };
     </script>
-    <script src="js/app.js?v=1807"></script>
+    <script src="js/app.js?v=1808"></script>
   </body>
 </html>

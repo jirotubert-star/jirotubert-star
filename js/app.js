@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.8.7";
+const APP_VERSION = "1.8.8";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -1928,10 +1928,16 @@ const goalPlanThuInput = document.getElementById("goal-plan-thu");
 const goalPlanFriInput = document.getElementById("goal-plan-fri");
 const goalPlanSatInput = document.getElementById("goal-plan-sat");
 const goalPlanSunInput = document.getElementById("goal-plan-sun");
+const goalWeeklyInline = document.getElementById("goal-weekly-inline");
 const goalTimeInput = document.getElementById("goal-time-input");
 const goalTimeToggle = document.getElementById("goal-time-toggle");
 const goalTimePicker = document.getElementById("goal-time-picker");
 const goalTimeApplyBtn = document.getElementById("goal-time-apply");
+const goalsAddBtn = document.getElementById("goals-add-btn");
+const goalSheet = document.getElementById("goal-sheet");
+const goalSheetCloseBtn = document.getElementById("goal-sheet-close");
+const goalSheetBackdrop = document.getElementById("goal-sheet-backdrop");
+const goalWeeklyUnlockNote = document.getElementById("goal-weekly-unlock-note");
 const timePickerValueEl = document.getElementById("time-picker-value");
 const timePickerTitleEl = document.getElementById("time-picker-title");
 const timeHourTitleEl = document.getElementById("time-hour-title");
@@ -2042,6 +2048,31 @@ let languageSelectionInProgress = false;
 let renderRafId = null;
 const WHEEL_ITEM_HEIGHT = 36;
 const LANGUAGE_SELECT_ANIMATION_MS = 460;
+
+const openGoalSheet = () => {
+  if (!goalSheet) return;
+  goalSheet.hidden = false;
+  goalSheet.classList.add("is-open");
+};
+
+const closeGoalSheet = () => {
+  if (!goalSheet) return;
+  goalSheet.classList.remove("is-open");
+  goalSheet.hidden = true;
+  if (goalTimePicker) goalTimePicker.hidden = true;
+  if (goalTimeToggle) goalTimeToggle.setAttribute("aria-expanded", "false");
+};
+
+const syncGoalSheetState = (state) => {
+  const access = getFeatureAccess(state);
+  if (goalWeeklyUnlockNote) {
+    goalWeeklyUnlockNote.hidden = !!access.weeklyPlan;
+  }
+  if (goalWeeklyInline) {
+    goalWeeklyInline.hidden = !access.weeklyPlan;
+    if (!access.weeklyPlan) goalWeeklyInline.open = false;
+  }
+};
 const WHEEL_REPEAT = 7;
 const WHEEL_CENTER_REPEAT = Math.floor(WHEEL_REPEAT / 2);
 const HOUR_VALUES = Array.from({ length: 24 }, (_, i) => i);
@@ -4210,6 +4241,7 @@ const renderToday = (state) => {
 
 const renderGoals = (state) => {
   goalsList.innerHTML = "";
+  syncGoalSheetState(state);
   const activeGoalIds = new Set(state.todayTasks.map((task) => task.goalId));
   const s = STATIC_TEXT[currentLanguage] || STATIC_TEXT.de;
 
@@ -4669,6 +4701,8 @@ const startGoalTimeEdit = (goalId) => {
   const state = loadState();
   const goal = state.goals.find((g) => g.id === goalId);
   if (!goal) return;
+  openGoalSheet();
+  syncGoalSheetState(state);
   editingGoalTimeId = goal.id;
   if (goalTimePicker) goalTimePicker.dataset.editGoalId = goal.id;
   setGoalTimeValue(goal.difficulty);
@@ -5390,20 +5424,24 @@ const init = () => {
     templatesSection.open = false;
   }
   openIntroIfNeeded(state);
+  syncGoalSheetState(state);
   const startTab = state.tutorialCompleted || state.tutorialStep >= 2 ? "today" : "goals";
   setActiveTab(startTab);
   setGoalTimeValue(goalTimeInput?.value || "12:00");
 
   if (!listenersBound) {
-    goalForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const value = goalInput.value.trim();
-      if (!value) return;
+    if (goalForm) {
+      goalForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const value = goalInput.value.trim();
+        if (!value) return;
 
-      addGoal(value, goalTimeInput?.value || "12:00", getInlineGoalWeeklyPlan());
-      goalInput.value = "";
-      clearInlineGoalWeeklyPlan();
-    });
+        addGoal(value, goalTimeInput?.value || "12:00", getInlineGoalWeeklyPlan());
+        goalInput.value = "";
+        clearInlineGoalWeeklyPlan();
+        closeGoalSheet();
+      });
+    }
     if (goalTimeToggle) {
       goalTimeToggle.addEventListener("click", () => {
         editingGoalTimeId = null;
@@ -5435,6 +5473,23 @@ const init = () => {
       if (goalTimePicker) delete goalTimePicker.dataset.editGoalId;
       toggleGoalTimePicker(false);
     });
+    if (goalsAddBtn) {
+      goalsAddBtn.addEventListener("click", () => {
+        editingGoalTimeId = null;
+        if (goalTimePicker) delete goalTimePicker.dataset.editGoalId;
+        if (goalInput) goalInput.value = "";
+        clearInlineGoalWeeklyPlan();
+        setGoalTimeValue("12:00");
+        syncGoalSheetState(loadState());
+        openGoalSheet();
+      });
+    }
+    if (goalSheetCloseBtn) {
+      goalSheetCloseBtn.addEventListener("click", () => closeGoalSheet());
+    }
+    if (goalSheetBackdrop) {
+      goalSheetBackdrop.addEventListener("click", () => closeGoalSheet());
+    }
 
     applyOffsetBtn.addEventListener("click", () => {
       const value = Number(dayOffsetInput.value || 0);

@@ -39,9 +39,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.8.11`
+- Aktuell: `1.8.12`
 
 ## Aenderungsprotokoll
+- `1.8.12` (2026-02-27): Today-Layout für besseren Überblick angepasst: Formular „Einmalige Aufgabe hinzufügen“ unter die Hauptaufgabenliste verschoben, damit zuerst die aktuellen Hauptaufgaben sichtbar sind.
 - `1.8.11` (2026-02-27): Onboarding-Banner oben verschlankt: nach abgeschlossenem Tutorial wird der obere Onboarding-Block nur noch an echten Freischaltungstagen angezeigt; an Tagen ohne neues Feature bleibt der Bereich ausgeblendet.
 - `1.8.10` (2026-02-27): Replit-Angleichung für Rest-UI: Tracker-Switch (`Checklist/Gewicht/Schlaf`) dauerhaft einzeilig mit horizontalem Scroll statt Zeilenumbruch sowie überarbeiteter `Tagesanzahl simulieren`-Block im card-basierten Replit-Look.
 - `1.8.9` (2026-02-27): Goals-Header auf Mobile/Desktop ausgerichtet: Plus-Button bleibt jetzt immer in derselben Zeile wie der Titel und sitzt ganz rechts.

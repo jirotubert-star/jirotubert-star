@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-title" content="OneStep" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/onestep-logo-rounded.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/onestep-logo-rounded.png" />
-    <link rel="manifest" href="site.webmanifest?v=1811" />
-    <link rel="stylesheet" href="css/style.css?v=1811" />
+    <link rel="manifest" href="site.webmanifest?v=1812" />
+    <link rel="stylesheet" href="css/style.css?v=1812" />
   </head>
   <body>
     <div id="language-modal" class="language-modal" hidden>
@@ -90,6 +90,8 @@
           </div>
         </div>
         <div id="today-smart-plan" class="soft-note today-smart-plan">Heute: Starte mit der frühesten Aufgabe und schließe den Tag sauber ab.</div>
+        <div id="unlock-controls" class="unlock" aria-live="polite"></div>
+        <ul id="today-list" class="checklist" aria-live="polite"></ul>
         <form id="quick-task-form" class="quick-task" autocomplete="off">
           <label class="sr-only" for="quick-task-input">Einmalige Aufgabe</label>
           <input id="quick-task-input" type="text" placeholder="Einmalige Aufgabe (z. B. Einkaufen)" />
@@ -98,8 +100,6 @@
             <button id="quick-task-tomorrow" type="button" class="btn ghost">Für morgen</button>
           </div>
         </form>
-        <div id="unlock-controls" class="unlock" aria-live="polite"></div>
-        <ul id="today-list" class="checklist" aria-live="polite"></ul>
         <form id="side-quest-form" class="side-quest-form" autocomplete="off">
           <label id="side-quest-label" class="sr-only" for="side-quest-select">Side Quest auswählen</label>
           <select id="side-quest-select"></select>
@@ -337,10 +337,10 @@
     <footer class="footer">
       <span>OneStep · Minimalistische Fortschritts‑App</span>
       <span class="soft-note">Lokal gespeichert in deinem Browser</span>
-      <span class="soft-note" id="version" data-version-label>Version 1.8.11</span>
+      <span class="soft-note" id="version" data-version-label>Version 1.8.12</span>
     </footer>
 
-    <div id="version-fixed" class="version-fixed soft-note" data-version-label>Version 1.8.11</div>
+    <div id="version-fixed" class="version-fixed soft-note" data-version-label>Version 1.8.12</div>
 
     <nav class="bottom-nav" aria-label="Bottom Navigation">
       <button class="nav-item active" type="button" data-target="today">
@@ -450,6 +450,6 @@
         scriptSrc: "https://plausible.io/js/pa-Yo5rD-tnsB9Pz60fVTI3i.js"
       };
     </script>
-    <script src="js/app.js?v=1811"></script>
+    <script src="js/app.js?v=1812"></script>
   </body>
 </html>

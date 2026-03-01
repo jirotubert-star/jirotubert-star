@@ -39,9 +39,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.8.9`
+- Aktuell: `1.8.10`
 
 ## Aenderungsprotokoll
+- `1.8.10` (2026-02-27): Replit-Angleichung für Rest-UI: Tracker-Switch (`Checklist/Gewicht/Schlaf`) dauerhaft einzeilig mit horizontalem Scroll statt Zeilenumbruch sowie überarbeiteter `Tagesanzahl simulieren`-Block im card-basierten Replit-Look.
 - `1.8.9` (2026-02-27): Goals-Header auf Mobile/Desktop ausgerichtet: Plus-Button bleibt jetzt immer in derselben Zeile wie der Titel und sitzt ganz rechts.
 - `1.8.8` (2026-02-27): Goals-Bereich neu aufgebaut: runder Plus-Button im Goals-Header, neues Bottom-Sheet zum Erstellen von Zielen (Name + Uhrzeit), Wochenplan-Felder nur nach Freischaltung im Sheet sichtbar; alter separater Wochenplan und direkter Wochenplan-Bereich aus der UI entfernt.
 - `1.8.7` (2026-02-27): Permanente Versionsanzeige ergänzt: Version wird jetzt als fixe Bottom-Badge global eingeblendet und über alle Screens synchron aktualisiert (`data-version-label`), zusätzlich zur bisherigen Footer-Anzeige.

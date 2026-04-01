@@ -39,9 +39,10 @@ OneStep ist eine minimalistische Web-App fuer taegliche kleine Schritte, Gewohnh
   - `side_task_completed`
 
 ## Version
-- Aktuell: `1.8.14`
+- Aktuell: `1.8.15`
 
 ## Aenderungsprotokoll
+- `1.8.15` (2026-04-01): Neuer Haupttab `Vokabel Trainer` in der Bottom-Navigation ergänzt. Die bereits vorhandene Vokabel-Logik ist jetzt wieder als eigener Screen sichtbar, inklusive Aktivierung von `js/vocab-logic.js` im App-Shell-Cache.
 - `1.8.14` (2026-03-01): Design-Freeze-Experiment als rückbaubare UI-Schicht eingeführt (`body.design-freeze`): strengere visuelle Konsistenz für Header, Cards, Buttons, Inputs, Tracker-Switch und Bottom-Navigation mit klarerem nativen App-Look auf Mobile/Desktop.
 - `1.8.13` (2026-03-01): Vollständiger Native-UI-Pass umgesetzt: konsistentes Spacing-/Radius-System, modernisierte Typografie, vereinheitlichte Buttons/Inputs/Cards, verbesserte Tracker-Tabs, stärkere Bottom-Navigation mit Blur-Glass-Look, sticky kompakter Header, flüssigere Screen-Transitions und bessere Safe-Area-/Touch-Optimierung für Mobile.
 - `1.8.12` (2026-02-27): Today-Layout für besseren Überblick angepasst: Formular „Einmalige Aufgabe hinzufügen“ unter die Hauptaufgabenliste verschoben, damit zuerst die aktuellen Hauptaufgaben sichtbar sind.

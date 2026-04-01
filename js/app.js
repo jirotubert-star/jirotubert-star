@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.8.14";
+const APP_VERSION = "1.8.15";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -653,6 +653,7 @@ const STATIC_TEXT = {
     footer1: "OneStep · Minimalistische Fortschritts-App",
     footer2: "Lokal gespeichert in deinem Browser",
     navSettings: "Einstellungen",
+    navVocab: "Vokabeln",
     navToday: "Heute",
     navGoals: "Ziele",
     navProgress: "Fortschritt",
@@ -836,6 +837,7 @@ const STATIC_TEXT = {
     footer1: "OneStep · Minimal progress app",
     footer2: "Stored locally in your browser",
     navSettings: "Settings",
+    navVocab: "Vocab",
     navToday: "Today",
     navGoals: "Goals",
     navProgress: "Progress",
@@ -1019,6 +1021,7 @@ const STATIC_TEXT = {
     footer1: "OneStep · Минималистичный прогресс",
     footer2: "Данные хранятся локально",
     navSettings: "Настройки",
+    navVocab: "Слова",
     navToday: "Сегодня",
     navGoals: "Цели",
     navProgress: "Прогресс",
@@ -1202,6 +1205,7 @@ const STATIC_TEXT = {
     footer1: "OneStep · Progreso minimalista",
     footer2: "Guardado local en tu navegador",
     navSettings: "Ajustes",
+    navVocab: "Vocabulario",
     navToday: "Hoy",
     navGoals: "Metas",
     navProgress: "Progreso",
@@ -1385,6 +1389,7 @@ const STATIC_TEXT = {
     footer1: "OneStep · Progrès minimaliste",
     footer2: "Stocké localement dans le navigateur",
     navSettings: "Réglages",
+    navVocab: "Vocabulaire",
     navToday: "Aujourd'hui",
     navGoals: "Objectifs",
     navProgress: "Progrès",
@@ -2022,7 +2027,7 @@ const annualGoalValueEl = document.getElementById("annual-goal-value");
 const annualGoalMetaEl = document.getElementById("annual-goal-meta");
 const annualGoalStatsEl = document.getElementById("annual-goal-stats");
 let currentTab = "today";
-const tabOrder = ["today", "goals", "progress", "info"];
+const tabOrder = ["today", "goals", "progress", "vocab", "info"];
 let touchStartX = null;
 let touchStartY = null;
 let touchStartTime = null;
@@ -2764,11 +2769,12 @@ const applyStaticTranslations = () => {
   setGoalTimeValue(goalTimeInput?.value || "12:00");
 
   const navLabels = document.querySelectorAll(".nav-label");
-  if (navLabels.length === 4) {
+  if (navLabels.length >= 5) {
     navLabels[0].textContent = s.navToday;
     navLabels[1].textContent = s.navGoals;
     navLabels[2].textContent = s.navProgress;
-    navLabels[3].textContent = s.navSettings;
+    navLabels[3].textContent = s.navVocab || "Vokabeln";
+    navLabels[4].textContent = s.navSettings;
   }
 };
 
@@ -4591,6 +4597,7 @@ const renderAll = (state) => {
   renderTemplates();
   renderProgress(state);
   renderCalendar(state);
+  renderVocabTracker(state);
   renderSimulatedDate(state);
   applyFeatureGating(state);
   captureDayTaskHistory(state);

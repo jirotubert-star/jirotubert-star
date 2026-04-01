@@ -3702,3 +3702,313 @@ body.design-freeze .version-fixed {
     min-width: 102px;
   }
 }
+
+body.design-freeze .bottom-nav {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+body.design-freeze .nav-item {
+  min-width: 0;
+  padding: 6px 4px;
+}
+
+body.design-freeze .nav-icon {
+  font-size: 0.92rem;
+}
+
+body.design-freeze .nav-label {
+  font-size: 0.64rem;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+@media (max-width: 480px) {
+  body.design-freeze .bottom-nav {
+    gap: 4px;
+    padding: 5px;
+  }
+
+  body.design-freeze .nav-item {
+    min-height: 48px;
+    padding: 5px 2px;
+  }
+
+  body.design-freeze .nav-label {
+    font-size: 0.58rem;
+  }
+}
+
+.delf-trainer-host {
+  min-height: 60vh;
+}
+
+.delf-shell {
+  display: grid;
+  gap: 16px;
+}
+
+.delf-card {
+  border: 1px solid #d6e4dc;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(12, 34, 26, 0.08);
+  padding: 20px;
+}
+
+.delf-card h1,
+.delf-card h2,
+.delf-card h3,
+.delf-card p {
+  margin: 0;
+}
+
+.delf-card p {
+  color: #60746b;
+  margin-top: 8px;
+}
+
+.delf-config-grid,
+.delf-stats-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.delf-config-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.delf-config-grid label,
+.delf-reset-row label {
+  display: grid;
+  gap: 8px;
+  color: #60746b;
+  font-size: 0.9rem;
+}
+
+.delf-config-grid input,
+.delf-config-grid select {
+  width: 100%;
+}
+
+.delf-reset-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.delf-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 16px;
+}
+
+.delf-toolbar,
+.delf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.delf-chip {
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1px solid #c9ddd2;
+  border-radius: 18px;
+  background: #fff;
+  color: #1f3028;
+  font: inherit;
+  font-weight: 600;
+}
+
+.delf-chip.is-active {
+  background: #0f1720;
+  color: #fff;
+  border-color: #0f1720;
+}
+
+.delf-study-card {
+  display: grid;
+  gap: 16px;
+  min-height: 340px;
+  padding: 22px;
+  border: 1px solid #dce7e0;
+  border-radius: 24px;
+  background: #f8fbf9;
+}
+
+.delf-meta-line,
+.delf-score-box,
+.delf-theme-meta {
+  color: #60746b;
+  font-size: 0.92rem;
+}
+
+.delf-question {
+  margin-top: 18px;
+  font-size: clamp(1.8rem, 3vw, 2.35rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #17261f;
+}
+
+.delf-answer-block {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid #d9e5de;
+}
+
+.delf-answer-label,
+.delf-stat-label {
+  font-size: 0.86rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #74897f;
+}
+
+.delf-answer-text,
+.delf-stat-value,
+.delf-section-title {
+  margin-top: 8px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #17261f;
+}
+
+.delf-header-inline {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.delf-empty-box,
+.delf-question-box,
+.delf-mini-card {
+  border: 1px solid #dde8e1;
+  border-radius: 18px;
+  background: #fff;
+  padding: 16px;
+}
+
+.delf-option-list,
+.delf-theme-list {
+  display: grid;
+  gap: 10px;
+}
+
+.delf-option-btn,
+.delf-theme-btn {
+  width: 100%;
+  text-align: left;
+  border: 1px solid #d3e1d8;
+  border-radius: 18px;
+  background: #fff;
+  padding: 14px 16px;
+  font: inherit;
+  color: #17261f;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.delf-option-btn.is-selected,
+.delf-theme-btn.is-active {
+  background: #111827;
+  color: #fff;
+  border-color: #111827;
+}
+
+.delf-option-btn.is-correct {
+  background: #dff5e8;
+  border-color: #67b67f;
+}
+
+.delf-option-btn.is-wrong {
+  background: #fde5e5;
+  border-color: #e38b8b;
+}
+
+.delf-feedback {
+  color: #42594f;
+  font-size: 0.95rem;
+}
+
+.delf-match-grid,
+.delf-learning-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.delf-stats-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.delf-wide-card {
+  grid-column: 1 / -1;
+}
+
+.delf-reset-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.delf-danger-btn {
+  border-color: #e5a5a5 !important;
+  color: #b43838 !important;
+}
+
+.delf-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.delf-modal-card {
+  width: min(100%, 420px);
+  padding: 24px;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+.delf-modal-card p {
+  margin: 12px 0 0;
+}
+
+.delf-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.delf-loading {
+  text-align: center;
+  color: #60746b;
+}
+
+@media (max-width: 920px) {
+  .delf-main-grid,
+  .delf-config-grid,
+  .delf-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .delf-reset-row,
+  .delf-match-grid,
+  .delf-learning-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .delf-header-inline {
+    flex-direction: column;
+  }
+}

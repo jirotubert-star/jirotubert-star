@@ -20,7 +20,7 @@ Aufbau der App:
 // LocalStorage Schlüssel
 // ---------------------------
 const STORAGE_KEY = "onestep_state_v1";
-const APP_VERSION = "1.8.15";
+const APP_VERSION = "1.8.17";
 const BACKUP_SCHEMA_VERSION = 2;
 const LANGUAGE_KEY = "onestep_language_v1";
 const ERROR_LOG_KEY = "onestep_error_log_v1";
@@ -653,7 +653,7 @@ const STATIC_TEXT = {
     footer1: "OneStep · Minimalistische Fortschritts-App",
     footer2: "Lokal gespeichert in deinem Browser",
     navSettings: "Einstellungen",
-    navVocab: "Vokabeln",
+    navVocab: "Vokabel",
     navToday: "Heute",
     navGoals: "Ziele",
     navProgress: "Fortschritt",
@@ -1205,7 +1205,7 @@ const STATIC_TEXT = {
     footer1: "OneStep · Progreso minimalista",
     footer2: "Guardado local en tu navegador",
     navSettings: "Ajustes",
-    navVocab: "Vocabulario",
+    navVocab: "Vocab",
     navToday: "Hoy",
     navGoals: "Metas",
     navProgress: "Progreso",
@@ -1389,7 +1389,7 @@ const STATIC_TEXT = {
     footer1: "OneStep · Progrès minimaliste",
     footer2: "Stocké localement dans le navigateur",
     navSettings: "Réglages",
-    navVocab: "Vocabulaire",
+    navVocab: "Vocab",
     navToday: "Aujourd'hui",
     navGoals: "Objectifs",
     navProgress: "Progrès",
@@ -1857,6 +1857,7 @@ const trackerVocabBtn = document.getElementById("tracker-vocab-btn");
 const weightTrackerPanel = document.getElementById("weight-tracker-panel");
 const sleepTrackerPanel = document.getElementById("sleep-tracker-panel");
 const vocabTrackerPanel = document.getElementById("vocab-tracker-panel");
+const vocabTrainerHost = document.getElementById("vocab-trainer-app");
 const weightForm = document.getElementById("weight-form");
 const weightInput = document.getElementById("weight-input");
 const weightSaveBtn = document.getElementById("weight-save-btn");
@@ -3586,6 +3587,10 @@ const saveVocabSettings = () => {
 };
 
 const renderVocabTracker = (state) => {
+  if (typeof window !== "undefined" && window.DelfVocabTrainer && vocabTrainerHost) {
+    window.DelfVocabTrainer.mount(vocabTrainerHost);
+    return;
+  }
   if (!vocabTrackerPanel) return;
   ensureVocabSeedLoaded(state);
   const runtime = state.vocabRuntime || {};
